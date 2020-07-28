@@ -13,14 +13,16 @@ import * as React from 'react';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-function Browse() {
+function App() {
   return (
-    <Stack.Navigator>
-      {/*<Stack.Screen name="Welcome" component={LogoPage} />*/}
-      <Stack.Screen name="Browse" component={SearchProducts} />
-      <Stack.Screen name="Basket" component={BasketList} />
-      <Stack.Screen name="Order Details" component={OrderForm} />
-    </Stack.Navigator>
+    <NavigationContainer>
+      <Stack.Navigator>
+        {/*<Stack.Screen name="Welcome" component={LogoPage} />*/}
+        <Stack.Screen name="Browse" component={SearchProducts} />
+        <Stack.Screen name="Basket" component={BasketList} />
+        <Stack.Screen name="Order Details" component={OrderForm} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
@@ -34,7 +36,7 @@ function Checkout() {
     </Stack.Navigator>
   );
 }
-*/
+
 
 
 function App() {
@@ -46,5 +48,6 @@ function App() {
     </NavigationContainer>
   );
 }
+*/
 
 export default App;

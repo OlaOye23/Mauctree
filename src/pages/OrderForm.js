@@ -205,7 +205,7 @@ export default class OrderForm extends Component{
     onClickSubmit = async () => {
       try{
         console.log('order details ' + this.state)
-        //await this.sendAlert(this.state)
+        await this.sendAlert(this.state)
         await addOrder(this.state, this.onOrderUploaded)
         this.clearAllLocalData()
         this.setState({modalVisible: true})
