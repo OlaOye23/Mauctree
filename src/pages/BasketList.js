@@ -4,7 +4,8 @@ import {View, ScrollView, Modal, TextInput, Text, TouchableOpacity, Image, Style
 import {getSelectProduct}from '../api/ShopsApi'
 //import Modal from 'react-native-modal';
 //import Fuse from 'fuse.js'
-import { AsyncStorage, RefreshControl } from 'react-native';
+import { RefreshControl } from 'react-native';
+import { AsyncStorage} from 'react-native'
 
 
 
@@ -27,6 +28,8 @@ export default class BasketList extends React.Component{
           searchQuery: "",
           refreshing: false,
           itemAdded: false,
+          disableAddButton: true,
+          disableCheckout: true,
       }
   }
 
@@ -35,15 +38,31 @@ export default class BasketList extends React.Component{
 
   componentDidMount = async () =>{
     this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
-    this.getAllLocalData()
+    try{
+      await this.getAllLocalData()
+    } catch (error) {
+      console.warn(error)
+      alert('Error: please try again or restart')
+    }
+    setTimeout(()=>{
+      let items = this.state.products
+      console.log(items.length)
+      if ((items.length) > 0){
+        this.setState({disableCheckout: false})
+      }
+      else{
+        this.setState({disableCheckout: true})
+      }
+    },100)
   }
 
   getAllLocalData = async () =>{
     console.log('in async get')
     this.total = 0
+    try{
     await AsyncStorage.getAllKeys( async (err, keys) => {
       await AsyncStorage.multiGet(keys, async (err, stores) => {
-        stores.map((result, i, store) => {
+        stores.map( async (result, i, store) => {
           let key = store[i][0];
           let value = store[i][1];
           let prodObj = JSON.parse(value)
@@ -60,18 +79,26 @@ export default class BasketList extends React.Component{
       console.log('1',this.state.products)
       console.log('done')   
     });
-   
+    } catch (error) {
+      console.warn(error)
+      alert('Error: please try again or restart')
+    }
     console.log('out async get')
   }
 
   
-  onClickCheckOut = () =>{
-    //navigate to orderForm
-  }
+  
 
   onClearBasket = async () =>{
-    await this.clearAllLocalData()
-    this.componentDidMount()
+    try{
+      await this.clearAllLocalData().then(()=>{
+        this.setState({disableCheckout: false})
+        this.componentDidMount()
+      })
+    } catch (error) {
+      console.warn(error)
+      alert('Error: please try again or restart')
+    }
   }
 
 
@@ -79,8 +106,8 @@ export default class BasketList extends React.Component{
     try {
       await AsyncStorage.setItem(key, val)
     } catch (error) {
-      console.log(error)
-      // Error saving data
+      console.warn(error)
+      alert('Error: please try again or restart')
     }
   }
 
@@ -95,38 +122,52 @@ export default class BasketList extends React.Component{
         console.log('empty')
       }
     } catch (error) {
-      console.log(error)
-      // Error retrieving data
+      console.warn(error)
+      alert('Error: please try again or restart')
     }
     return value
   }
 
   clearAllLocalData = async () =>{
     console.log('in async get')
-    await AsyncStorage.getAllKeys( async (err, keys) => {
-      await AsyncStorage.multiGet(keys, async (err, stores) => {
-        stores.map(async (result, i, store) => {
-          let key = store[i][0];
-          let value = store[i][1];
-          let prodObj = JSON.parse(value)
-          console.log(prodObj.qty)
-          if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
-            await AsyncStorage.setItem(key, JSON.stringify({"null": "null"}))
-          }
+    try{
+      await AsyncStorage.getAllKeys( async (err, keys) => {
+        await AsyncStorage.multiGet(keys, async (err, stores) => {
+          stores.map(async (result, i, store) => {
+            let key = store[i][0];
+            let value = store[i][1];
+            let prodObj = JSON.parse(value)
+            console.log(prodObj.qty)
+            if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
+              await AsyncStorage.setItem(key, JSON.stringify({"": ""}))
+            }
+          });
         });
+        this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
+        console.log('done')   
       });
-      this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
-      console.log('done')   
-    });
-    console.log('out async get') 
-    
+    } catch (error) {
+      console.warn(error)
+      alert('Error: please try again or restart')
+    }
+    console.log('out async get')  
   }
 
   
 
   onChangeQty = (info, name, qty) =>{
-    let obj = {info : info, name : name, qty : qty}
+    this.setState({disableAddButton: true})
+    let obj = {info : info, name : name, qty : parseInt(qty)}
     this.setState({itemObj : obj})
+    console.log(qty)
+    console.log(this.state.itemObj.qty)
+    console.log(this.state.current.stock)
+    if ((qty == "") || (parseInt(qty) > parseInt(this.state.current.stock) ) ){//different from search page
+      this.setState({disableAddButton: true})
+    }
+    else{
+      this.setState({disableAddButton: false})
+    }
     console.log('onChangeQty', this.state.itemObj)
   }
 
@@ -135,12 +176,13 @@ export default class BasketList extends React.Component{
     console.log(this.state.itemObj)
     if (this.state.itemObj.name){
       this.storeLocalData(this.state.itemObj.name, JSON.stringify(this.state.itemObj))
-      let obj = {name: null, qty: null}
+      let obj = {name: "", qty: ""}
       this.setState({itemObj: obj})
     }
     this.setState({modalVisible: false})
     this.setState({itemAdded: true})
-    
+    this.setState({disableAddButton: true})
+    this.componentDidMount()
     console.log('onAddItem', this.state.itemObj)
   }
 
@@ -149,11 +191,14 @@ export default class BasketList extends React.Component{
   }
 
   onCancelAdd = () => {
-    obj = {name: null, qty: null}
+    obj = {name: "", qty: ""}
     this.setState({itemObj: obj})
     this.setState({modalVisible: false})
-    console.log('onCancelAdd', this.state.itemObj)
+    this.setState({disableAddButton: true})
+    this.componentDidMount()
+    console.log('onCancelAdd', this.state.obj)
   }
+
 
   onPressItem =(product) => {
     console.log("Item pressed")
@@ -172,46 +217,52 @@ export default class BasketList extends React.Component{
 
   onCheckOut = async () =>{
     console.log('checking out')
+    console.log(this.state.disableCheckout)
     let items = this.state.products
     let fail = false
     console.log(items.length)
-    if ((items.length) > 0){
-      items.forEach(async (basketItem) => {
-        console.log(basketItem)
-        dbItem = await getSelectProduct(basketItem.info, this.onRetrieved)   
-        console.log('database + '+ dbItem)
-        console.log(dbItem)
-        if (parseInt(dbItem.price) == parseInt(basketItem.info.price)){
-          console.log('price equal')
-        }
-        else{
-          console.log('price not equal')
-          this.storeLocalData(basketItem.name, JSON.stringify(basketItem.info))
-          basketItem.info.price = dbItem.price
-        }
-        if (parseInt(dbItem.stock) >= parseInt(basketItem.qty)){
-          console.log('product still in stock')
-          fail = false
-        }
-        else{
-          console.log('product not in stock')
-          fail = true
-        }
-    })
-      if (fail === false){
-        const { navigation } = this.props;
-        navigation.navigate(
-          'Order Details',
-          {total: this.total}
-        )
-      }else{
-        console.log('fail condition reached')
+
+    try{
+    items.forEach(async (basketItem) => {
+      console.log(basketItem)
+      dbItem = await getSelectProduct(basketItem.info, this.onRetrieved)   
+      console.log('database + '+ dbItem)
+      console.log(dbItem)
+      if (parseInt(dbItem.price) == parseInt(basketItem.info.price)){
+        console.log('price equal')
       }
+      else{
+        console.log('price not equal')
+        this.storeLocalData(basketItem.name, JSON.stringify(basketItem.info))
+        basketItem.info.price = dbItem.price
+      }
+      if (parseInt(dbItem.stock) >= parseInt(basketItem.qty)){
+        console.log('product still in stock')
+        fail = false
+      }
+      else{
+        console.log('product not in stock')
+        fail = true
+      }
+    })
+    } catch (error) {
+      console.warn(error)
+      alert('Error: please try again or restart')
     }
+    if (fail === false){
+      const { navigation } = this.props;
+      navigation.navigate(
+        'Order Details',
+        {total: this.total}
+      )
+    }else{
+      console.log('fail condition reached')
+    }
+   
   }
   
 
-  onRetrieved = (itemInfo) =>{//useless for now
+  onRetrieved = (itemInfo) =>{//useless for now...
     return itemInfo
   }
   
@@ -263,13 +314,16 @@ export default class BasketList extends React.Component{
             </TouchableOpacity>
           ))}
 
-        <Modal visible={this.state.modalVisible} transparent={false}>
+          <Modal visible={this.state.modalVisible} transparent={false}>
             <ScrollView>
                 <View style={basketStyles.modal}>
                 <Text style = {basketStyles.modalText}>{this.state.current.name} </Text>
                 <Image source = {{uri:this.state.current.imgURL}} style = {basketStyles.modalPic} />
                 <Text style = {basketStyles.modalText}> N{this.state.current.price}</Text>
-                <Text style = {basketStyles.modalText} >enter quantity: max = {this.state.current.stock}</Text>  
+                <Text style = {basketStyles.modalText} >enter quantity:</Text>  
+                <Text style = {parseInt(this.state.current.stock) > 0? basketStyles.goodCenterText: basketStyles.badCenterText} >
+                    {this.state.current.stock} units available 
+                </Text>  
                   <TextInput 
                     keyboardType="numeric"
                     style = {basketStyles.textInput}
@@ -279,15 +333,15 @@ export default class BasketList extends React.Component{
                     value={String(this.state.itemObj.qty)}
                     onChangeText={(text) => this.onChangeQty(this.state.current,this.state.current.name, text)}
                   />
-                <Text style = {basketStyles.warnText} >
-                  {parseInt(this.state.itemObj.qty) > this.state.current.stock? "Not enough items in stock" : "" }
+                <Text style = {basketStyles.badCenterText} >
+                  {parseInt(this.state.itemObj.qty) > parseInt(this.state.current.stock)? "Not enough items in stock" : "" }
                 </Text> 
                 <Text style = {basketStyles.modalText}> Total: N{this.state.current.price * this.state.itemObj.qty}</Text>
                 <TouchableOpacity 
-                  disabled = {parseInt(this.state.itemObj.qty) > this.state.current.stock}
-                  style = {basketStyles.modalButton} 
+                  disabled = {this.state.disableAddButton}
+                  style = {this.state.disableAddButton === false? basketStyles.modalButton: basketStyles.modalDisabledButton} 
                   onPress = {() => this.onAddItem() }>
-                  <Text style = {basketStyles.buttonText}>ADD TO BASKET</Text>
+                  <Text style = {basketStyles.buttonText}>UPDATE QUANTITY</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style = {basketStyles.modalButton} onPress = {() => this.onCancelAdd() }>
                   <Text style = {basketStyles.buttonText}>CANCEL</Text>
@@ -299,19 +353,23 @@ export default class BasketList extends React.Component{
             <Modal visible={this.state.itemAdded} transparent={false}>
             <ScrollView>
                 <View style={basketStyles.modal}>
-                  <Text style = {basketStyles.addConfirmText}>Item Added!</Text>
+                  <Text style = {basketStyles.addConfirmText}>Quantity Updated!</Text>
                 </View>
                 <TouchableOpacity style = {basketStyles.modalButton} onPress = {() => this.onContinueShopping() }>
-                  <Text style = {basketStyles.buttonText}>CONTINUE SHOPPING</Text>
+                  <Text style = {basketStyles.buttonText}>GO TO BASKET</Text>
                 </TouchableOpacity>
               </ScrollView>
             </Modal>
 
-            <TouchableOpacity style = {basketStyles.modalButton} onPress = {this.onCheckOut}>
-                <Text style = {basketStyles.buttonText}>CHECKOUT</Text>
+            <TouchableOpacity 
+              disabled = {this.state.disableCheckout}
+              style = {this.state.disableCheckout === false? basketStyles.modalButton: basketStyles.modalDisabledButton}
+              onPress = {() => this.onCheckOut()}
+              >
+              <Text style = {basketStyles.buttonText}>CHECKOUT</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style = {basketStyles.modalButton} onPress = {this.onClearBasket}>
+            <TouchableOpacity style = {basketStyles.modalButton} onPress = {() =>this.onClearBasket()}>
                 <Text style = {basketStyles.buttonText}>CLEAR BASKET</Text>
             </TouchableOpacity>
       
@@ -326,6 +384,13 @@ export default class BasketList extends React.Component{
 
 basketStyles = StyleSheet.create({
 
+  neutralCenterText: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 10,
+    marginLeft: 5,
+    alignSelf: 'center',
+  },
   neutralText: {
     color: 'black',
     fontWeight: 'bold',
@@ -333,7 +398,14 @@ basketStyles = StyleSheet.create({
     marginLeft: 5,
     //alignSelf: 'center',
   },
-  warnText: {
+  goodCenterText: {
+    color: 'green',
+    fontWeight: 'bold',
+    fontSize: 10,
+    marginLeft: 5,
+    alignSelf: 'center',
+  },
+  badCenterText: {
     color: 'red',
     fontWeight: 'bold',
     fontSize: 10,
@@ -402,6 +474,17 @@ basketStyles = StyleSheet.create({
     paddingBottom: 10,
     backgroundColor: 'black',
   },
+
+  modalDisabledButton: {
+    margin: 10,
+    marginTop: 10,
+    marginBottom: 20,
+    alignItems: 'stretch',
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: 'grey',
+  },
+
 
   textInput:{
     alignSelf: 'center',
