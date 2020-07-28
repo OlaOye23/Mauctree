@@ -260,7 +260,7 @@ export default class OrderForm extends Component{
         console.log('invalid name')
         this.state.invalidName = true
       }
-      else if (this.state.name !== null && this.state.name !== ""){
+      else{
         this.state.invalidName = false
       }
       //check phoneNumber
@@ -268,7 +268,7 @@ export default class OrderForm extends Component{
         console.log('invalid phone')
         this.state.invalidPhone = true
       }
-      else if (this.state.phoneNumber !== null && this.state.phoneNumber !== ""){
+      else{
         this.state.invalidPhone = false
       }
       //check address
@@ -276,7 +276,7 @@ export default class OrderForm extends Component{
         console.log('invalid address')
         this.state.invalidAddress = true
       }
-      else if(this.state.address !== null && this.state.address !== ""){
+      else{
         this.state.invalidAddress = false
       }
 
@@ -304,6 +304,7 @@ export default class OrderForm extends Component{
       console.log(this.state.disableSubmit)
 
       //this.componentDidMount()
+      this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
       
     }
     
@@ -325,7 +326,7 @@ export default class OrderForm extends Component{
                   value={this.state.name}
                   onChangeText={(text) =>{
                     this.setState({ name: text})
-                    this.checkValidity()
+                    setTimeout(()=>this.checkValidity(),500)
                     }}/>
 
                 <Text style = {orderFormStyles.subHeader} >your contact number</Text>  
@@ -337,7 +338,7 @@ export default class OrderForm extends Component{
                   value={this.state.phoneNumber}
                   onChangeText={(text) =>{
                     this.setState({ phoneNumber: text})
-                    this.checkValidity()
+                    setTimeout(()=>this.checkValidity(),500)
                     }}/>
              
 
@@ -349,7 +350,7 @@ export default class OrderForm extends Component{
                   value={this.state.address}
                   onChangeText={(text) =>{
                      this.setState({ address: text})
-                     this.checkValidity()
+                     setTimeout(()=>this.checkValidity(),500)
                      }}/>
 
                 <TouchableOpacity style = {orderFormStyles.loadButton} onPress = {() => this.updateLocation(this.state.address)}>
