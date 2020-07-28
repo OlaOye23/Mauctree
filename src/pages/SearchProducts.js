@@ -106,6 +106,9 @@ export default class searchProducts extends React.Component{
 
   onChangeQty = (info, name, qty) =>{
     this.setState({disableAddButton: true})
+    if (qty <= 0 || qty == "" ){
+      qty = 0
+    }
     let obj = {info : info, name : name, qty : parseInt(qty)}
     this.setState({itemObj : obj})
     console.log(qty)
