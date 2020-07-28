@@ -3,7 +3,7 @@ import {View, ScrollView, Modal, TextInput, Text, TouchableOpacity, Image, Style
 //import {BaseButton} from 'react-native-gesture-handler'
 import {getSelectProduct}from '../api/ShopsApi'
 //import Modal from 'react-native-modal';
-import Fuse from 'fuse.js'
+//import Fuse from 'fuse.js'
 import { AsyncStorage, RefreshControl } from 'react-native';
 
 
@@ -233,27 +233,27 @@ export default class BasketList extends React.Component{
       <View >
 
       
-      <ScrollView styles = {listStyles.allContainer}
+      <ScrollView styles = {basketStyles.allContainer}
        refreshControl={
         <RefreshControl
           refreshing={this.state.refreshing}
           onRefresh={this._onRefresh.bind(this)}/>}
        >
-      <Text style={listStyles.modalText}>Total : N {this.total} </Text> 
+      <Text style={basketStyles.modalText}>Total : N {this.total} </Text> 
           {this.state.products.map((product,i) =>(
             product.name && 
             <TouchableOpacity key ={i} onPress = {()=> this.onPressItem(product.info)}>
-              <View style = {listStyles.superContainer}>
-              <Image source = {{uri:product.info.imgURL}} style = {listStyles.productPic} />
-              <View style = {listStyles.mainContainer}>
-                  <View style = {listStyles.titleContainer}>
-                      <Text style = {listStyles.titleText}>{product.info.name} </Text>
-                      <Text style = {listStyles.titleText}> N{product.info.price}</Text>
+              <View style = {basketStyles.superContainer}>
+              <Image source = {{uri:product.info.imgURL}} style = {basketStyles.productPic} />
+              <View style = {basketStyles.mainContainer}>
+                  <View style = {basketStyles.titleContainer}>
+                      <Text style = {basketStyles.titleText}>{product.info.name} </Text>
+                      <Text style = {basketStyles.titleText}> N{product.info.price}</Text>
                   </View>
-                  <Text style = {listStyles.neutralText} >
+                  <Text style = {basketStyles.neutralText} >
                       {product.qty+ " in basket"}
                   </Text>
-                  <Text style = {listStyles.neutralText}>
+                  <Text style = {basketStyles.neutralText}>
                       {"Total: N"+ product.qty* product.info.price } 
                   </Text>
               </View>
@@ -265,32 +265,32 @@ export default class BasketList extends React.Component{
 
         <Modal visible={this.state.modalVisible} transparent={false}>
             <ScrollView>
-                <View style={listStyles.modal}>
-                <Text style = {listStyles.modalText}>{this.state.current.name} </Text>
-                <Image source = {{uri:this.state.current.imgURL}} style = {listStyles.modalPic} />
-                <Text style = {listStyles.modalText}> N{this.state.current.price}</Text>
-                <Text style = {listStyles.modalText} >enter quantity: max = {this.state.current.stock}</Text>  
+                <View style={basketStyles.modal}>
+                <Text style = {basketStyles.modalText}>{this.state.current.name} </Text>
+                <Image source = {{uri:this.state.current.imgURL}} style = {basketStyles.modalPic} />
+                <Text style = {basketStyles.modalText}> N{this.state.current.price}</Text>
+                <Text style = {basketStyles.modalText} >enter quantity: max = {this.state.current.stock}</Text>  
                   <TextInput 
                     keyboardType="numeric"
-                    style = {listStyles.textInput}
+                    style = {basketStyles.textInput}
                     placeholderTextColor = {'grey'}
                     placeholder = {String(0)}
                     underlineColorAndroid= {'transparent'}
                     value={String(this.state.itemObj.qty)}
                     onChangeText={(text) => this.onChangeQty(this.state.current,this.state.current.name, text)}
                   />
-                <Text style = {listStyles.warnText} >
+                <Text style = {basketStyles.warnText} >
                   {parseInt(this.state.itemObj.qty) > this.state.current.stock? "Not enough items in stock" : "" }
                 </Text> 
-                <Text style = {listStyles.modalText}> Total: N{this.state.current.price * this.state.itemObj.qty}</Text>
+                <Text style = {basketStyles.modalText}> Total: N{this.state.current.price * this.state.itemObj.qty}</Text>
                 <TouchableOpacity 
                   disabled = {parseInt(this.state.itemObj.qty) > this.state.current.stock}
-                  style = {listStyles.modalButton} 
+                  style = {basketStyles.modalButton} 
                   onPress = {() => this.onAddItem() }>
-                  <Text style = {listStyles.buttonText}>ADD TO BASKET</Text>
+                  <Text style = {basketStyles.buttonText}>ADD TO BASKET</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style = {listStyles.modalButton} onPress = {() => this.onCancelAdd() }>
-                  <Text style = {listStyles.buttonText}>CANCEL</Text>
+                <TouchableOpacity style = {basketStyles.modalButton} onPress = {() => this.onCancelAdd() }>
+                  <Text style = {basketStyles.buttonText}>CANCEL</Text>
                 </TouchableOpacity>
                 </View>
               </ScrollView>
@@ -298,21 +298,21 @@ export default class BasketList extends React.Component{
 
             <Modal visible={this.state.itemAdded} transparent={false}>
             <ScrollView>
-                <View style={listStyles.modal}>
-                  <Text style = {listStyles.addConfirmText}>Item Added!</Text>
+                <View style={basketStyles.modal}>
+                  <Text style = {basketStyles.addConfirmText}>Item Added!</Text>
                 </View>
-                <TouchableOpacity style = {listStyles.modalButton} onPress = {() => this.onContinueShopping() }>
-                  <Text style = {listStyles.buttonText}>CONTINUE SHOPPING</Text>
+                <TouchableOpacity style = {basketStyles.modalButton} onPress = {() => this.onContinueShopping() }>
+                  <Text style = {basketStyles.buttonText}>CONTINUE SHOPPING</Text>
                 </TouchableOpacity>
               </ScrollView>
             </Modal>
 
-            <TouchableOpacity style = {listStyles.modalButton} onPress = {this.onCheckOut}>
-                <Text style = {listStyles.buttonText}>CHECKOUT</Text>
+            <TouchableOpacity style = {basketStyles.modalButton} onPress = {this.onCheckOut}>
+                <Text style = {basketStyles.buttonText}>CHECKOUT</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style = {listStyles.modalButton} onPress = {this.onClearBasket}>
-                <Text style = {listStyles.buttonText}>CLEAR BASKET</Text>
+            <TouchableOpacity style = {basketStyles.modalButton} onPress = {this.onClearBasket}>
+                <Text style = {basketStyles.buttonText}>CLEAR BASKET</Text>
             </TouchableOpacity>
       
           </ScrollView>
@@ -324,7 +324,7 @@ export default class BasketList extends React.Component{
 }
 
 
-listStyles = StyleSheet.create({
+basketStyles = StyleSheet.create({
 
   neutralText: {
     color: 'black',

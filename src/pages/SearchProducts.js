@@ -32,6 +32,7 @@ export default class searchProducts extends React.Component{
           refreshing: false,
           searchQuery: "",
           itemAdded: false,
+          disableAddButton: true,
       }
   }
 
@@ -42,8 +43,14 @@ export default class searchProducts extends React.Component{
 
   componentDidMount = async () =>{
     //get product and put in list
-    this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
-    await getProducts(this.productsRetrieved)
+    try{
+      this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
+      await getProducts(this.productsRetrieved)
+    }
+    catch (error){
+      console.warn(error)
+      alert("Timeout: Please check your internet connection and try again ")
+    }
     
   }
 
@@ -62,8 +69,8 @@ export default class searchProducts extends React.Component{
     try {
       await AsyncStorage.setItem(key, val)
     } catch (error) {
-      console.log(error)
-      // Error saving data
+      console.warn(error)
+      alert('Error: please try again or restart')
     }
   }
 
@@ -78,8 +85,8 @@ export default class searchProducts extends React.Component{
         console.log('empty')
       }
     } catch (error) {
-      console.log(error)
-      // Error retrieving data
+      console.warn(error)
+      alert('Error: please try again or restart')
     }
     return value
   }
@@ -98,8 +105,18 @@ export default class searchProducts extends React.Component{
 
 
   onChangeQty = (info, name, qty) =>{
+    this.setState({disableAddButton: true})
     let obj = {info : info, name : name, qty : qty}
     this.setState({itemObj : obj})
+    console.log(qty)
+    console.log(this.state.itemObj.qty)
+    console.log(this.state.current.stock)
+    if ((qty == "") || (parseInt(qty) <= 0) || (parseInt(qty) > parseInt(this.state.current.stock) ) ){
+      this.setState({disableAddButton: true})
+    }
+    else{
+      this.setState({disableAddButton: false})
+    }
     console.log('onChangeQty', this.state.itemObj)
   }
 
@@ -113,6 +130,7 @@ export default class searchProducts extends React.Component{
     }
     this.setState({modalVisible: false})
     this.setState({itemAdded: true})
+    this.setState({disableAddButton: true})
     console.log('onAddItem', this.state.itemObj)
   }
 
@@ -124,6 +142,7 @@ export default class searchProducts extends React.Component{
     obj = {name: "", qty: ""}
     this.setState({itemObj: obj})
     this.setState({modalVisible: false})
+    this.setState({disableAddButton: true})
     console.log('onCancelAdd', this.state.obj)
   }
 
@@ -139,7 +158,6 @@ export default class searchProducts extends React.Component{
 }
 
 onSearchProducts = () => {
-  this.setState({searchUsed: true})
   const options = {
     includeScore: true,
     keys: [
@@ -150,11 +168,16 @@ onSearchProducts = () => {
   
   const fuse = new Fuse(this.prodList, options)
   if (this.state.searchQuery !== ""){
+    this.setState({searchUsed: true})
     const result = fuse.search(this.state.searchQuery)
     console.log(result)
     this.setState({products :[]})
     this.setState({products :result})
     console.log(this.state.products)
+  }
+  else{
+    this.setState({searchUsed: false})
+    this.componentDidMount()
   }
 }
 
@@ -275,7 +298,10 @@ componentDidCatch(error, errorInfo) {
                 <Text style = {listStyles.modalText}>{this.state.current.name} </Text>
                 <Image source = {{uri:this.state.current.imgURL}} style = {listStyles.modalPic} />
                 <Text style = {listStyles.modalText}> N{this.state.current.price}</Text>
-                <Text style = {listStyles.modalText} >enter quantity: max = {this.state.current.stock}</Text>  
+                <Text style = {listStyles.modalText} >enter quantity:</Text>  
+                <Text style = {parseInt(this.state.current.stock) > 0? listStyles.goodCenterText: listStyles.badCenterText} >
+                    {this.state.current.stock} units available 
+                </Text>  
                   <TextInput 
                     keyboardType="numeric"
                     style = {listStyles.textInput}
@@ -285,13 +311,13 @@ componentDidCatch(error, errorInfo) {
                     value={String(this.state.itemObj.qty)}
                     onChangeText={(text) => this.onChangeQty(this.state.current,this.state.current.name, text)}
                   />
-                <Text style = {listStyles.warnText} >
-                  {parseInt(this.state.itemObj.qty) > this.state.current.stock? "Not enough items in stock" : "" }
+                <Text style = {listStyles.badCenterText} >
+                  {parseInt(this.state.itemObj.qty) > parseInt(this.state.current.stock)? "Not enough items in stock" : "" }
                 </Text> 
                 <Text style = {listStyles.modalText}> Total: N{this.state.current.price * this.state.itemObj.qty}</Text>
                 <TouchableOpacity 
-                  disabled = {parseInt(this.state.itemObj.qty) > this.state.current.stock}
-                  style = {listStyles.modalButton} 
+                  disabled = {this.state.disableAddButton}
+                  style = {this.state.disableAddButton === false? listStyles.modalButton: listStyles.modalDisabledButton} 
                   onPress = {() => this.onAddItem() }>
                   <Text style = {listStyles.buttonText}>ADD TO BASKET</Text>
                 </TouchableOpacity>
@@ -322,7 +348,21 @@ componentDidCatch(error, errorInfo) {
 
 
 listStyles = StyleSheet.create({
-  warnText: {
+  neutralCenterText: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 10,
+    marginLeft: 5,
+    alignSelf: 'center',
+  },
+  goodCenterText: {
+    color: 'green',
+    fontWeight: 'bold',
+    fontSize: 10,
+    marginLeft: 5,
+    alignSelf: 'center',
+  },
+  badCenterText: {
     color: 'red',
     fontWeight: 'bold',
     fontSize: 10,
@@ -390,6 +430,16 @@ listStyles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     backgroundColor: 'black',
+  },
+
+  modalDisabledButton: {
+    margin: 10,
+    marginTop: 10,
+    marginBottom: 20,
+    alignItems: 'stretch',
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: 'grey',
   },
 
   textInput:{
