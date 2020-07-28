@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "storemobUser",
-    "slug": "storemobUser",
+    "name": "AdaMob Store",
+    "slug": "AdaMob Store",
     "platforms": [
       "ios",
       "android",
