@@ -18,7 +18,7 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {/*<Stack.Screen name="Welcome" component={LogoPage} />*/}
-        <Stack.Screen name="Browse" component={SearchProducts} />
+        <Stack.Screen name="Find a Product" component={SearchProducts} />
         <Stack.Screen name="Basket" component={BasketList} />
         <Stack.Screen name="Order Details" component={OrderForm} />
       </Stack.Navigator>

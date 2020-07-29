@@ -222,7 +222,7 @@ export default class OrderForm extends Component{
 
     onCloseModal = () => {
       const { navigation } = this.props
-      navigation.navigate('Browse')
+      navigation.navigate('Find a Product')
     }
     
     /*
@@ -264,7 +264,7 @@ export default class OrderForm extends Component{
         this.state.invalidName = false
       }
       //check phoneNumber
-      if (parseInt(this.state.phoneNumber) === null || parseInt(this.state.phoneNumber) === "" ){
+      if ((this.state.phoneNumber) === null || (this.state.phoneNumber) === "" ){
         console.log('invalid phone')
         this.state.invalidPhone = true
       }
