@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, ScrollView, Modal, TextInput, Text, TouchableOpacity, Image, StyleSheet} from 'react-native'
 //import {BaseButton} from 'react-native-gesture-handler'
-import {getSelectProduct}from '../api/ShopsApi'
+import {getSelectProduct, getSelectStore}from '../api/ShopsApi'
 //import Modal from 'react-native-modal';
 //import Fuse from 'fuse.js'
 import { RefreshControl } from 'react-native';
@@ -30,6 +30,11 @@ export default class BasketList extends React.Component{
           itemAdded: false,
           disableAddButton: true,
           disableCheckout: true,
+          store:{
+            id: "bvUlmrcHZsUi6SpECE8y",//VGC STORE HARD CODE
+            name: "VGC",
+            open: "no"
+          }
       }
   }
 
@@ -40,6 +45,8 @@ export default class BasketList extends React.Component{
     this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
     try{
       await this.getAllLocalData()
+      let store = await getSelectStore(this.state.store)
+      this.setState({store: store})  
     } catch (error) {
       console.warn(error)
       alert('Error: please try again or restart')
@@ -51,6 +58,9 @@ export default class BasketList extends React.Component{
         this.setState({disableCheckout: false})
       }
       else{
+        this.setState({disableCheckout: true})
+      }
+      if (this.state.store.open === "no"){
         this.setState({disableCheckout: true})
       }
     },100)
@@ -225,47 +235,62 @@ export default class BasketList extends React.Component{
     let fail = false
     console.log(items.length)
 
+    if (items.length < 1){
+      alert("There are no items in your basket")
+      fail = true
+      return
+    }
+
     try{
-    items.forEach(async (basketItem) => {
-      console.log(basketItem)
-      dbItem = await getSelectProduct(basketItem.info, this.onRetrieved)   
-      console.log('database + '+ dbItem)
-      console.log(dbItem)
-      if (parseInt(dbItem.price) == parseInt(basketItem.info.price)){
-        console.log('price equal')
-      }
-      else{
-        console.log('price not equal')
-        this.storeLocalData(basketItem.name, JSON.stringify(basketItem.info))
-        basketItem.info.price = dbItem.price
-      }
-      if (parseInt(dbItem.stock) >= parseInt(basketItem.qty)){
-        console.log('product still in stock')
-        fail = false
-      }
-      else{
-        console.log('product not in stock')
+      let store = await getSelectStore(this.state.store)
+      this.setState({store: store}) 
+      if (this.state.store.open === "no"){
+        alert('shop closed! opens at 8am')
         fail = true
+        return
       }
-    })
-    } catch (error) {
-      console.warn(error)
-      alert('Error: please try again or restart')
-    }
-    if (fail === false){
-      const { navigation } = this.props;
-      navigation.navigate(
-        'Order Details',
-        {total: this.total}
-      )
-    }else{
-      console.log('fail condition reached')
-    }
-   
+      items.forEach(async (basketItem) => {
+        console.log(basketItem)
+        
+        dbItem = await getSelectProduct(basketItem.info, this.onRetrieved)   
+        console.log('database + '+ dbItem)
+        console.log(dbItem)
+        if (parseInt(dbItem.price) == parseInt(basketItem.info.price)){
+          console.log('price equal')
+        }
+        else{
+          console.log('price not equal')
+          this.storeLocalData(basketItem.name, JSON.stringify(basketItem.info))
+          basketItem.info.price = dbItem.price
+        }
+        if (parseInt(dbItem.stock) >= parseInt(basketItem.qty)){//need to test
+          console.log('product still in stock')
+          //fail = false
+        }
+        else{
+          console.log('product not in stock')
+          fail = true
+        }
+      
+      if (fail === false){
+        const { navigation } = this.props;
+        navigation.navigate(
+          'Order Details',
+          {total: this.total}
+        )
+      }else{
+        console.log('fail condition reached')
+      }
+      })
+      } catch (error) {
+        console.warn(error)
+        alert('Error: please try again or restart')
+      }
+    
   }
   
 
-  onRetrieved = (itemInfo) =>{//useless for now...
+  onRetrieved = (itemInfo) =>{//useless for now...dont delete naively look for dependants
     return itemInfo
   }
   
@@ -282,6 +307,7 @@ export default class BasketList extends React.Component{
   
   render(){
     
+    
   return (
       
       <View >
@@ -294,6 +320,9 @@ export default class BasketList extends React.Component{
           onRefresh={this._onRefresh.bind(this)}/>}
        >
       <Text style={basketStyles.modalText}>Total : N {this.total} </Text> 
+          {this.state.store.open == "yes" ?
+             <Text style = {basketStyles.goodCenterText}>store is open! closes at 11pm</Text> : 
+              <Text style = {basketStyles.badCenterText}>store is closed! opens at 8am</Text> }
           {this.state.products.map((product,i) =>(
             product.name && 
             <TouchableOpacity key ={i} onPress = {()=> this.onPressItem(product.info)}>

@@ -16,6 +16,30 @@ firebase.initializeApp(config);
 //firebase.analytics();
 
 
+
+
+//get a specific store
+export async function getSelectStore(selectedStore){
+  console.log('in load selected store')
+  store = null 
+  const db = firebase.firestore()
+  let query = db.collection('stores')
+                      .where('name', '==', selectedStore.name)
+                      .limit(1) 
+
+  await query.get().then(d00=> {
+    console.log('still running load')
+    d00.forEach(d0 => {
+      data = d0.data()
+      store = data
+      console.log('in db')
+      console.log(store)
+    })
+  })
+  return store
+}  
+
+
 //get list of products
 export async function getProducts(productsRetreived) {
   console.log('in getProducts')
