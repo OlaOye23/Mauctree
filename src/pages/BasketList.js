@@ -6,6 +6,8 @@ import {getSelectProduct, getSelectStore}from '../api/ShopsApi'
 //import Fuse from 'fuse.js'
 import { RefreshControl } from 'react-native';
 import { AsyncStorage} from 'react-native'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import {percWidth, percHeight} from '../api/StyleFuncs'
 
 
 
@@ -419,46 +421,46 @@ basketStyles = StyleSheet.create({
   neutralCenterText: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 10,
-    marginLeft: 5,
+    fontSize: 12,
+    marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
   neutralText: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 10,
-    marginLeft: 5,
+    fontSize: 12,
+    marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
   goodCenterText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: 10,
-    marginLeft: 5,
+    fontSize: 12,
+    marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
   badCenterText: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize: 12,
     alignSelf: 'center',
   },
   badText: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: 10,
-    marginLeft: 5,
+    fontSize: 12,
+    marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
   goodText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: 10,
-    marginLeft: 5,
+    fontSize: 12,
+    marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
   searchBox: {
-    height: 50,
+    height: hp(percHeight(50)),
     marginTop: 0,
     marginBottom: 0,
     paddingLeft: 0,
@@ -470,13 +472,13 @@ basketStyles = StyleSheet.create({
   },
 
   modal: { 
-    marginTop: 50,
+    marginTop: hp(percHeight(50)),
     alignContent: 'center',
    },
 
   modalPic:{
-    width: 250,
-    height: 250,
+    width: hp(percHeight(250)),
+    height: hp(percHeight(250)),
     alignSelf:'center'
   },
 
@@ -484,12 +486,12 @@ basketStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     alignSelf: 'center',
-    padding: 5,
+    padding: hp(percHeight(5)),
     textAlign: 'center',
   },
 
   addConfirmText: {
-    marginTop: 200,
+    marginTop: hp(percHeight(200)),
     fontWeight: 'bold',
     fontSize: 20,
     alignSelf: 'center',
@@ -498,22 +500,22 @@ basketStyles = StyleSheet.create({
   },
   
   modalButton: {
-    margin: 10,
-    marginTop: 10,
-    marginBottom: 20,
+    margin: hp(percHeight(10)),
+    marginTop: hp(percHeight(10)),
+    marginBottom: hp(percHeight(20)),
     alignItems: 'stretch',
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: hp(percHeight(10)),
+    paddingBottom: hp(percHeight(10)),
     backgroundColor: 'black',
   },
 
   modalDisabledButton: {
-    margin: 10,
-    marginTop: 10,
-    marginBottom: 20,
+    margin: hp(percHeight(10)),
+    marginTop: hp(percHeight(10)),
+    marginBottom: hp(percHeight(20)),
     alignItems: 'stretch',
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: hp(percHeight(10)),
+    paddingBottom: hp(percHeight(10)),
     backgroundColor: 'grey',
   },
 
@@ -521,10 +523,10 @@ basketStyles = StyleSheet.create({
   textInput:{
     alignSelf: 'center',
     textAlign: 'center',
-    height: 40,
-    width: 60,
-    marginLeft: 10,
-    marginBottom: 10,
+    height: hp(percHeight(40)),
+    width: hp(percHeight(60)),
+    marginLeft: hp(percHeight(10)),
+    marginBottom: hp(percHeight(10)),
     color: 'black',
     borderBottomColor: 'black' ,
     borderBottomWidth: 1,
@@ -537,57 +539,57 @@ basketStyles = StyleSheet.create({
   },
   
   allContainer:{
-    marginTop: 100,  // doesnt do anything
+    marginTop: hp(percHeight(100)),  // doesnt do anything
   },
   titleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 5,
+    margin: hp(percHeight(5)),
 
   },
   superContainer:{
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 5,
+    margin: hp(percHeight(5)),
 
   },
   mainContainer: {
-    width: 260,
-    margin : 5,
+    width: hp(percHeight(260)),
+    margin : hp(percHeight(5)),
 
   },
   description: {
-    margin: 5,
-    fontSize: 10,
+    margin: hp(percHeight(5)),
+    fontSize: 12,
 
   },
   titleText: {
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize: 12,
     alignSelf: 'center',
   },
   
   newItemText: {
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize: 12,
 
   },
   
   productPic:{
-    width: 80,
-    height: 80,
-    margin: 5,
+    width: hp(percHeight(80)),
+    height: hp(percHeight(80)),
+    margin: hp(percHeight(5)),
 
   },
   productTitle:{
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: 'bold',
-    marginLeft: 5,
+    marginLeft: hp(percHeight(5)),
   },
   location2: {
-    height: 45,
+    height: hp(percHeight(45)),
     marginTop: 0,
-    marginBottom: 5,
+    marginBottom: hp(percHeight(5)),
     textAlign: 'center',
     fontSize: 16,
     color: 'grey',
@@ -598,22 +600,3 @@ basketStyles = StyleSheet.create({
 
 })
 
-productOtherStyles = StyleSheet.create({
-  button: {
-      marginTop: 5,
-      marginBottom: 5,
-      width: 350,
-      height: 40,
-      alignItems: 'center',
-      alignSelf: 'center',
-      backgroundColor: '#000000'
-    },
-
-    buttonText: {
-      textAlign: 'center',
-      margin: 14,
-      color: 'white',
-      fontWeight: 'bold',
-      fontSize: 12,
-    },
-})

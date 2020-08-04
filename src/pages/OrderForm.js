@@ -6,7 +6,8 @@ import { Dropdown } from 'react-native-material-dropdown';
 import Geocoder from 'react-native-geocoding'; 
 import { AsyncStorage } from 'react-native';
 import * as yup from 'yup';
-//import { fetch } from 'node-fetch';// not used-- only useful if outside node environment e.g firebase else: error
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import {percWidth, percHeight} from '../api/StyleFuncs'
 
 
 export default class OrderForm extends Component{
@@ -125,10 +126,12 @@ export default class OrderForm extends Component{
           return
         }
         try{
-          Geocoder.init('AIzaSyBLElYt7l1VCCCHI5l8nAlsWwYK6xe1KRk')
-          json = await Geocoder.from(address+", Lagos, Nigeria")
-          jsonLagos = await Geocoder.from("Lagos, Nigeria")
+          Geocoder.init('AIzaSyAkZKlaIyQmJyIVJomOhjYLK6InkNJjdXc')
+          json = await Geocoder.from(address+"VGC, Lagos, Nigeria")
           let location = json.results[0].geometry.location
+          this.setState({latitude: location.lat, longitude: location.lng, address: address})
+          /*
+          jsonLagos = await Geocoder.from("VGC, Lagos, Nigeria")
           let locationLagos = jsonLagos.results[0].geometry.location
           if (location.lat === locationLagos.lat && location.lng == locationLagos.lng){
               console.log('irreconcilable address')
@@ -136,7 +139,7 @@ export default class OrderForm extends Component{
           }
           else{
               this.setState({latitude: location.lat, longitude: location.lng, address: address})
-          }
+          }*/
         } catch (error) {
             console.warn(error)
             alert('Error: please try again or restart')
@@ -145,7 +148,7 @@ export default class OrderForm extends Component{
 
 
     getAddress = async (lat, long) => {
-      Geocoder.init('AIzaSyBLElYt7l1VCCCHI5l8nAlsWwYK6xe1KRk')
+      Geocoder.init('AIzaSyAkZKlaIyQmJyIVJomOhjYLK6InkNJjdXc')
       try{
           let json = await Geocoder.from(lat, long)
           let addressComponent = json.results[0].address_components[0]['short_name']+',' +json.results[0].address_components[1]['short_name'] + ','+json.results[0].address_components[2]['short_name'];
@@ -160,8 +163,8 @@ export default class OrderForm extends Component{
 
     updateLocation = async (address) => {
       console.log(this.state)
-        //await this.getGeolocation(address)
-        //await this.getAddress(this.state.latitude, this.state.longitude)
+        await this.getGeolocation(address)
+        await this.getAddress(this.state.latitude, this.state.longitude)
     }
 
     onProductUploaded = () =>{
@@ -225,32 +228,6 @@ export default class OrderForm extends Component{
       navigation.navigate('Find a Product')
     }
     
-    /*
-    checkValidity = () =>{
-
-    let schema = yup.object().shape({
-      name: yup.string(20).required(),
-      phoneNumber: yup.number(10).required().positive().integer(),
-      address: yup.string(50).required(),
-      geoAddress: yup.string(50).required(),
-    });
-
-    // check validity
-    schema
-      .isValid({
-        name: this.state.name,
-        phoneNumber: this.state.phoneNumber,
-        address: this.state.address,
-        geoAddress: this.state.geoAddress
-      })
-      .then( (valid) => {
-        console.log(valid)
-        if (valid === false){
-          alert("please review your delivery details")
-        }
-      }
-    }
-    */
 
 
     checkValidity = () => {
@@ -416,88 +393,79 @@ export default class OrderForm extends Component{
 
 orderFormStyles = StyleSheet.create({
   modalDisabledButton: {
-    margin: 10,
-    marginTop: 10,
-    marginBottom: 20,
+    margin: hp(percHeight(10)),
+    marginTop:  hp(percHeight(10)),
+    marginBottom:  hp(percHeight(20)),
     alignItems: 'stretch',
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop:  hp(percHeight(10)),
+    paddingBottom:  hp(percHeight(10)),
     backgroundColor: 'grey',
   },
   topText: {
     fontWeight: 'bold',
     fontSize: 20,
     alignSelf: 'center',
-    marginTop: 100,
-    padding: 5,
+    marginTop:  hp(percHeight(100)),
+    padding:  hp(percHeight(5)),
     textAlign: 'center',
   },
   modalText: {
     fontWeight: 'bold',
     fontSize: 20,
     alignSelf: 'center',
-    padding: 5,
+    padding:  hp(percHeight(5)),
     textAlign: 'center',
   },
     regForm: {
       alignSelf : 'stretch',
       flex: 1,
-      paddingTop: 50,
+      paddingTop:  hp(percHeight(50)),
       backgroundColor: 'white',
-      paddingLeft: 60,
-      paddingRight: 60,
+      paddingLeft:  hp(percHeight(60)),
+      paddingRight:  hp(percHeight(60)),
       
     },
     header: {
       fontSize: 24,
       color: 'black',
-      paddingBottom: 10,
-      marginBottom: 40,
-      borderBottomColor: 'black' ,
+      paddingBottom:  hp(percHeight(10)),
+      marginBottom:  hp(percHeight(40)),
+      borderBottomColor: 'white',
       borderBottomWidth: 1,
       fontWeight: 'bold',
     },
     subHeader:{
       fontSize: 14,
       color: 'black',
-      borderBottomColor: 'black' ,
+      borderBottomColor: 'white' ,
       borderBottomWidth: 1,
       fontWeight: 'bold',
-      marginBottom: 50,
+      marginBottom:  hp(percHeight(50)),
     },
     textInputBad:{
       alignSelf: 'stretch',
-      height: 40,
-      marginBottom: 30,
+      height:  hp(percHeight(40)),
+      marginBottom:  hp(percHeight(30)),
       color: 'black',
       borderBottomColor: 'red' ,
       borderBottomWidth: 1,
     },
     textInput:{
       alignSelf: 'stretch',
-      height: 40,
-      marginBottom: 30,
+      height:  hp(percHeight(40)),
+      marginBottom:  hp(percHeight(30)),
       color: 'black',
       borderBottomColor: 'black' ,
       borderBottomWidth: 1,
     },
-    description:{
-      alignSelf: 'stretch',
-      height: 40,
-      margin: -5,
-      padding: 5,
-      marginBottom: 30, 
-      color: 'black',
-      borderBottomColor: 'black' ,
-      borderBottomWidth: 1,
-  },
+
   loadButton: {
-    margin: 10,
-    marginTop: 10,
-    marginBottom: 20,
+    margin:  hp(percHeight(10)),
+    marginTop:  hp(percHeight(10)),
+    marginBottom:  hp(percHeight(20)),
     alignItems: 'stretch',
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop:  hp(percHeight(10)),
+    paddingBottom:  hp(percHeight(10)),
     backgroundColor: 'black',
   },
   buttonText: {
@@ -506,25 +474,15 @@ orderFormStyles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-  previewImage: {
-    width: '100%',
-    height: '100%'
-  },
-  imageContainer: {
-    borderWidth: 1,
-    borderColor: 'black',
-    backgroundColor: '#eee',
-    width: '80%',
-    height: 150
-  },
+ 
   modal: { 
-    marginTop: 50,
+    marginTop:  hp(percHeight(50)),
     alignContent: 'center',
    },
 
   modalText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize:  20,
     alignSelf: 'center',
     padding: 5,
     textAlign: 'center',
@@ -532,7 +490,7 @@ orderFormStyles = StyleSheet.create({
 
   titleText: {
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize:  12,
     alignSelf: 'center',
   },
 
