@@ -5,7 +5,7 @@ import {getProducts}from '../api/ShopsApi'
 //import Modal from 'react-native-modal';
 import Fuse from 'fuse.js'
 import { AsyncStorage, RefreshControl } from 'react-native';
-import { heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../api/StyleFuncs'
 
 
@@ -110,7 +110,7 @@ export default class searchProducts extends React.Component{
 
   onChangeQty = (info, name, qty) =>{
     this.setState({disableAddButton: true})
-    if (qty <= 0 || qty == "" ){
+    if (qty <= 0 || isNaN(parseInt(qty)) || qty == "" ){
       qty = 0
     }
     let obj = {info : info, name : name, qty : parseInt(qty)}
@@ -252,6 +252,9 @@ componentDidCatch(error, errorInfo) {
                       <Text style = {listStyles.titleText}>{product.item.name} </Text>
                       <Text style = {listStyles.titleText}> N{product.item.price}</Text>
                   </View>
+                  <View style = {listStyles.sizeContainer}>
+                      <Text style = {listStyles.titleText}>{product.item.size} </Text>
+                  </View>
                   <Text style = {product.item.stock > 0? listStyles.goodText: listStyles.badText} >
                       {product.item.stock > 0? "available": "out of Stock"}
                   </Text>
@@ -279,6 +282,9 @@ componentDidCatch(error, errorInfo) {
                         <Text style = {listStyles.titleText}>{product.name} </Text>
                         <Text style = {listStyles.titleText}> N{product.price}</Text>
                     </View>
+                    <View style = {listStyles.sizeContainer}>
+                      <Text style = {listStyles.titleText}>{product.size} </Text>
+                  </View>
                     <Text style = {product.stock > 0? listStyles.goodText: listStyles.badText} >
                         {product.stock > 0? "available": "out of Stock"}
                     </Text>
@@ -303,6 +309,7 @@ componentDidCatch(error, errorInfo) {
             <ScrollView>
                 <View style={listStyles.modal}>
                 <Text style = {listStyles.modalText}>{this.state.current.name} </Text>
+                <Text style = {listStyles.modalText}>{this.state.current.size} </Text>
                 <Image source = {{uri:this.state.current.imgURL}} style = {listStyles.modalPic} />
                 <Text style = {listStyles.modalText}> N{this.state.current.price}</Text>
                 <Text style = {listStyles.modalText} >enter quantity:</Text>  
@@ -359,14 +366,14 @@ listStyles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percHeight(5)),
+    marginLeft: wp(percWidth(5)),
     alignSelf: 'center',
   },
   goodCenterText: {
     color: 'green',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percHeight(5)),
+    marginLeft: wp(percWidth(5)),
     alignSelf: 'center',
   },
   badCenterText: {
@@ -379,14 +386,14 @@ listStyles = StyleSheet.create({
     color: 'red',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percHeight(5)),
+    marginLeft: wp(percWidth(5)),
     //alignSelf: 'center',
   },
   goodText: {
     color: 'green',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percHeight(5)),
+    marginLeft: wp(percWidth(5)),
     //alignSelf: 'center',
   },
   searchBox: {
@@ -407,7 +414,7 @@ listStyles = StyleSheet.create({
    },
 
   modalPic:{
-    width: hp(percHeight(250)),
+    width: wp(percWidth(250)),
     height: hp(percHeight(250)),
     alignSelf:'center'
   },
@@ -453,8 +460,8 @@ listStyles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     height: hp(percHeight(40)),
-    width: hp(percHeight(60)),
-    marginLeft: hp(percHeight(10)),
+    width: wp(percWidth(60)),
+    marginLeft: wp(percWidth(10)),
     marginBottom: hp(percHeight(10)),
     color: 'black',
     borderBottomColor: 'black' ,
@@ -473,17 +480,24 @@ listStyles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 5,
+    margin: hp(percHeight(5)),
+
+  },
+  sizeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 0,
+    marginLeft: wp(percWidth(5)),
 
   },
   superContainer:{
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 5,
+    margin: hp(percHeight(5)),
 
   },
   mainContainer: {
-    width: hp(percHeight(260)),
+    width: wp(percWidth(260)),
     margin : hp(percHeight(5)),
 
   },
@@ -501,19 +515,18 @@ listStyles = StyleSheet.create({
   newItemText: {
     fontWeight: 'bold',
     fontSize: 12,
-
   },
   
   productPic:{
-    width: hp(percHeight(80)),
-    height: hp(percHeight(80)),
-    margin: 5,
+    width: wp(percWidth(80)),
+    height: wp(percWidth(80)),//used width to maintain ratio- very slight difference
+    margin: wp(percWidth(5)),
 
   },
   productTitle:{
     fontSize: 12,
     fontWeight: 'bold',
-    marginLeft: 5,
+    marginLeft: wp(percWidth(5)),
   },
   location2: {
     height: hp(percHeight(45)),

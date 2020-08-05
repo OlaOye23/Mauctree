@@ -3,5 +3,5 @@ export function percHeight(size){
 }
 
 export function percWidth(size){
-    return String(size/667)+"%"
+    return String(100*(size/375))+"%"
 }

@@ -35,7 +35,7 @@ export default class BasketList extends React.Component{
           store:{
             id: "bvUlmrcHZsUi6SpECE8y",//VGC STORE HARD CODE
             name: "VGC",
-            open: "no"
+            open: ""
           }
       }
   }
@@ -169,7 +169,7 @@ export default class BasketList extends React.Component{
 
   onChangeQty = (info, name, qty) =>{
     this.setState({disableAddButton: true})
-    if (qty <= 0 || qty == "" ){
+    if (parseInt(qty) < 0 || isNaN(parseInt(qty)) || qty == "" ){
       qty = 0
     }
     let obj = {info : info, name : name, qty : parseInt(qty)}
@@ -272,6 +272,8 @@ export default class BasketList extends React.Component{
         else{
           console.log('product not in stock')
           fail = true
+          alert('Error: '+ basketItem.name + ' is no longer in stock. \nThe item has been removed from your basket')
+          await AsyncStorage.setItem(basketItem.name, JSON.stringify({"": ""}))
         }
       
       if (fail === false){
@@ -282,6 +284,7 @@ export default class BasketList extends React.Component{
         )
       }else{
         console.log('fail condition reached')
+        this.componentDidMount()
       }
       })
       } catch (error) {
@@ -324,7 +327,8 @@ export default class BasketList extends React.Component{
       <Text style={basketStyles.modalText}>Total : N {this.total} </Text> 
           {this.state.store.open == "yes" ?
              <Text style = {basketStyles.goodCenterText}>store is open! closes at 11pm</Text> : 
-              <Text style = {basketStyles.badCenterText}>store is closed! opens at 8am</Text> }
+             this.state.store.open == "yes" ? <Text style = {basketStyles.badCenterText}>store is closed! opens at 8am</Text>:
+             <Text style = {basketStyles.neutralCenterText}>checking store...</Text>}
           {this.state.products.map((product,i) =>(
             product.name && 
             <TouchableOpacity key ={i} onPress = {()=> this.onPressItem(product.info)}>
