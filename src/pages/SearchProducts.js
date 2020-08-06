@@ -439,7 +439,7 @@ listStyles = StyleSheet.create({
   modalButton: {
     margin: hp(percHeight(10)),
     marginTop: hp(percHeight(10)),
-    marginBottom: hp(percHeight(20)),
+    marginBottom: hp(percHeight(10)),
     alignItems: 'stretch',
     paddingTop: hp(percHeight(10)),
     paddingBottom: hp(percHeight(10)),
@@ -449,7 +449,7 @@ listStyles = StyleSheet.create({
   modalDisabledButton: {
     margin: hp(percHeight(10)),
     marginTop: hp(percHeight(10)),
-    marginBottom: hp(percHeight(20)),
+    marginBottom: hp(percHeight(10)),
     alignItems: 'stretch',
     paddingTop: hp(percHeight(10)),
     paddingBottom: hp(percHeight(10)),

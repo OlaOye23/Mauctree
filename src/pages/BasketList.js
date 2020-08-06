@@ -318,17 +318,30 @@ export default class BasketList extends React.Component{
       <View >
 
       
-      <ScrollView styles = {basketStyles.allContainer}
-       refreshControl={
-        <RefreshControl
-          refreshing={this.state.refreshing}
-          onRefresh={this._onRefresh.bind(this)}/>}
-       >
+      <View style = {basketStyles.totalContainer}  >
       <Text style={basketStyles.modalText}>Total : N {this.total} </Text> 
           {this.state.store.open == "yes" ?
              <Text style = {basketStyles.goodCenterText}>store is open! closes at 11pm</Text> : 
              this.state.store.open == "yes" ? <Text style = {basketStyles.badCenterText}>store is closed! opens at 8am</Text>:
              <Text style = {basketStyles.neutralCenterText}>checking store...</Text>}
+            <TouchableOpacity 
+              disabled = {this.state.disableCheckout}
+              style = {this.state.disableCheckout === false? basketStyles.modalButton: basketStyles.modalDisabledButton}
+              onPress = {() => this.onCheckOut()}
+              >
+              <Text style = {basketStyles.buttonText}>CHECKOUT</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style = {basketStyles.modalButton} onPress = {() =>this.onClearBasket()}>
+                <Text style = {basketStyles.buttonText}>CLEAR BASKET</Text>
+            </TouchableOpacity>
+      </View>
+      <ScrollView styles = {basketStyles.allContainer}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh.bind(this)}/>}
+            >     
           {this.state.products.map((product,i) =>(
             product.name && 
             <TouchableOpacity key ={i} onPress = {()=> this.onPressItem(product.info)}>
@@ -351,6 +364,10 @@ export default class BasketList extends React.Component{
         
             </TouchableOpacity>
           ))}
+
+          <View style = {listStyles.superContainer}>
+            <Image source = {{uri:"../../assets/white.png"}} style = {listStyles.modalPic} />
+          </View>
 
           <Modal visible={this.state.modalVisible} transparent={false}>
             <ScrollView>
@@ -399,17 +416,7 @@ export default class BasketList extends React.Component{
               </ScrollView>
             </Modal>
 
-            <TouchableOpacity 
-              disabled = {this.state.disableCheckout}
-              style = {this.state.disableCheckout === false? basketStyles.modalButton: basketStyles.modalDisabledButton}
-              onPress = {() => this.onCheckOut()}
-              >
-              <Text style = {basketStyles.buttonText}>CHECKOUT</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style = {basketStyles.modalButton} onPress = {() =>this.onClearBasket()}>
-                <Text style = {basketStyles.buttonText}>CLEAR BASKET</Text>
-            </TouchableOpacity>
+           
       
           </ScrollView>
 
@@ -421,6 +428,10 @@ export default class BasketList extends React.Component{
 
 
 basketStyles = StyleSheet.create({
+
+  totalContainer:{
+    marginBottom:hp(percHeight(10))
+  },
 
   neutralCenterText: {
     color: 'black',
@@ -506,7 +517,7 @@ basketStyles = StyleSheet.create({
   modalButton: {
     margin: hp(percHeight(10)),
     marginTop: hp(percHeight(10)),
-    marginBottom: hp(percHeight(20)),
+    marginBottom: hp(percHeight(10)),
     alignItems: 'stretch',
     paddingTop: hp(percHeight(10)),
     paddingBottom: hp(percHeight(10)),
@@ -516,7 +527,7 @@ basketStyles = StyleSheet.create({
   modalDisabledButton: {
     margin: hp(percHeight(10)),
     marginTop: hp(percHeight(10)),
-    marginBottom: hp(percHeight(20)),
+    marginBottom: hp(percHeight(10)),
     alignItems: 'stretch',
     paddingTop: hp(percHeight(10)),
     paddingBottom: hp(percHeight(10)),
