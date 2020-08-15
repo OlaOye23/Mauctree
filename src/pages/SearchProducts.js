@@ -214,6 +214,7 @@ componentDidCatch(error, errorInfo) {
 
   
   render(){
+
   return (
       
       <View >
@@ -233,6 +234,7 @@ componentDidCatch(error, errorInfo) {
         <TouchableOpacity style = {listStyles.modalButton} onPress = {() => this.onViewBasket() }>
           <Text style = {listStyles.buttonText}>VIEW BASKET</Text>
         </TouchableOpacity>
+        <Text style={listStyles.refreshText}>pull down your screen to refresh stock</Text>
       </View>
       
       <ScrollView styles = {listStyles.allContainer}
@@ -361,7 +363,14 @@ componentDidCatch(error, errorInfo) {
 }
 
 
-listStyles = StyleSheet.create({
+const listStyles = StyleSheet.create({
+  refreshText: {
+    color: 'black',
+    //fontWeight: 'bold',
+    fontSize: 9,
+    marginLeft: wp(percWidth(5)),
+    alignSelf: 'center',
+  },
   neutralCenterText: {
     color: 'black',
     fontWeight: 'bold',

@@ -6,8 +6,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SearchProducts from './src/pages/SearchProducts'
 import OrderForm from './src/pages/OrderForm'
 import BasketList from './src/pages/BasketList'
-import MapPage from './src/pages/MapPage'
-import RequestPage from './src/pages/RequestPage'
+//import MapPage from './src/pages/MapPage'
+//import RequestPage from './src/pages/RequestPage'
 
 import * as React from 'react';
 
@@ -26,7 +26,7 @@ function Shop() {
   );
 }
 
-
+/*
 function Location() {
   return (
     <Stack.Navigator>
@@ -35,6 +35,7 @@ function Location() {
     </Stack.Navigator>
   );
 }
+*/
 
 function App() {//stack
   return (
@@ -55,7 +56,7 @@ function AppTab() {//tab
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="Browse" component={Shop} />
-        <Tab.Screen name="Location" component={Location} />
+        {/*<Tab.Screen name="Location" component={Location} />*/}
       </Tab.Navigator>
     </NavigationContainer>
   );

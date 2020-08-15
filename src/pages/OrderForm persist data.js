@@ -10,7 +10,6 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import {percWidth, percHeight} from '../api/StyleFuncs'
 import syncforeach from 'sync-foreach'
 import * as defaultCheckout from '../../assets/defaultCheckout.json'
-import logo from './logo.png'
 
 
 
@@ -21,10 +20,10 @@ export default class OrderForm extends Component{
         this.state = {
             id: null,
             status: null,
-            name: defaultCheckout.name,
-            address: defaultCheckout.address,
-            house: defaultCheckout.house,
-            phoneNumber: defaultCheckout.phoneNumber,
+            name: null,
+            address: null,
+            house: null,
+            phoneNumber: null,
             longitude: null, 
             latitude: null,
             long2dp: null,
@@ -65,7 +64,16 @@ export default class OrderForm extends Component{
     this.setState({total : total })
     this.getAllLocalData() 
     this.setGeoLoc()
-    this.checkValidity()
+    try{
+      this.setState({name: JSON.parse(this.retrieveLocalData(deafultCheckoutName))})
+      this.setState({phoneNumber: JSON.parse(this.retrieveLocalData(deafultCheckoutPhoneNumber))})
+      this.setState({address: JSON.parse(this.retrieveLocalData(deafultCheckoutAddress))})
+      this.setState({house: JSON.parse(this.retrieveLocalData(deafultCheckoutHouse))})
+      this.checkValidity()
+    }catch(error){
+      console.warn(error)
+    }
+    
     //this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
   }
 
@@ -104,7 +112,7 @@ export default class OrderForm extends Component{
       console.log('out async get')
     }
 
-    clearAllLocalData = async () =>{
+    clearAllLocalData = async () =>{//actually: clearbasket only
       console.log('in async get')
       try{
         await AsyncStorage.getAllKeys( async (err, keys) => {
@@ -114,7 +122,7 @@ export default class OrderForm extends Component{
               let value = store[i][1];
               let prodObj = JSON.parse(value)
               if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
-                await AsyncStorage.setItem(key, JSON.stringify({"null": "null"}))
+                await AsyncStorage.setItem(key, JSON.stringify({"": ""}))
               }
             });
           });
@@ -138,21 +146,21 @@ export default class OrderForm extends Component{
     }
 
     retrieveLocalData = async (key) => {
-    try {
-      const value = await AsyncStorage.getItem(key);
-      if (value !== null) {
-        // We have data!!
-        console.log(value);
+      try {
+        const value = await AsyncStorage.getItem(key);
+        if (value !== null) {
+          // We have data!!
+          console.log(value);
+        }
+        else{
+          console.log('empty')
+        }
+      } catch (error) {
+        console.warn(error)
+        alert('Error: please try again or restart')
       }
-      else{
-        console.log('empty')
-      }
-    } catch (error) {
-      console.warn(error)
-      alert('Error: please try again or restart')
+      return value
     }
-    return value
-  }
 
     getCoordinates() {
       return new Promise(function(resolve, reject) {
@@ -416,16 +424,18 @@ export default class OrderForm extends Component{
       console.log(this.state.invalidPhone)
       console.log(this.state.invalidName)
       console.log(this.state.disableSubmit)
-
-      defaultCheckout.name = this.state.name
-      defaultCheckout.address = this.state.address
-      defaultCheckout.house = this.state.house
-      defaultCheckout.phoneNumber = this.state.phoneNumber
-
-      console.log(defaultCheckout.name )
+      
+      try{
+        this.storeLocalData("deafultCheckoutName", JSON.stringify(this.state.name))
+        this.storeLocalData("deafultCheckoutPhoneNumber", JSON.stringify(this.state.phoneNumber))
+        this.storeLocalData("deafultCheckoutAddress", JSON.stringify(this.state.address))
+        this.storeLocalData("deafultCheckoutHouse", JSON.stringify(this.state.house))
+      } catch(error){
+        console.warn(error)
+      }
 
       this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
-
+      
     }
     
 
@@ -523,11 +533,12 @@ export default class OrderForm extends Component{
 
                 <Modal visible={this.state.modalVisible} transparent={false}>
                   <ScrollView>
-                  <Image source = {logo} style = {orderFormStyles.modalPic} />
+                  <Image source = {{uri:'./logo.png'}} style={orderFormStyles.modalPic}/>
                       <View style={orderFormStyles.modal}>
                       <Text style = {orderFormStyles.modalText}>We're on our way!</Text>
-                      <Text style = {orderFormStyles.modalText}>your order has been submitted! </Text>
-
+                      <Text style = {orderFormStyles.modalText}>your order has been submitted! {"\n"}</Text>
+                      <Text style = {orderFormStyles.modalSmallText}>phone number:{this.state.phoneNumber}</Text>
+                      <Text style = {orderFormStyles.modalSmallText}>address {this.state.address + " " + this.state.address}</Text>
                       <Text style = {orderFormStyles.modalText}>{"\n"} Expect our call in 1 minute </Text>
                       <Text style = {orderFormStyles.modalText}>Expect delivery in 15 minutes </Text>
                       <Text style = {orderFormStyles.modalText}>Thank you for shopping with us! </Text>
@@ -538,11 +549,6 @@ export default class OrderForm extends Component{
                         onPress = {() => this.onCloseModal() }>
                         <Text style = {orderFormStyles.buttonText}>CLOSE</Text>
                       </TouchableOpacity>
-
-
-                      <Text style = {orderFormStyles.modalSmallText}>phone number:{this.state.phoneNumber}</Text>
-                      <Text style = {orderFormStyles.modalSmallText}>address {this.state.house + " " + this.state.address}</Text>
-                      
                       </View>
                   </ScrollView>
                 </Modal>
@@ -554,9 +560,8 @@ export default class OrderForm extends Component{
 }
 
 
-const orderFormStyles = StyleSheet.create({
+orderFormStyles = StyleSheet.create({
   modalPic:{
-    marginTop: wp(percWidth(25)),
     width: wp(percWidth(250)),
     height: hp(percHeight(250)),
     alignSelf:'center'

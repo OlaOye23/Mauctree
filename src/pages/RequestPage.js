@@ -72,7 +72,7 @@ export default class RequestPage extends Component{
   setLocation = async () => {//define a function to retrieve the location of the user
     if (navigator.geolocation) {//if navigation is enabled
       try{
-        //se time
+        //set time
         let today = new Date();
         let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
         let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();

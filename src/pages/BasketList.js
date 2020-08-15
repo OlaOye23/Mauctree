@@ -230,6 +230,12 @@ export default class BasketList extends React.Component{
     console.log(this.state.products)
   }
 
+  asyncForEach = async (array, callback) => {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
+  } 
+
   onCheckOut = async () =>{
     console.log('checking out')
     console.log(this.state.disableCheckout)
@@ -243,6 +249,16 @@ export default class BasketList extends React.Component{
       return
     }
 
+    if (this.total < 2000){
+      alert("You need to spend a minimum of N2000 for our delivery service")
+      fail = true
+      const { navigation } = this.props;
+        navigation.navigate(
+          'Basket',
+        )
+      return fail
+    }
+
     try{
       let store = await getSelectStore(this.state.store)
       this.setState({store: store}) 
@@ -251,7 +267,7 @@ export default class BasketList extends React.Component{
         fail = true
         return
       }
-      items.forEach(async (basketItem) => {
+      await this.asyncForEach(items, async (basketItem) => { 
         console.log(basketItem)
         
         dbItem = await getSelectProduct(basketItem.info, this.onRetrieved)   
@@ -262,8 +278,9 @@ export default class BasketList extends React.Component{
         }
         else{
           console.log('price not equal')
-          this.storeLocalData(basketItem.name, JSON.stringify(basketItem.info))
           basketItem.info.price = dbItem.price
+          this.storeLocalData(basketItem.name, JSON.stringify(basketItem.info))
+          alert(basketItem.name + "'s price has changed since you added it to your basket.\nPlease review the updated price and checkout agian")
         }
         if (parseInt(dbItem.stock) >= parseInt(basketItem.qty)){//need to test
           console.log('product still in stock')
@@ -272,7 +289,7 @@ export default class BasketList extends React.Component{
         else{
           console.log('product not in stock')
           fail = true
-          alert('Error: '+ basketItem.name + ' is no longer in stock. \nThe item has been removed from your basket')
+          alert(basketItem.name + ' is no longer in stock.\nThe item has been removed from your basket')
           await AsyncStorage.setItem(basketItem.name, JSON.stringify({"": ""}))
         }
       
@@ -335,6 +352,7 @@ export default class BasketList extends React.Component{
             <TouchableOpacity style = {basketStyles.modalButton} onPress = {() =>this.onClearBasket()}>
                 <Text style = {basketStyles.buttonText}>CLEAR BASKET</Text>
             </TouchableOpacity>
+            <Text style={basketStyles.refreshText}>pull down your screen to refresh stock</Text>
       </View>
       <ScrollView styles = {basketStyles.allContainer}
             refreshControl={
@@ -365,8 +383,8 @@ export default class BasketList extends React.Component{
             </TouchableOpacity>
           ))}
 
-          <View style = {listStyles.superContainer}>
-            <Image source = {{uri:"../../assets/white.png"}} style = {listStyles.modalPic} />
+          <View style = {basketStyles.superContainer}>
+            <Image source = {{uri:"../../assets/white.png"}} style = {basketStyles.modalPic} />
           </View>
 
           <Modal visible={this.state.modalVisible} transparent={false}>
@@ -427,7 +445,14 @@ export default class BasketList extends React.Component{
 }
 
 
-basketStyles = StyleSheet.create({
+const basketStyles = StyleSheet.create({
+  refreshText: {
+    color: 'black',
+    //fontWeight: 'bold',
+    fontSize: 9,
+    marginLeft: wp(percWidth(5)),
+    alignSelf: 'center',
+  },
 
   totalContainer:{
     marginBottom:hp(percHeight(10))
