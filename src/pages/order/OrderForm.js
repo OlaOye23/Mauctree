@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {addOrder, updateProduct, getSelectStore, getSelectProduct} from '../api/ShopsApi'
+import {addOrder, updateProduct, getSelectStore, getSelectProduct} from '../../api/ShopsApi'
 import {StyleSheet, Modal, Image, TextInput, TouchableOpacity, View, ScrollView} from 'react-native'
 import {Button, Text} from 'react-native-elements'
 import { Dropdown } from 'react-native-material-dropdown';
@@ -7,10 +7,10 @@ import Geocoder from 'react-native-geocoding';
 import { AsyncStorage } from 'react-native';
 import * as yup from 'yup';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
-import {percWidth, percHeight} from '../api/StyleFuncs'
+import {percWidth, percHeight} from '../../api/StyleFuncs'
 import syncforeach from 'sync-foreach'
-import * as defaultCheckout from '../../assets/defaultCheckout.json'
-import logo from './logo.png'
+import * as defaultCheckout from '../../../assets/defaultCheckout.json'
+import logo from '../../../assets/logo.png'
 
 
 
@@ -72,10 +72,11 @@ export default class OrderForm extends Component{
   setGeoLoc = async () =>{
     if (navigator.geolocation) {//if navigation is enabled
       const position =  await this.getCoordinates()
-      lat = position.coords.latitude//.toFixed(4);
-      long = position.coords.longitude//.toFixed(4);
+      let lat = position.coords.latitude//.toFixed(4);
+      let long = position.coords.longitude//.toFixed(4);
       this.setState({latitude: lat, longitude: long})
       this.setState({lat2dp: parseFloat(lat).toFixed(2), long2dp: parseFloat(long).toFixed(2)})//not actually used here
+      console.log(this.state)
     }
   }
 
@@ -87,10 +88,14 @@ export default class OrderForm extends Component{
             stores.map((result, i, store) => {
               let key = store[i][0];
               let value = store[i][1];
-              let prodObj = JSON.parse(value)
-              if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
-                this.basket.push(prodObj)
-                console.log('hahaha'+this.basket)
+              try{
+                let prodObj = JSON.parse(value)
+                if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
+                  this.basket.push(prodObj)
+                  console.log('hahaha'+this.basket)
+                }
+              }catch(error){
+                console.log(error)
               }
             });
           });
@@ -112,10 +117,14 @@ export default class OrderForm extends Component{
             stores.map(async (result, i, store) => {
               let key = store[i][0];
               let value = store[i][1];
+              try{
               let prodObj = JSON.parse(value)
               if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
                 await AsyncStorage.setItem(key, JSON.stringify({"null": "null"}))
               }
+            }catch(error){
+              console.warn(error)
+            }
             });
           });
           console.log('done')   
@@ -128,31 +137,6 @@ export default class OrderForm extends Component{
       console.log('out async get') 
     }
 
-    storeLocalData = async (key, val) => {
-      try {
-        await AsyncStorage.setItem(key, val)
-      } catch (error) {
-        console.warn(error)
-        alert('Error: please try again or restart')
-      }
-    }
-
-    retrieveLocalData = async (key) => {
-    try {
-      const value = await AsyncStorage.getItem(key);
-      if (value !== null) {
-        // We have data!!
-        console.log(value);
-      }
-      else{
-        console.log('empty')
-      }
-    } catch (error) {
-      console.warn(error)
-      alert('Error: please try again or restart')
-    }
-    return value
-  }
 
     getCoordinates() {
       return new Promise(function(resolve, reject) {
@@ -164,56 +148,7 @@ export default class OrderForm extends Component{
         navigator.geolocation.getCurrentPosition(resolve, reject, options);
       });
     }
-    
-    
-    getGeolocation = async (address) =>{
-        console.log('getting order geolocation')
-        if (address === ''){
-          console.log('no address entered')
-          return
-        }
-        try{
-          Geocoder.init('AIzaSyAitgbYx6XMFSzLbwMccZxQ6lQg32hFkPc')
-          json = await Geocoder.from(address+" Victoria Garden City, Ajah, Lagos, Nigeria")
-          let location = json.results[0].geometry.location
-          this.setState({latitude: location.lat, longitude: location.lng, address: address})
-          
-          jsonLagos = await Geocoder.from(" Victoria Garden City, Ajah, Lagos, Nigeria")
-          let locationLagos = jsonLagos.results[0].geometry.location
-          if (location.lat === locationLagos.lat && location.lng == locationLagos.lng){
-              console.log('irreconcilable address')
-              return
-          }
-          else{
-              this.setState({latitude: location.lat, longitude: location.lng, address: address})
-          }
-        } catch (error) {
-            console.warn(error)
-            alert('Error: please try again or restart')
-        }
-    }
-    getAddress = async (lat, long) => {
-      Geocoder.init('AIzaSyAitgbYx6XMFSzLbwMccZxQ6lQg32hFkPc')
-      try{
-          let json = await Geocoder.from(lat, long)
-          let addressComponent = json.results[0].address_components[0]['short_name']+',' +json.results[0].address_components[1]['short_name'] + ','+json.results[0].address_components[2]['short_name'];
-          this.setState({geoAddress: addressComponent})
-          console.log(addressComponent)
-          return addressComponent
-      } catch (error) {
-          console.warn(error)
-          alert('Error: please try again or restart')
-      }
-    }
 
-
-
-
-    
-    updateLocation = async (address) => {
-      await this.getGeolocation(address)
-      await this.getAddress(this.state.latitude, this.state.longitude)
-    }
 
     onProductUploaded = () =>{
       console.log('product stock updated')
@@ -298,7 +233,7 @@ export default class OrderForm extends Component{
           return fail
         }
         await this.asyncForEach(items, async (basketItem) => { 
-          dbItem = await getSelectProduct(basketItem.info, this.onRetrieved)   
+          let dbItem = await getSelectProduct(basketItem.info, this.onRetrieved)   
           if (parseInt(dbItem.price) == parseInt(basketItem.info.price)){
             console.log('price equal')
           }
@@ -335,7 +270,7 @@ export default class OrderForm extends Component{
     }
 
     onClickSubmit = async () => {
-      fail = true
+      alert("your order is being submitted \n please wait...")
       try{
          await this.checkOutCheck().then( async (fail)=>{
           console.log('fail on submit i.e 2 '+ fail)
@@ -343,10 +278,9 @@ export default class OrderForm extends Component{
             //await this.sendAlert(this.state) //comment only in test
             await addOrder(this.state, this.onOrderUploaded)
             await this.clearAllLocalData()
-            this.setState({modalVisible: true})
             let prods =  this.basket
-            prods.forEach( async (prod)=>{
-              dbItem = await getSelectProduct(prod.info)
+            await this.asyncForEach(prods,async (prod)=>{//change to asyncforech
+              let dbItem = await getSelectProduct(prod.info)
               prod.info.stock = Math.max(dbItem.stock - prod.qty,0)
               await updateProduct(prod.info, this.onProductUploaded)
             })
@@ -360,12 +294,14 @@ export default class OrderForm extends Component{
         console.warn(error)
         alert('Error: please try again or restart')
       }
+      const { navigation } = this.props;
+      navigation.navigate(
+        'Order Complete',
+        {order: this.state}
+      )
     }
 
-    onCloseModal = () => {
-      const { navigation } = this.props
-      navigation.navigate('Find a Product')
-    }
+ 
     
 
 
@@ -432,8 +368,6 @@ export default class OrderForm extends Component{
 
     render(){
         return(
-         
-            
             <ScrollView style = {orderFormStyles.regForm}>
                 <View style = {{marginBottom: 300}}>
                 <Text style = {orderFormStyles.header} >delivery details</Text>
@@ -512,7 +446,7 @@ export default class OrderForm extends Component{
                 <TouchableOpacity 
                   disabled = {this.state.disableSubmit}
                   style = {this.state.disableSubmit === false? orderFormStyles.loadButton: orderFormStyles.modalDisabledButton} 
-                  onPress = {this.onClickSubmit}>
+                  onPress = {() => this.onClickSubmit()}>
                   <Text style = {orderFormStyles.buttonText}>SUBMIT</Text>
                 </TouchableOpacity>
 
@@ -521,31 +455,7 @@ export default class OrderForm extends Component{
 
                 </View>
 
-                <Modal visible={this.state.modalVisible} transparent={false}>
-                  <ScrollView>
-                  <Image source = {logo} style = {orderFormStyles.modalPic} />
-                      <View style={orderFormStyles.modal}>
-                      <Text style = {orderFormStyles.modalText}>We're on our way!</Text>
-                      <Text style = {orderFormStyles.modalText}>your order has been submitted! </Text>
-
-                      <Text style = {orderFormStyles.modalText}>{"\n"} Expect our call in 1 minute </Text>
-                      <Text style = {orderFormStyles.modalText}>Expect delivery in 15 minutes </Text>
-                      <Text style = {orderFormStyles.modalText}>Thank you for shopping with us! </Text>
-                     
-                      <TouchableOpacity 
-                        disabled = {this.state.disableSubmit }
-                        style = {orderFormStyles.loadButton} 
-                        onPress = {() => this.onCloseModal() }>
-                        <Text style = {orderFormStyles.buttonText}>CLOSE</Text>
-                      </TouchableOpacity>
-
-
-                      <Text style = {orderFormStyles.modalSmallText}>phone number:{this.state.phoneNumber}</Text>
-                      <Text style = {orderFormStyles.modalSmallText}>address {this.state.house + " " + this.state.address}</Text>
-                      
-                      </View>
-                  </ScrollView>
-                </Modal>
+                
             </ScrollView>
       
         )

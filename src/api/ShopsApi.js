@@ -21,7 +21,7 @@ firebase.initializeApp(config);
 //get a specific store
 export async function getSelectStore(selectedStore){
   console.log('in load selected store')
-  store = null 
+  let store = null 
   const db = firebase.firestore()
   let query = db.collection('stores')
                       .where('name', '==', selectedStore.name)
@@ -30,7 +30,7 @@ export async function getSelectStore(selectedStore){
   await query.get().then(d00=> {
     console.log('still running load')
     d00.forEach(d0 => {
-      data = d0.data()
+      let data = d0.data()
       store = data
       console.log('in db')
       console.log(store)
@@ -43,8 +43,8 @@ export async function getSelectStore(selectedStore){
 //get list of products
 export async function getProducts(productsRetreived) {
   console.log('in getProducts')
-  var productList = [];
-  var snapshot = await firebase.firestore()
+  let productList = [];
+  let snapshot = await firebase.firestore()
     .collection('products')
     .orderBy('createdAt','desc')
     .get()
@@ -73,7 +73,7 @@ export async function addOrder(order, addComplete) {
 
 export async function getSelectProduct(selectedProduct, retrievedSelectedProduct){
   console.log('in load selected product')
-  product = null 
+  let product = null 
   const db = firebase.firestore()
   let query = db.collection('products')
                       .where('name', '==', selectedProduct.name)
@@ -82,7 +82,7 @@ export async function getSelectProduct(selectedProduct, retrievedSelectedProduct
   await query.get().then(d00=> {
     console.log('still running load')
     d00.forEach(d0 => {
-      data = d0.data()
+      let data = d0.data()
       product = data
       console.log('in db')
       console.log(product)

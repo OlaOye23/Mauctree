@@ -3,9 +3,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import SearchProducts from './src/pages/SearchProducts'
-import OrderForm from './src/pages/OrderForm'
-import BasketList from './src/pages/BasketList'
+import SearchProducts from './src/pages/search/SearchProducts'
+import AddItem from './src/pages/search/AddItem'
+
+import OrderForm from './src/pages/order/OrderForm'
+import OrderComplete from './src/pages/order/OrderComplete'
+
+import BasketList from './src/pages/basket/BasketList'
+import UpdateItem from './src/pages/basket/UpdateItem'
+
 //import MapPage from './src/pages/MapPage'
 //import RequestPage from './src/pages/RequestPage'
 
@@ -42,6 +48,22 @@ function App() {//stack
     <NavigationContainer>
       <Stack.Navigator>
         {/*<Stack.Screen name="Welcome" component={LogoPage} />*/}
+        <Stack.Screen name="Search Products" component={SearchProducts} />
+        <Stack.Screen name="Add Item" component={AddItem} />
+        <Stack.Screen name="Basket" component={BasketList} />
+        <Stack.Screen name="Update Item" component={UpdateItem} />
+        <Stack.Screen name="Order Details" component={OrderForm} />
+        <Stack.Screen name="Order Complete" component={OrderComplete} />
+
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+function AppX() {//stack
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
         <Stack.Screen name="Find a Product" component={SearchProducts} />
         <Stack.Screen name="Basket" component={BasketList} />
         <Stack.Screen name="Order Details" component={OrderForm} />

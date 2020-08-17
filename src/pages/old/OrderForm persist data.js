@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {addOrder, updateProduct, getSelectStore, getSelectProduct} from '../api/ShopsApi'
+import {addOrder, updateProduct, getSelectStore, getSelectProduct} from '../../api/ShopsApi'
 import {StyleSheet, Modal, Image, TextInput, TouchableOpacity, View, ScrollView} from 'react-native'
 import {Button, Text} from 'react-native-elements'
 import { Dropdown } from 'react-native-material-dropdown';
@@ -7,7 +7,7 @@ import Geocoder from 'react-native-geocoding';
 import { AsyncStorage } from 'react-native';
 import * as yup from 'yup';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
-import {percWidth, percHeight} from '../api/StyleFuncs'
+import {percWidth, percHeight} from '../../api/StyleFuncs'
 import syncforeach from 'sync-foreach'
 import * as defaultCheckout from '../../assets/defaultCheckout.json'
 
