@@ -7,6 +7,7 @@ import Fuse from 'fuse.js'
 import { RefreshControl } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'
+import * as myEPT from '../../../assets/myEPT.json'
 
 
 
@@ -128,6 +129,12 @@ onViewBasket = () =>{
   navigation.navigate('Basket')
 }
 
+onViewOrders = () =>{
+  console.warn(myEPT.ept)
+  const { navigation } = this.props;
+  navigation.navigate('My Orders')
+}
+
 
 render(){
   return (
@@ -143,6 +150,11 @@ render(){
         <TouchableOpacity style = {SearchProdStyles.modalButton} onPress = {() => this.onViewBasket() }>
           <Text style = {SearchProdStyles.buttonText}>VIEW BASKET</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style = {SearchProdStyles.modalButton} onPress = {() => this.onViewOrders() }>
+          <Text style = {SearchProdStyles.buttonText}>MY ORDERS</Text>
+        </TouchableOpacity>
+
       </View>
       
       <ScrollView styles = {SearchProdStyles.allContainer}

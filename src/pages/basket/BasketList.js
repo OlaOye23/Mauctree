@@ -290,7 +290,7 @@ export default class BasketList extends React.Component{
       <Text style={basketStyles.modalText}>Total : N {this.total} </Text> 
           {this.state.store.open == "yes" ?
              <Text style = {basketStyles.goodCenterText}>store is open! closes at 11pm</Text> : 
-             this.state.store.open == "yes" ? <Text style = {basketStyles.badCenterText}>store is closed! opens at 8am</Text>:
+             this.state.store.open == "no" ? <Text style = {basketStyles.badCenterText}>store is closed! opens at 8am</Text>:
              <Text style = {basketStyles.neutralCenterText}>checking store...</Text>}
             <TouchableOpacity 
               disabled = {this.state.disableCheckout}

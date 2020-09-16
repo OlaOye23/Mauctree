@@ -2,15 +2,17 @@ import React, {Component} from 'react'
 import {addOrder, updateProduct, getSelectStore, getSelectProduct} from '../../api/ShopsApi'
 import {StyleSheet, Modal, Image, TextInput, TouchableOpacity, View, ScrollView} from 'react-native'
 import {Button, Text} from 'react-native-elements'
-import { Dropdown } from 'react-native-material-dropdown';
-import Geocoder from 'react-native-geocoding'; 
 import { AsyncStorage } from 'react-native';
 import * as yup from 'yup';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'
-import syncforeach from 'sync-foreach'
 import * as defaultCheckout from '../../../assets/defaultCheckout.json'
-import logo from '../../../assets/logo.png'
+import * as myEPT from '../../../assets/myEPT.json'
+
+
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 
 
 
@@ -46,6 +48,7 @@ export default class OrderForm extends Component{
               name: "VGC",
               open: ""
             },
+            token: myEPT.ept
         }
     }
 
@@ -63,10 +66,47 @@ export default class OrderForm extends Component{
     const { route } = this.props;
     const { total } = route.params;
     this.setState({total : total })
+
+    
+
     this.getAllLocalData() 
     this.setGeoLoc()
     this.checkValidity()
     //this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
+
+    let _token = await this.registerForPushNotificationsAsync()
+    this.setState({token: _token})
+    console.warn(_token)
+  }
+
+  registerForPushNotificationsAsync = async () => {
+    let token;
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      //console.log("token: ",token); // log token to send to user
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+  
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+    return token;
   }
 
   setGeoLoc = async () =>{

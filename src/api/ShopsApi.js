@@ -15,8 +15,25 @@ const config = {//firebase project configuration
 firebase.initializeApp(config);
 //firebase.analytics();
 
-
-
+//get orders
+export async function getOrders(ordersRetreived, pushToken ) {
+  console.log('in getOrders')
+  var orderList = [];
+  var snapshot = await firebase.firestore()
+    .collection('orders')
+    .where('token', '==', pushToken)
+    //.where('status', '==', "open")
+    .orderBy('timeOpened','desc')
+    .get()
+  snapshot.forEach((doc) => {
+    const orderItem = doc.data();
+    orderItem.id = doc.id;
+    orderList.push(orderItem);
+  });
+  console.log(orderList)
+  ordersRetreived(orderList);
+  console.log('out getOrders')
+}
 
 //get a specific store
 export async function getSelectStore(selectedStore){
