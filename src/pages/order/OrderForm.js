@@ -7,12 +7,12 @@ import * as yup from 'yup';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'
 import * as defaultCheckout from '../../../assets/defaultCheckout.json'
-import * as myEPT from '../../../assets/myEPT.json'
-
 
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
+
+import config from '../../../config'
 
 
 
@@ -27,6 +27,7 @@ export default class OrderForm extends Component{
             address: defaultCheckout.address,
             house: defaultCheckout.house,
             phoneNumber: defaultCheckout.phoneNumber,
+            phoneNumber2: defaultCheckout.phoneNumber2,
             longitude: null, 
             latitude: null,
             long2dp: null,
@@ -41,6 +42,7 @@ export default class OrderForm extends Component{
             disableSubmit: true,
             invalidName: true,
             invalidPhone: true,
+            invalidPhone2: true,
             invalidAddress: true,
             invalidHouse: true,
             store:{
@@ -48,7 +50,7 @@ export default class OrderForm extends Component{
               name: "VGC",
               open: ""
             },
-            token: myEPT.ept
+            token: ""
         }
     }
 
@@ -220,7 +222,7 @@ export default class OrderForm extends Component{
         });
       }
       try{
-        sendPushNotification("ExponentPushToken[qY0HHeKM_FS_EwLWGjf0PI]") 
+        sendPushNotification(config.PUSH_TOKEN) 
       } catch (error) {
         console.warn(error)
         alert('Error: please try again or restart')
@@ -315,7 +317,7 @@ export default class OrderForm extends Component{
          await this.checkOutCheck().then( async (fail)=>{
           console.log('fail on submit i.e 2 '+ fail)
           if (fail === false){
-            //await this.sendAlert(this.state) //comment only in test
+            await this.sendAlert(this.state) //comment only in test
             await addOrder(this.state, this.onOrderUploaded)
             await this.clearAllLocalData()
             let prods =  this.basket
@@ -363,6 +365,14 @@ export default class OrderForm extends Component{
       else{
         this.state.invalidPhone = false
       }
+      //check phoneNumber2
+      if (this.state.phoneNumber2 !== this.state.phoneNumber){
+        console.log('invalid phone')
+        this.state.invalidPhone2 = true
+      }
+      else{
+        this.state.invalidPhone2 = false
+      }
       //check address
       if (this.state.address === null || this.state.address === ""){
         console.log('invalid address')
@@ -381,10 +391,10 @@ export default class OrderForm extends Component{
       }
 
       
-      if (this.state.invalidAddress || this.state.invalidPhone || this.state.invalidName){
+      if (this.state.invalidAddress || this.state.invalidPhone || this.state.invalidPhone2 || this.state.invalidName ){
         this.state.disableSubmit = true
       }
-      else if (this.state.invalidAddress && this.state.invalidPhone && this.state.invalidName){
+      else if (this.state.invalidAddress && this.state.invalidPhone && this.state.invalidPhone2 && this.state.invalidName){
         this.state.disableSubmit = false
       }
 
@@ -422,18 +432,6 @@ export default class OrderForm extends Component{
                     this.setState({ name: text})
                     setTimeout(()=>this.checkValidity(),500)
                     }}/>
-
-                <Text style = {orderFormStyles.subHeader} >your contact number</Text>  
-                <TextInput style = {this.state.invalidPhone === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
-                  keyboardType="numeric"
-                  placeholderTextColor = {'grey'}
-                  placeholder = {"e.g 0801 234 5678"}
-                  underlineColorAndroid= {'transparent'}
-                  value={this.state.phoneNumber}
-                  onChangeText={(text) =>{
-                    this.setState({ phoneNumber: text})
-                    setTimeout(()=>this.checkValidity(),500)
-                    }}/>
              
 
                 <Text style = {orderFormStyles.subHeader} >house number:</Text>  
@@ -457,6 +455,30 @@ export default class OrderForm extends Component{
                      this.setState({ address: text})
                      setTimeout(()=>this.checkValidity(),500)
                      }}/>
+
+                <Text style = {orderFormStyles.subHeader} >your contact number</Text>  
+                <TextInput style = {this.state.invalidPhone === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
+                  keyboardType="numeric"
+                  placeholderTextColor = {'grey'}
+                  placeholder = {"e.g 0801 234 5678"}
+                  underlineColorAndroid= {'transparent'}
+                  value={this.state.phoneNumber}
+                  onChangeText={(text) =>{
+                    this.setState({ phoneNumber: text})
+                    setTimeout(()=>this.checkValidity(),500)
+                    }}/>
+
+                <Text style = {orderFormStyles.subHeader} >confirm contact number</Text>  
+                <TextInput style = {this.state.invalidPhone2 === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
+                  keyboardType="numeric"
+                  placeholderTextColor = {'grey'}
+                  placeholder = {"e.g 0801 234 5678"}
+                  underlineColorAndroid= {'transparent'}
+                  value={this.state.phoneNumber2}
+                  onChangeText={(text) =>{
+                    this.setState({ phoneNumber2: text})
+                    setTimeout(()=>this.checkValidity(),500)
+                    }}/>
 
                {/* <TouchableOpacity style = {orderFormStyles.loadButton} onPress = {() => this.updateLocation(this.state.address)}>
                 <Text style = {orderFormStyles.buttonText}>FIND CLOSE BY</Text>

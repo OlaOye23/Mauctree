@@ -1,15 +1,16 @@
 import firebase from 'firebase';
 import '@firebase/firestore'
+import fbconfig from '../../fbconfig'
 
 const config = {//firebase project configuration
-  apiKey: "AIzaSyCaIAv4g9dzPRnJneyv6Yofu8X93ReYwYU",
-  authDomain: "mobishopvgc.firebaseapp.com",
-  databaseURL: "https://mobishopvgc.firebaseio.com",
-  projectId: "mobishopvgc",
-  storageBucket: "mobishopvgc.appspot.com",
-  messagingSenderId: "578653668100",
-  appId: "1:578653668100:web:75bffa6e62bea2b1d80651",
-  measurementId: "G-J8HH92VW1Q"
+  apiKey: fbconfig.API_KEY,
+  authDomain: fbconfig.AUTH_DOMAIN,
+  databaseURL: fbconfig.DATABASE_URL,
+  projectId: fbconfig.PROJECT_ID,
+  storageBucket: fbconfig.STORAGE_BUCKET,
+  messagingSenderId: fbconfig.MESSAGE_ID,
+  appId: fbconfig.APP_ID,
+  measurementId: fbconfig.MEASUREMENT_ID
 };
 // Initialize Firebase
 firebase.initializeApp(config);

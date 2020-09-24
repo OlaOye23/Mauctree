@@ -38,9 +38,7 @@ export default class SearchProducts extends React.Component{
       }
   }
 
-  static navigationOptions = {
-    title: "Search Products",
-  };  
+
 
   componentDidMount = async () =>{
     if (this.props.params){
@@ -152,7 +150,7 @@ render(){
         </TouchableOpacity>
 
         <TouchableOpacity style = {SearchProdStyles.modalButton} onPress = {() => this.onViewOrders() }>
-          <Text style = {SearchProdStyles.buttonText}>MY ORDERS</Text>
+          <Text style = {SearchProdStyles.buttonText}>VIEW ORDERS</Text>
         </TouchableOpacity>
 
       </View>
@@ -281,7 +279,7 @@ const SearchProdStyles = StyleSheet.create({
   searchBox: {
     height: hp(percHeight(50)),
     marginTop: 0,
-    marginBottom: 0,
+    marginBottom: 10,
     paddingLeft: 0,
     textAlign: 'center',
     fontSize: 18,
@@ -319,9 +317,7 @@ const SearchProdStyles = StyleSheet.create({
   },
   
   modalButton: {
-    margin: hp(percHeight(10)),
-    marginTop: hp(percHeight(10)),
-    marginBottom: hp(percHeight(10)),
+    margin: hp(percHeight(5)),
     alignItems: 'stretch',
     paddingTop: hp(percHeight(10)),
     paddingBottom: hp(percHeight(10)),

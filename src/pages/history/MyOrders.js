@@ -11,6 +11,11 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 
+import { widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import {percWidth, percHeight} from '../../api/StyleFuncs'
+
+import config from '../../../config'
+
 
 
 
@@ -139,26 +144,26 @@ openGps = (lat, lng) => {
       
       <View >
 
-      <ScrollView styles = {orderStyles.allContainer}
+      <ScrollView styles = {orderHistoryStyles.allContainer}
        refreshControl={
         <RefreshControl
           refreshing={this.state.refreshing}
           onRefresh={this._onRefresh.bind(this)}/>}
        >
       
-      <Text style={orderStyles.titleText}>Pull down to update </Text> 
+      {/*<Text style={orderHistoryStyles.titleText}>Pull down to update </Text> */}
 
           { this.state.orders.map((order,i) =>(
               order.name && 
               <TouchableOpacity style = {{borderColor: '#c0c0c0', borderWidth: 1,}} key ={i} onPress = {()=> this.onPressItem(order)}>
-                <View style = {orderStyles.superContainer}>
-                <View style = {orderStyles.mainContainer}>
-                    <View style = {orderStyles.titleContainer}>
-                        <Text style = {orderStyles.titleText}>{order.name} </Text>
-                        <Text style = {orderStyles.titleText}> {'Total: N' + order.total } </Text>
+                <View style = {orderHistoryStyles.superContainer}>
+                <View style = {orderHistoryStyles.mainContainer}>
+                    <View style = {orderHistoryStyles.titleContainer}>
+                        <Text style = {orderHistoryStyles.titleText}>{order.name} </Text>
+                        <Text style = {orderHistoryStyles.titleText}> {'Total: N' + order.total } </Text>
                     </View>
-                    <Text style = {orderStyles.neutralText} >{order.address}</Text>
-                    <Text style = {orderStyles.description}>{order.phoneNumber}</Text>
+                    <Text style = {orderHistoryStyles.neutralText} >{order.address}</Text>
+                    <Text style = {orderHistoryStyles.description}>{order.phoneNumber}</Text>
                 </View>
               </View>
 
@@ -171,23 +176,18 @@ openGps = (lat, lng) => {
           <Modal visible={this.state.modalVisible} transparent={false}>
           {(this.state.current !== undefined) &&
             <View>
-              <Text style = {orderStyles.modalTextFirst}>{this.state.current.name}</Text>
-              <Text style = {orderStyles.modalText}>{this.state.current.address}</Text>
-              <Text style = {orderStyles.modalText}>{'Total: N' + this.state.current.total}</Text>
+              <Text style = {orderHistoryStyles.modalTextFirst}>{this.state.current.name}</Text>
+              <Text style = {orderHistoryStyles.modalText}>{this.state.current.address}</Text>
+              <Text style = {orderHistoryStyles.modalText}>{'Total: N' + this.state.current.total}</Text>
+              
               <TouchableOpacity 
-                style = {orderStyles.modalButton} 
-                onPress = {() => this.openGps(this.state.current.latitude, this.state.current.longitude)}
+                style = {orderHistoryStyles.modalButton} 
+                onPress = {() => this.makeCall(config.CONTACT_US_NO)}
                 >
-                <Text style = {orderStyles.buttonText}>GET DIRECTIONS</Text>
+                <Text style = {orderHistoryStyles.buttonText}>CALL US</Text>
               </TouchableOpacity>
-              <TouchableOpacity 
-                style = {orderStyles.modalButton} 
-                onPress = {() => this.makeCall(this.state.current.phoneNumber)}
-                >
-                <Text style = {orderStyles.buttonText}>CALL US</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style = {orderStyles.modalButton} onPress = {() => this.onCloseModal() }>
-                <Text style = {orderStyles.buttonText}>CLOSE</Text>
+              <TouchableOpacity style = {orderHistoryStyles.modalButton} onPress = {() => this.onCloseModal() }>
+                <Text style = {orderHistoryStyles.buttonText}>CLOSE</Text>
               </TouchableOpacity>
             </View>
           }
@@ -195,17 +195,17 @@ openGps = (lat, lng) => {
             { (this.state.current !== undefined) && this.state.current.basket.map((product,i) =>(
               product.name && 
               
-                <View key ={i} style = {orderStyles.superContainer}>
-                <Image source = {{uri:product.info.imgURL}} style = {orderStyles.productPic} />
-                <View style = {orderStyles.mainContainer}>
-                    <View style = {orderStyles.titleContainer}>
-                        <Text style = {orderStyles.titleText}>{product.info.name} </Text>
-                        <Text style = {orderStyles.titleText}> N{product.info.price}</Text>
+                <View key ={i} style = {orderHistoryStyles.superContainer}>
+                <Image source = {{uri:product.info.imgURL}} style = {orderHistoryStyles.productPic} />
+                <View style = {orderHistoryStyles.mainContainer}>
+                    <View style = {orderHistoryStyles.titleContainer}>
+                        <Text style = {orderHistoryStyles.titleText}>{product.info.name} </Text>
+                        <Text style = {orderHistoryStyles.titleText}> N{product.info.price}</Text>
                     </View>
-                    <Text style = {orderStyles.neutralText} >
+                    <Text style = {orderHistoryStyles.neutralText} >
                         {product.qty+ " in basket"}
                     </Text>
-                    <Text style = {orderStyles.neutralText}>
+                    <Text style = {orderHistoryStyles.neutralText}>
                         {"Total: N"+ product.qty* product.info.price } 
                     </Text>
                 </View>
@@ -225,36 +225,36 @@ openGps = (lat, lng) => {
 }
 
 
-orderStyles = StyleSheet.create({
+const orderHistoryStyles = StyleSheet.create({
   neutralText: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 10,
-    marginLeft: 5,
+    fontSize: wp(percWidth(12)),
+    marginLeft: wp(percWidth(5)),
     //alignSelf: 'center',
   },
   warnText: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize: 12,
     alignSelf: 'center',
   },
   badText: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: 10,
-    marginLeft: 5,
+    fontSize: 12,
+    marginLeft: wp(percWidth(5)),
     //alignSelf: 'center',
   },
   goodText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: 10,
-    marginLeft: 5,
+    fontSize: 12,
+    marginLeft: wp(percWidth(5)),
     //alignSelf: 'center',
   },
   searchBox: {
-    height: 50,
+    height: wp(percWidth(50)),
     marginTop: 0,
     marginBottom: 0,
     paddingLeft: 0,
@@ -266,29 +266,29 @@ orderStyles = StyleSheet.create({
   },
   
   productPic:{
-    width: 80,
-    height: 80,
-    margin: 5,
+    width: wp(percWidth(80)),
+    height: wp(percWidth(80)),
+    margin: wp(percWidth(5)),
 
   },
 
   modal: { 
-    marginTop: 50,
+    marginTop: wp(percWidth(50)),
     alignContent: 'center',
    },
 
   modalPic:{
-    width: 250,
-    height: 250,
+    width: wp(percWidth(250)),
+    height: wp(percWidth(250)),
     alignSelf:'center'
   },
 
   modalTextFirst: {
-    marginTop: 50,
+    marginTop: wp(percWidth(50)),
     fontWeight: 'bold',
     fontSize: 20,
     alignSelf: 'center',
-    padding: 5,
+    padding: wp(percWidth(5)),
     textAlign: 'center',
   },
 
@@ -296,39 +296,39 @@ orderStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     alignSelf: 'center',
-    padding: 5,
+    padding: wp(percWidth(5)),
     textAlign: 'center',
   },
   modalButtonFirst: {
-    margin: 10,
-    marginTop: 50,
-    marginBottom: 20,
+    margin: wp(percWidth(10)),
+    marginTop: wp(percWidth(50)),
+    marginBottom: wp(percWidth(20)),
     alignItems: 'stretch',
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: wp(percWidth(10)),
+    paddingBottom: wp(percWidth(10)),
     backgroundColor: 'black',
   },
   
   modalButton: {
-    margin: 10,
-    marginTop: 10,
-    marginBottom: 20,
+    margin: wp(percWidth(5)),
+    marginTop: wp(percWidth(5)),
+    marginBottom: wp(percWidth(5)),
     alignItems: 'stretch',
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: wp(percWidth(10)),
+    paddingBottom: wp(percWidth(10)),
     backgroundColor: 'black',
   },
 
   textInput:{
     alignSelf: 'center',
     textAlign: 'center',
-    height: 40,
-    width: 60,
-    marginLeft: 10,
-    marginBottom: 10,
+    height: wp(percWidth(40)),
+    width: wp(percWidth(60)),
+    marginLeft: wp(percWidth(10)),
+    marginBottom: wp(percWidth(10)),
     color: 'black',
     borderBottomColor: 'black' ,
-    borderBottomWidth: 1,
+    borderBottomWidth: wp(percWidth(1)),
   },
   buttonText: {
     fontSize: 12,
@@ -338,83 +338,64 @@ orderStyles = StyleSheet.create({
   },
   
   allContainer:{
-    marginTop: 100,  // doesnt do anything
+    marginTop: wp(percWidth(100)),  // doesnt do anything
   },
   titleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 5,
+    margin: wp(percWidth(5)),
 
   },
   superContainer:{
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 5,
+    margin: wp(percWidth(5)),
 
   },
   mainContainer: {
-    width: 260,
-    margin : 5,
+    width: wp(percWidth(260)),
+    margin : wp(percWidth(5)),
 
   },
   description: {
-    margin: 5,
+    margin: wp(percWidth(5)),
     fontSize: 10,
 
   },
   titleText: {
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize: 12,
     alignSelf: 'center',
   },
   
   newItemText: {
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize: 12,
 
   },
   
   orderPic:{
-    width: 80,
-    height: 80,
-    margin: 5,
+    width: wp(percWidth(80)),
+    height: wp(percWidth(80)),
+    margin: wp(percWidth(5)),
 
   },
   orderTitle:{
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: 'bold',
-    marginLeft: 5,
+    marginLeft: wp(percWidth(5)),
   },
   location2: {
-    height: 45,
-    marginTop: 0,
-    marginBottom: 5,
+    height: wp(percWidth(45)),
+    marginTop: wp(percWidth(0)),
+    marginBottom: wp(percWidth(5)),
     textAlign: 'center',
     fontSize: 16,
     color: 'grey',
     borderColor: 'grey',
-    borderWidth: 1,
+    borderWidth: wp(percWidth(1)),
   },    
 
 
 })
 
-orderOtherStyles = StyleSheet.create({
-  button: {
-      marginTop: 5,
-      marginBottom: 5,
-      width: 350,
-      height: 40,
-      alignItems: 'center',
-      alignSelf: 'center',
-      backgroundColor: '#000000'
-    },
-
-    buttonText: {
-      textAlign: 'center',
-      margin: 14,
-      color: 'white',
-      fontWeight: 'bold',
-      fontSize: 12,
-    },
-})
