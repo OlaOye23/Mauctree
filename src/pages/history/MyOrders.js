@@ -162,7 +162,7 @@ openGps = (lat, lng) => {
                         <Text style = {orderHistoryStyles.titleText}>{order.name} </Text>
                         <Text style = {orderHistoryStyles.titleText}> {'Total: N' + order.total } </Text>
                     </View>
-                    <Text style = {orderHistoryStyles.neutralText} >{order.address}</Text>
+                    <Text style = {orderHistoryStyles.neutralText} >{order.address}{order.house}</Text>
                     <Text style = {orderHistoryStyles.description}>{order.phoneNumber}</Text>
                 </View>
               </View>

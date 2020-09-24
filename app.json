@@ -23,6 +23,10 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "supportsTablet": true,
+      "package": "com.adadevng.shopmob"
     }
   }
 }

@@ -437,9 +437,7 @@ const basketStyles = StyleSheet.create({
   },
   
   modalButton: {
-    margin: hp(percHeight(10)),
-    marginTop: hp(percHeight(10)),
-    marginBottom: hp(percHeight(10)),
+    margin: hp(percHeight(5)),
     alignItems: 'stretch',
     paddingTop: hp(percHeight(10)),
     paddingBottom: hp(percHeight(10)),
@@ -447,9 +445,7 @@ const basketStyles = StyleSheet.create({
   },
 
   modalDisabledButton: {
-    margin: hp(percHeight(10)),
-    marginTop: hp(percHeight(10)),
-    marginBottom: hp(percHeight(10)),
+    margin: hp(percHeight(5)),
     alignItems: 'stretch',
     paddingTop: hp(percHeight(10)),
     paddingBottom: hp(percHeight(10)),
