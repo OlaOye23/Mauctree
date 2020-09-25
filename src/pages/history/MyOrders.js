@@ -177,7 +177,7 @@ openGps = (lat, lng) => {
           {(this.state.current !== undefined) &&
             <View>
               <Text style = {orderHistoryStyles.modalTextFirst}>{this.state.current.name}</Text>
-              <Text style = {orderHistoryStyles.modalText}>{this.state.current.address}</Text>
+              <Text style = {orderHistoryStyles.modalText}>{this.state.current.address} {this.state.current.house}</Text>
               <Text style = {orderHistoryStyles.modalText}>{'Total: N' + this.state.current.total}</Text>
               
               <TouchableOpacity 
