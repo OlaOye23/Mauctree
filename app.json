@@ -25,7 +25,8 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.adadevng.shopmob"
+      "package": "com.adadevng.shopmob",
+      "versionCode": 1
     }
   }
 }
