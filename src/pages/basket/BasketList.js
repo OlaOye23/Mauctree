@@ -127,6 +127,10 @@ export default class BasketList extends React.Component{
       await this.clearAllLocalData().then(()=>{
         this.setState({disableCheckout: false})
         this.componentDidMount()
+        const { navigation } = this.props;
+        navigation.navigate(
+          'Search Products'
+        )
       })
     } catch (error) {
       console.warn(error)
