@@ -127,10 +127,10 @@ onViewBasket = () =>{
   navigation.navigate('Basket')
 }
 
-onViewOrders = () =>{
+onViewMore = () =>{
   console.warn(myEPT.ept)
   const { navigation } = this.props;
-  navigation.navigate('My Orders')
+  navigation.navigate('More Apps')
 }
 
 
@@ -149,8 +149,8 @@ render(){
           <Text style = {SearchProdStyles.buttonText}>VIEW BASKET</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style = {SearchProdStyles.modalButton} onPress = {() => this.onViewOrders() }>
-          <Text style = {SearchProdStyles.buttonText}>VIEW ORDERS</Text>
+        <TouchableOpacity style = {SearchProdStyles.modalButton} onPress = {() => this.onViewMore() }>
+          <Text style = {SearchProdStyles.buttonText}>MORE</Text>
         </TouchableOpacity>
 
       </View>

@@ -14,6 +14,12 @@ import UpdateItem from './src/pages/basket/UpdateItem'
 
 import MyOrders from './src/pages/history/MyOrders'
 
+import MapPage from './src/pages/light/mapPage'
+import RequestPage from './src/pages/light/requestPage'
+
+import MoreApps from './src/pages/more/moreApps'
+import TrackDriver from './src/pages/track/trackDriver'
+
 //import MapPage from './src/pages/MapPage'
 //import RequestPage from './src/pages/RequestPage'
 
@@ -129,6 +135,7 @@ function App() {//stack
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        
         {/*<Stack.Screen name="Welcome" component={LogoPage} />*/}
         <Stack.Screen name="Search Products" component={SearchProducts} />
         <Stack.Screen name="Add Item" component={AddItem} />
@@ -137,6 +144,11 @@ function App() {//stack
         <Stack.Screen name="Order Details" component={OrderForm} />
         <Stack.Screen name="Order Complete" component={OrderComplete} />
         <Stack.Screen name="My Orders" component={MyOrders} />
+
+        <Stack.Screen name="More Apps" component={MoreApps} />
+        <Stack.Screen name="Track Driver" component={TrackDriver} />
+        <Stack.Screen name="Request" component={RequestPage} />
+        <Stack.Screen name="Reports" component={MapPage} />
 
       </Stack.Navigator>
     </NavigationContainer>

@@ -122,3 +122,7 @@ export async function updateProduct(product, updateComplete) {
     .then(() => updateComplete(product))
     .catch((error) => console.log(error));
 }
+
+
+
+export default firebase;
