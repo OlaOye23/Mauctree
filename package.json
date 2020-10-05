@@ -72,6 +72,7 @@
     "rn-nodeify": "^10.2.0",
     "sync-foreach": "^1.0.2",
     "uuid": "^3.3.3",
+    "uuid4": "^2.0.2",
     "yup": "^0.27.0"
   },
   "devDependencies": {

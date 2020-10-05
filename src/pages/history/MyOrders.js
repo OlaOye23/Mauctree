@@ -16,6 +16,9 @@ import {percWidth, percHeight} from '../../api/StyleFuncs'
 
 import config from '../../../config'
 
+import uuid4 from "uuid4"
+import { AsyncStorage } from 'react-native';
+
 
 
 
@@ -42,7 +45,8 @@ export default class MyOrders extends React.Component{
 
   componentDidMount = async () =>{
     //get order and put in list
-    let _token = await this.registerForPushNotificationsAsync()
+    //let _token = await this.registerForPushNotificationsAsync()
+    let _token = await this.getUID()
     this.setState({token: _token})
     console.warn(_token)
     try{
@@ -54,6 +58,25 @@ export default class MyOrders extends React.Component{
     }
     
   }
+
+  getUID = async () =>{
+    let id = await AsyncStorage.getItem("uid")
+    if ((id == undefined) || (id == null) || (id == "")){
+      let uid = uuid4();
+      await this.storeLocalData("uid", uid)
+    }
+    return await AsyncStorage.getItem("uid")
+  }
+
+  storeLocalData = async (key, val) => {
+    try {
+      await AsyncStorage.setItem(key, val)
+    } catch (error) {
+      console.warn(error)
+      alert('Error: please try again or restart')
+    }
+  }
+
   
   registerForPushNotificationsAsync = async () => {
     let token;

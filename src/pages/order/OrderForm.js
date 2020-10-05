@@ -14,6 +14,10 @@ import * as Permissions from 'expo-permissions';
 
 import config from '../../../config'
 
+import uuid4 from "uuid4"
+
+
+
 
 
 export default class OrderForm extends Component{
@@ -23,11 +27,11 @@ export default class OrderForm extends Component{
         this.state = {
             id: null,
             status: null,
-            name: defaultCheckout.name,
-            address: defaultCheckout.address,
-            house: defaultCheckout.house,
-            phoneNumber: defaultCheckout.phoneNumber,
-            phoneNumber2: defaultCheckout.phoneNumber2,
+            name: "",
+            address: "",
+            house: "",
+            phoneNumber: "",
+            phoneNumber2: "",
             longitude: null, 
             latitude: null,
             long2dp: null,
@@ -76,10 +80,33 @@ export default class OrderForm extends Component{
     this.checkValidity()
     //this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
 
-    let _token = await this.registerForPushNotificationsAsync()
+    //let _token = await this.registerForPushNotificationsAsync()
+    let name = await AsyncStorage.getItem("checkoutName")
+    let address = await AsyncStorage.getItem("checkoutAddr")
+    let house = await AsyncStorage.getItem("checkoutHouse")
+    let phoneNumber = await AsyncStorage.getItem("checkoutPhone")
+
+    this.setState({name: name})
+    this.setState({address: address})
+    this.setState({house: house})
+    this.setState({phoneNumber: phoneNumber})
+
+    let _token = await this.getUID()
     this.setState({token: _token})
     console.warn(_token)
   }
+
+  
+  getUID = async () =>{
+    let id = await AsyncStorage.getItem("uid")
+    if ((id == undefined) || (id == null) || (id == "")){
+      let uid = uuid4();
+      await this.storeLocalData("uid", uid)
+    }
+    return await AsyncStorage.getItem("uid")
+  }
+
+
 
   registerForPushNotificationsAsync = async () => {
     let token;
@@ -177,6 +204,15 @@ export default class OrderForm extends Component{
       }
       this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
       console.log('out async get') 
+    }
+
+    storeLocalData = async (key, val) => {
+      try {
+        await AsyncStorage.setItem(key, val)
+      } catch (error) {
+        console.warn(error)
+        alert('Error: please try again or restart')
+      }
     }
 
 
@@ -312,6 +348,10 @@ export default class OrderForm extends Component{
     }
 
     onClickSubmit = async () => {
+      await this.storeLocalData("checkoutName",  this.state.name)
+      await this.storeLocalData("checkoutAddr", this.state.address)
+      await this.storeLocalData("checkoutHouse", this.state.house)
+      await this.storeLocalData("checkoutPhone", this.state.phoneNumber)
       alert("your order is being submitted \n please wait...")
       try{
          await this.checkOutCheck().then( async (fail)=>{
@@ -347,7 +387,7 @@ export default class OrderForm extends Component{
     
 
 
-    checkValidity = () => {
+    checkValidity = async () => {
       this.state.disableSubmit = false
       //check name
       if (this.state.name === null || this.state.name === ""){
@@ -403,10 +443,21 @@ export default class OrderForm extends Component{
       console.log(this.state.invalidName)
       console.log(this.state.disableSubmit)
 
+
+      //CHANGE TO ASYNCSTORE(checkoutname, checkoutaddr, checkouthouse, checkoutphone)
+      /*
+      await storeLocalData("checkoutName",  this.state.name)
+      await storeLocalData("checkoutAddr", this.state.address)
+      await storeLocalData("checkoutHouse", this.state.house)
+      await storeLocalData("checkoutPhone", this.state.phoneNumber)
+      */
+
+      /*
       defaultCheckout.name = this.state.name
       defaultCheckout.address = this.state.address
       defaultCheckout.house = this.state.house
       defaultCheckout.phoneNumber = this.state.phoneNumber
+      */
 
       console.log(defaultCheckout.name )
 

@@ -125,4 +125,20 @@ export async function updateProduct(product, updateComplete) {
 
 
 
+export async function loadDriverLoc() {
+    const db = firebase.firestore()
+    let reports_query = db.collection('driver_loc')
+                        .orderBy('timeCalc', 'desc')
+                        .limit(1) 
+        
+    await reports_query.get().then(d00=> {
+        d00.forEach(d0 => {
+            d = d0.data
+            let long = d.long
+            let lat = d.lat
+            return [lat, long] 
+        })
+    })
+}
+
 export default firebase;
