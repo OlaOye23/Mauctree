@@ -100,6 +100,7 @@ async function registerForPushNotificationsAsync() {
 
 function App() {//stack
 
+  /*
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
@@ -127,6 +128,8 @@ function App() {//stack
       Notifications.removeNotificationSubscription(responseListener);
     };
   }, []);
+
+  */
 
 
   return (

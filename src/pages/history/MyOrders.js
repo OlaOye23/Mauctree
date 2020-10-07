@@ -174,36 +174,7 @@ openGps = (lat, lng) => {
       
       <View >
 
-      <ScrollView styles = {orderHistoryStyles.allContainer}
-       refreshControl={
-        <RefreshControl
-          refreshing={this.state.refreshing}
-          onRefresh={this._onRefresh.bind(this)}/>}
-       >
-      
-      {/*<Text style={orderHistoryStyles.titleText}>Pull down to update </Text> */}
-
-          { (this.state.orders !== []) && this.state.orders.map((order,i) =>(
-              order.name && 
-              <TouchableOpacity style = {{borderColor: '#c0c0c0', borderWidth: 1,}} key ={i} onPress = {()=> this.onPressItem(order)}>
-                <View style = {orderHistoryStyles.superContainer}>
-                <View style = {orderHistoryStyles.mainContainer}>
-                    <View style = {orderHistoryStyles.titleContainer}>
-                        <Text style = {orderHistoryStyles.titleText}>{order.name} </Text>
-                        <Text style = {orderHistoryStyles.titleText}> {'Total: N' + order.total } </Text>
-                    </View>
-                    <Text style = {orderHistoryStyles.neutralText} >{order.address}: {order.house}</Text>
-                    <Text style = {orderHistoryStyles.description}>{order.phoneNumber}</Text>
-                </View>
-              </View>
-
-              </TouchableOpacity>
-  
-            
-          ))}
-
-          
-          <Modal visible={this.state.modalVisible} transparent={false}>
+<Modal visible={this.state.modalVisible} transparent={false}>
           {(this.state.current !== undefined) &&
             <View>
               <Text style = {orderHistoryStyles.modalTextFirst}>{this.state.current.name}</Text>
@@ -246,6 +217,37 @@ openGps = (lat, lng) => {
           ))}
               </ScrollView>
             </Modal>
+
+      <ScrollView styles = {orderHistoryStyles.allContainer}
+       refreshControl={
+        <RefreshControl
+          refreshing={this.state.refreshing}
+          onRefresh={this._onRefresh.bind(this)}/>}
+       >
+      
+      {/*<Text style={orderHistoryStyles.titleText}>Pull down to update </Text> */}
+
+          { (this.state.orders !== []) && this.state.orders.map((order,i) =>(
+              order.name && 
+              <TouchableOpacity style = {{borderColor: '#c0c0c0', borderWidth: 1,}} key ={i} onPress = {()=> this.onPressItem(order)}>
+                <View style = {orderHistoryStyles.superContainer}>
+                <View style = {orderHistoryStyles.mainContainer}>
+                    <View style = {orderHistoryStyles.titleContainer}>
+                        <Text style = {orderHistoryStyles.titleText}>{order.name} </Text>
+                        <Text style = {orderHistoryStyles.titleText}> {'Total: N' + order.total } </Text>
+                    </View>
+                    <Text style = {orderHistoryStyles.neutralText} >{order.address}: {order.house}</Text>
+                    <Text style = {orderHistoryStyles.description}>{order.phoneNumber}</Text>
+                </View>
+              </View>
+
+              </TouchableOpacity>
+  
+            
+          ))}
+
+          
+         
           
 
         </ScrollView>
