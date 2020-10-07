@@ -1,10 +1,11 @@
 import React from 'react'
-import {View, ScrollView, Modal, TextInput, Text, TouchableOpacity, Image, StyleSheet} from 'react-native'
+import {View, ScrollView, Modal, TextInput, Text, Image, StyleSheet} from 'react-native'
 //import {BaseButton} from 'react-native-gesture-handler'
 import {getSelectProduct, getSelectStore}from '../../api/ShopsApi'
 //import Modal from 'react-native-modal';
 //import Fuse from 'fuse.js'
 import { RefreshControl } from 'react-native';
+import { TouchableOpacity } from '../../web/react-native-web';
 import { AsyncStorage} from 'react-native'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'

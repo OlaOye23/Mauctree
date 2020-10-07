@@ -18,7 +18,8 @@ export default class MoreApps extends React.Component{
               "imgAddr": require('../../../assets/history.jpg'),
               "nav": "My Orders"
           },
-  
+      ]
+      /*
           {
               "name": "Light App",
               "description": "Check if there is light in the estate",
@@ -33,6 +34,7 @@ export default class MoreApps extends React.Component{
               "nav": "Track Driver"
           }
       ]
+      */
       this.state = {
           apps: [],
           forceRefresh: Math.floor(Math.random() * 100000000),//to force a re-render

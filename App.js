@@ -14,14 +14,11 @@ import UpdateItem from './src/pages/basket/UpdateItem'
 
 import MyOrders from './src/pages/history/MyOrders'
 
-import MapPage from './src/pages/light/mapPage'
-import RequestPage from './src/pages/light/requestPage'
-
 import MoreApps from './src/pages/more/moreApps'
-import TrackDriver from './src/pages/track/trackDriver'
+//import TrackDriver from './src/pages/track/trackDriver'
+//import MapPage from './src/pages/light/mapPage'
+//import RequestPage from './src/pages/light/requestPage'
 
-//import MapPage from './src/pages/MapPage'
-//import RequestPage from './src/pages/RequestPage'
 
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
@@ -146,9 +143,11 @@ function App() {//stack
         <Stack.Screen name="My Orders" component={MyOrders} />
 
         <Stack.Screen name="More Apps" component={MoreApps} />
+        {/*
         <Stack.Screen name="Track Driver" component={TrackDriver} />
         <Stack.Screen name="Request" component={RequestPage} />
         <Stack.Screen name="Reports" component={MapPage} />
+        */}
 
       </Stack.Navigator>
     </NavigationContainer>

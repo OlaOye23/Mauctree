@@ -16,7 +16,7 @@ import config from '../../../config'
 
 import uuid4 from "uuid4"
 
-
+//import uuid from 'react-native-uuid'
 
 
 
@@ -91,20 +91,48 @@ export default class OrderForm extends Component{
     this.setState({house: house})
     this.setState({phoneNumber: phoneNumber})
 
+    /*
     let _token = await this.getUID()
     this.setState({token: _token})
     console.warn(_token)
+    */
   }
 
   
   getUID = async () =>{
     let id = await AsyncStorage.getItem("uid")
+    console.log(id)
     if ((id == undefined) || (id == null) || (id == "")){
       let uid = uuid4();
+      await this.storeLocalData("uid", uid)
+      console.log(uid)
+    }
+    return await AsyncStorage.getItem("uid")
+  }
+  
+/*
+ getUID = async () =>{
+    let id = await AsyncStorage.getItem("uid")
+    if ((id == undefined) || (id == null) || (id == "")){
+      let uid = uuid.v4();
       await this.storeLocalData("uid", uid)
     }
     return await AsyncStorage.getItem("uid")
   }
+
+  */
+
+  storeHistory = async () =>{
+    let history = await AsyncStorage.getItem("history")
+    if ((history == undefined) || (history == null) || (history == "")){
+      let history = []
+      await this.storeLocalData("history", JSON.stringify(history))
+    }
+    let hist = JSON.parse(await AsyncStorage.getItem("history"))
+    hist.push(this.state)
+    await this.storeLocalData("history", JSON.stringify(hist))
+  }
+
 
 
 
@@ -376,6 +404,7 @@ export default class OrderForm extends Component{
         console.warn(error)
         alert('Error: please try again or restart')
       }
+      await this.storeHistory()
       const { navigation } = this.props;
       navigation.navigate(
         'Order Complete',

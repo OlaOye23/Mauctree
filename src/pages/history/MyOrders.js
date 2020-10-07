@@ -46,27 +46,34 @@ export default class MyOrders extends React.Component{
   componentDidMount = async () =>{
     //get order and put in list
     //let _token = await this.registerForPushNotificationsAsync()
-    let _token = await this.getUID()
-    this.setState({token: _token})
-    console.warn(_token)
+    //let _token = await this.getUID()
+    //this.setState({token: _token})
+    //console.warn(_token)
     try{
       this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
-      await getOrders(this.ordersRetrieved, this.state.token)
+      //await getOrders(this.ordersRetrieved, this.state.token)
+      this.ordList = JSON.parse(await AsyncStorage.getItem("history"))
+      if (this.ordList.length < 1){
+        this.ordList = []
+    }
+      console.log(this.ordList)
+      this.setState({orders: this.ordList})
       console.log(this.state.orders)
     }catch(error){
       console.warn(error)
     }
     
   }
-
+/*
   getUID = async () =>{
     let id = await AsyncStorage.getItem("uid")
     if ((id == undefined) || (id == null) || (id == "")){
       let uid = uuid4();
       await this.storeLocalData("uid", uid)
     }
-    return await AsyncStorage.getItem("uid")
-  }
+    id = await AsyncStorage.getItem("uid")
+    return id
+  }*/
 
   storeLocalData = async (key, val) => {
     try {
@@ -176,7 +183,7 @@ openGps = (lat, lng) => {
       
       {/*<Text style={orderHistoryStyles.titleText}>Pull down to update </Text> */}
 
-          { this.state.orders.map((order,i) =>(
+          { (this.state.orders !== []) && this.state.orders.map((order,i) =>(
               order.name && 
               <TouchableOpacity style = {{borderColor: '#c0c0c0', borderWidth: 1,}} key ={i} onPress = {()=> this.onPressItem(order)}>
                 <View style = {orderHistoryStyles.superContainer}>
