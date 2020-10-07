@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, ScrollView, TextInput, Text, TouchableOpacity, Image, StyleSheet} from 'react-native'
+import {View, ScrollView, TextInput, Text, TouchableOpacity, Image, StyleSheet, Linking} from 'react-native'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'
 
@@ -18,6 +18,14 @@ export default class MoreApps extends React.Component{
               "imgAddr": require('../../../assets/history.jpg'),
               "nav": "My Orders"
           },
+
+          {
+            "name": "Get Android App",
+            "description": "Get the full featured app on the Play Store with features like driver tracking and more added on.",
+            "imgAddr": require('../../../assets/playstore.png'),
+            "nav": "store",
+            "link": "https://play.google.com/store/apps/details?id=com.adadevng.shopmob"
+        },
       ]
       /*
           {
@@ -64,7 +72,12 @@ export default class MoreApps extends React.Component{
   
   onOpenApp = (app) =>{
     const { navigation } = this.props;
-    navigation.navigate(app.nav)
+    if (app.nav == "store"){
+      Linking.openURL(app.link)
+    }
+    else{
+      navigation.navigate(app.nav)
+    }
   }
 
 

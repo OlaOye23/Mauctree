@@ -5,7 +5,7 @@ import {getProducts}from '../../api/ShopsApi'
 //import Modal from 'react-native-modal';
 import Fuse from 'fuse.js'
 import { RefreshControl } from 'react-native';
-import { TouchableOpacity } from 'react-native' //'../../web/react-native-web';
+import { TouchableOpacity } from '../../web/react-native-web'; //'react-native' //
 import { widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'
 import * as myEPT from '../../../assets/myEPT.json'
