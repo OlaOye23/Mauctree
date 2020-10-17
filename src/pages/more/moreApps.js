@@ -1,8 +1,10 @@
 import React from 'react'
-import {View, ScrollView, TextInput, Text, TouchableOpacity, Image, StyleSheet, Linking} from 'react-native'
+import {View, ScrollView, TextInput, Text, Image, StyleSheet, Linking} from 'react-native'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'
 
+import { TouchableOpacity } from '../../web/react-native-web'; //'react-native' //
+//import { TouchableOpacity } from 'react-native' //
 
 
 
@@ -12,6 +14,22 @@ export default class MoreApps extends React.Component{
       super(props)
       this.appList = 
       [ 
+          
+
+          {
+              "name": "Continue Shopping",
+              "description": "Shop and pay before or after delivery. Our selection is growing. We deliver within 10 to 30 minutes",
+              "imgAddr": require('../../../assets/icon.png'),
+              "nav": "Search Products"
+          },
+
+          {
+            "name": "View Basket",
+            "description": "View items in your basket and checkout",
+            "imgAddr": require('../../../assets/basket.jpg'),
+            "nav": "Basket"
+          },
+
           {
               "name": "Order History",
               "description": "See your past orders and their status",
@@ -25,7 +43,7 @@ export default class MoreApps extends React.Component{
             "imgAddr": require('../../../assets/playstore.png'),
             "nav": "store",
             "link": "https://play.google.com/store/apps/details?id=com.adadevng.shopmob"
-        },
+          },
       ]
       /*
           {

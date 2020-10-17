@@ -5,10 +5,13 @@ import {getSelectProduct, getSelectStore}from '../../api/ShopsApi'
 //import Modal from 'react-native-modal';
 //import Fuse from 'fuse.js'
 import { RefreshControl } from 'react-native';
-import { TouchableOpacity } from '../../web/react-native-web';//'react-native' //
+
 import { AsyncStorage} from 'react-native'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'
+
+import { TouchableOpacity } from '../../web/react-native-web';//'react-native' //
+//import { TouchableOpacity } from 'react-native' //
 
 
 
@@ -98,7 +101,11 @@ export default class BasketList extends React.Component{
           let key = store[i][0];
           let value = store[i][1];
           try{
-            let prodObj = JSON.parse(value)
+            try{
+              let prodObj = JSON.parse(value)
+            }catch(error){
+            console.warn(error)
+            }
             console.log(prodObj.qty)
             if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
               this.total += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
@@ -155,22 +162,25 @@ export default class BasketList extends React.Component{
     try{
       await AsyncStorage.getAllKeys( async (err, keys) => {
         await AsyncStorage.multiGet(keys, async (err, stores) => {
-          stores.map(async (result, i, store) => {
-            let key = store[i][0];
-            let value = store[i][1];
-            let prodObj = JSON.parse(value)
-            console.log(prodObj.qty)
-            if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
-              await AsyncStorage.setItem(key, JSON.stringify({"": ""}))
-            }
+          try{
+            stores.map(async (result, i, store) => {
+              let key = store[i][0];
+              let value = store[i][1];
+              let prodObj = JSON.parse(value)
+              console.log(prodObj.qty)
+              if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
+                await AsyncStorage.setItem(key, JSON.stringify({"": ""}))
+              }
           });
+        }catch (error) {
+          console.warn(error)
+        }
         });
         this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
         console.log('done')   
       });
     } catch (error) {
       console.warn(error)
-      alert('Error: please try again or restart')
     }
     console.log('out async get')  
   }

@@ -5,11 +5,15 @@ import {getProducts}from '../../api/ShopsApi'
 //import Modal from 'react-native-modal';
 import Fuse from 'fuse.js'
 import { RefreshControl } from 'react-native';
-import { TouchableOpacity } from '../../web/react-native-web'; //'react-native' //
+
 import { widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'
 import * as myEPT from '../../../assets/myEPT.json'
 
+import { FloatingAction } from "react-native-floating-action";
+
+import { TouchableOpacity } from '../../web/react-native-web'; //'react-native' //
+//import { TouchableOpacity } from 'react-native' //
 
 
 
@@ -37,7 +41,19 @@ export default class SearchProducts extends React.Component{
           itemAdded: false,
           disableAddButton: true,
       }
+
+      this.actions = [
+        {
+          text: "Accessibility",
+          icon: require("'../../../assets/icon.png"),
+          name: "bt_accessibility",
+          position: 1,
+        },
+      ]
+      
   }
+
+  
 
 
 
@@ -134,8 +150,13 @@ onViewMore = () =>{
   navigation.navigate('More Apps')
 }
 
+onClearSearch  = () =>{
+  this._onRefresh()
+}
+
 
 render(){
+  
   return (
       <View >
      <View style = {{margin: 10}}>
@@ -146,14 +167,16 @@ render(){
             value={this.state.searchQuery} 
             onSubmitEditing = {() => this.onSearchProducts(this.state.searchQuery)}
         /> 
-        <TouchableOpacity style = {SearchProdStyles.modalButton} onPress = {() => this.onViewBasket() }>
-          <Text style = {SearchProdStyles.buttonText}>VIEW BASKET</Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity style = {SearchProdStyles.modalButton} onPress = {() => this.onViewMore() }>
-          <Text style = {SearchProdStyles.buttonText}>MORE</Text>
-        </TouchableOpacity>
+        <TouchableOpacity style = {SearchProdStyles.modalButton} onPress = {() => this.onClearSearch() }>
+            <Text style = {SearchProdStyles.buttonText}>CLEAR SEARCH</Text>
+          </TouchableOpacity>
 
+          <TouchableOpacity onPress = {() => this.onViewMore() } style = {SearchProdStyles.modalButton}>
+            <Text style = {SearchProdStyles.buttonText}>---></Text>
+          </TouchableOpacity>
+
+       
       </View>
       
       <ScrollView styles = {SearchProdStyles.allContainer}
@@ -162,7 +185,8 @@ render(){
             refreshing={this.state.refreshing}
             onRefresh={()=>this._onRefresh.bind(this)}/>}
           >
-            <View>
+            
+      <View>
           {this.state.searchUsed == true &&
             this.state.products.map((product,i) =>(
             product.item.name && 
@@ -222,11 +246,14 @@ render(){
               </TouchableOpacity>  
           ))}
 
+          
+
           <View style = {SearchProdStyles.superContainer}>
             <Image source = {{uri:"../../../assets/white.png"}} style = {SearchProdStyles.modalPic} />
           </View>
 
           </View>
+          
           
         </ScrollView>
         </View>
@@ -236,6 +263,19 @@ render(){
 
 
 const SearchProdStyles = StyleSheet.create({
+  floatingActionButton: {
+    position: 'absolute',
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 20,
+    bottom: 20,
+    backgroundColor: 'black',
+    borderRadius: 30,
+    elevation: 8
+  },
+
   refreshText: {
     color: 'black',
     //fontWeight: 'bold',
@@ -325,6 +365,15 @@ const SearchProdStyles = StyleSheet.create({
     backgroundColor: 'black',
   },
 
+  modalButton2: {
+    width: hp(percHeight(200)),
+    margin: hp(percHeight(5)),
+    alignItems: 'stretch',
+    paddingTop: hp(percHeight(10)),
+    paddingBottom: hp(percHeight(10)),
+    backgroundColor: 'black',
+  },
+
   modalDisabledButton: {
     margin: hp(percHeight(10)),
     marginTop: hp(percHeight(10)),
@@ -357,6 +406,12 @@ const SearchProdStyles = StyleSheet.create({
     marginTop: hp(percHeight(100)),  // doesnt do anything
   },
   titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: hp(percHeight(5)),
+
+  },
+  buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     margin: hp(percHeight(5)),

@@ -381,6 +381,11 @@ export default class OrderForm extends Component{
       await this.storeLocalData("checkoutHouse", this.state.house)
       await this.storeLocalData("checkoutPhone", this.state.phoneNumber)
       alert("your order is being submitted \n please wait...")
+      const { navigation } = this.props;
+      navigation.navigate(
+        'More Apps',
+      )
+
       try{
          await this.checkOutCheck().then( async (fail)=>{
           console.log('fail on submit i.e 2 '+ fail)
@@ -405,7 +410,7 @@ export default class OrderForm extends Component{
         alert('Error: please try again or restart')
       }
       await this.storeHistory()
-      const { navigation } = this.props;
+
       navigation.navigate(
         'Order Complete',
         {order: this.state}

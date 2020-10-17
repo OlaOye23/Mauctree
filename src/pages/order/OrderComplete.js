@@ -46,7 +46,7 @@ export default class OrderComplete extends Component{
 
   onClosePage = () => {
     const { navigation } = this.props
-    navigation.navigate('Search Products')
+    navigation.navigate('More Apps')
   }
     
 

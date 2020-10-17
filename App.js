@@ -13,6 +13,8 @@ import BasketList from './src/pages/basket/BasketList'
 import UpdateItem from './src/pages/basket/UpdateItem'
 
 import MyOrders from './src/pages/history/MyOrders'
+import ViewOrder from './src/pages/history/ViewOrder'
+
 
 import MoreApps from './src/pages/more/moreApps'
 //import TrackDriver from './src/pages/track/trackDriver'
@@ -144,7 +146,8 @@ function App() {//stack
         <Stack.Screen name="Order Details" component={OrderForm} />
         <Stack.Screen name="Order Complete" component={OrderComplete} />
         <Stack.Screen name="My Orders" component={MyOrders} />
-
+        <Stack.Screen name="View Order" component={ViewOrder} />
+        
         <Stack.Screen name="More Apps" component={MoreApps} />
         {/*
         <Stack.Screen name="Track Driver" component={TrackDriver} />

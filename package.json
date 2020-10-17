@@ -47,6 +47,7 @@
     "react-native-dotenv": "0.2.0",
     "react-native-elements": "^1.2.7",
     "react-native-firebase": "^5.5.6",
+    "react-native-floating-action": "^1.21.0",
     "react-native-fs": "^2.16.6",
     "react-native-geocoder": "^0.5.0",
     "react-native-geocoding": "^0.4.0",
