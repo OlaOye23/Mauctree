@@ -101,11 +101,9 @@ export default class BasketList extends React.Component{
           let key = store[i][0];
           let value = store[i][1];
           try{
-            try{
+            
               let prodObj = JSON.parse(value)
-            }catch(error){
-            console.warn(error)
-            }
+           
             console.log(prodObj.qty)
             if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
               this.total += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
