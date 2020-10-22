@@ -16,6 +16,8 @@ import config from '../../../config'
 
 import uuid4 from "uuid4"
 
+import { Expo } from 'expo-server-sdk';
+
 //import uuid from 'react-native-uuid'
 
 
@@ -277,11 +279,12 @@ export default class OrderForm extends Component{
       
         await fetch('https://exp.host/--/api/v2/push/send', {
           method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Accept-encoding': 'gzip, deflate',
-            'Content-Type': 'application/json',
-          },
+          'mode': 'no-cors',
+            'method': 'POST',
+            'headers': {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
           body: JSON.stringify(message),
         });
       }
@@ -292,6 +295,40 @@ export default class OrderForm extends Component{
         alert('Error: please try again or restart')
       }
     console.log('new order alert complete')
+    }
+    
+    sendAlertSDK = async (orderObj) =>{
+      let expo = new Expo();
+      let messages = []
+      const message = {
+        to: config.PUSH_TOKEN,
+        sound: 'default',
+        title: 'New Order!',
+        body: 'Open app to see details',
+        data: { name: orderObj.name,
+                address: orderObj.address,
+                total: orderObj.total,  
+              },
+      }
+      messages.push(message)
+
+      let chunks = expo.chunkPushNotifications(messages);
+      let tickets = [];
+      (async () => {
+     
+        for (let chunk of chunks) {
+          try {
+            let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+            console.log(ticketChunk);
+            tickets.push(...ticketChunk);
+            
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      })();
+
+      
     }
 
 
@@ -390,7 +427,8 @@ export default class OrderForm extends Component{
          await this.checkOutCheck().then( async (fail)=>{
           console.log('fail on submit i.e 2 '+ fail)
           if (fail === false){
-            await this.sendAlert(this.state) //comment only in test
+
+            setTimeout(async ()=> {await this.sendAlert(this.state)}, 1000) //comment only in test
             await addOrder(this.state, this.onOrderUploaded)
             await this.clearAllLocalData()
             let prods =  this.basket

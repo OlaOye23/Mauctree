@@ -27,7 +27,8 @@
     },
     "android": {
       "package": "com.adadevng.shopmob",
-      "versionCode": 2
+      "versionCode": 2,
+      "useNextNotificationsApi": true
     }
   }
 }

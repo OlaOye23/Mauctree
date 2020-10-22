@@ -172,12 +172,14 @@ render(){
             <Text style = {SearchProdStyles.buttonText}>CLEAR SEARCH</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress = {() => this.onViewMore() } style = {SearchProdStyles.modalButton}>
-            <Text style = {SearchProdStyles.buttonText}>---></Text>
+          <TouchableOpacity  onPress= {() => this.onViewBasket() } style = {SearchProdStyles.modalButton}>
+            <Text style = {SearchProdStyles.buttonText}>OPEN BASKET</Text>
           </TouchableOpacity>
 
        
       </View>
+
+      
       
       <ScrollView styles = {SearchProdStyles.allContainer}
         refreshControl={
@@ -256,6 +258,8 @@ render(){
           
           
         </ScrollView>
+
+        
         </View>
   );
 }

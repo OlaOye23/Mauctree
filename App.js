@@ -80,13 +80,13 @@ async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
+      console.warn('Failed to get push token for push notification!');
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
     //console.log("token: ",token); // log token to send to user
   } else {
-    alert('Must use physical device for Push Notifications');
+    console.warn('Must use physical device for Push Notifications');
   }
 
   if (Platform.OS === 'android') {
@@ -130,8 +130,9 @@ function App() {//stack
       Notifications.removeNotificationSubscription(responseListener);
     };
   }, []);
-
   */
+
+  
 
 
   return (
@@ -139,6 +140,7 @@ function App() {//stack
       <Stack.Navigator>
         
         {/*<Stack.Screen name="Welcome" component={LogoPage} />*/}
+        <Stack.Screen name="More Apps" component={MoreApps} />
         <Stack.Screen name="Search Products" component={SearchProducts} />
         <Stack.Screen name="Add Item" component={AddItem} />
         <Stack.Screen name="Basket" component={BasketList} />
@@ -148,7 +150,7 @@ function App() {//stack
         <Stack.Screen name="My Orders" component={MyOrders} />
         <Stack.Screen name="View Order" component={ViewOrder} />
         
-        <Stack.Screen name="More Apps" component={MoreApps} />
+        
         {/*
         <Stack.Screen name="Track Driver" component={TrackDriver} />
         <Stack.Screen name="Request" component={RequestPage} />

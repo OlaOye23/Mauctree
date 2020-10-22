@@ -20,7 +20,7 @@ import uuid4 from "uuid4"
 import { AsyncStorage } from 'react-native';
 
 import { TouchableOpacity } from '../../web/react-native-web'; //'react-native' //
-//import { TouchableOpacity } from 'react-native' //
+//import { TouchableOpacity } from 'react-native' 
 
 
 

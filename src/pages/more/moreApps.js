@@ -23,12 +23,7 @@ export default class MoreApps extends React.Component{
               "nav": "Search Products"
           },
 
-          {
-            "name": "View Basket",
-            "description": "View items in your basket and checkout",
-            "imgAddr": require('../../../assets/basket.jpg'),
-            "nav": "Basket"
-          },
+          
 
           {
               "name": "Order History",
@@ -46,6 +41,14 @@ export default class MoreApps extends React.Component{
           },
       ]
       /*
+
+          {
+            "name": "View Basket",
+            "description": "View items in your basket and checkout",
+            "imgAddr": require('../../../assets/basket.jpg'),
+            "nav": "Basket"
+          },
+          
           {
               "name": "Light App",
               "description": "Check if there is light in the estate",
