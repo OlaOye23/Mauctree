@@ -102,45 +102,14 @@ async function registerForPushNotificationsAsync() {
 
 function App() {//stack
 
-  /*
-  const [expoPushToken, setExpoPushToken] = useState('');
-  const [notification, setNotification] = useState(false);
-  const notificationListener = useRef();
-  const responseListener = useRef();
-
-  useEffect(() => {// functions for receiving push notifications
-    registerForPushNotificationsAsync().then(token => {
-      setExpoPushToken(token)
-      myEPT.ept = token
-      console.warn(myEPT.ept)
-    });
-
-    // This listener is fired whenever a notification is received while the app is foregrounded
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      setNotification(notification);
-    });
-
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
-    });
-
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener);
-      Notifications.removeNotificationSubscription(responseListener);
-    };
-  }, []);
-  */
-
-  
-
-
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="More Apps">
         
         {/*<Stack.Screen name="Welcome" component={LogoPage} />*/}
+        
         <Stack.Screen name="More Apps" component={MoreApps} />
+
         <Stack.Screen name="Search Products" component={SearchProducts} />
         <Stack.Screen name="Add Item" component={AddItem} />
         <Stack.Screen name="Basket" component={BasketList} />
