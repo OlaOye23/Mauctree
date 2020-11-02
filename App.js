@@ -137,7 +137,7 @@ function App() {//stack
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="More Apps">
         
         {/*<Stack.Screen name="Welcome" component={LogoPage} />*/}
         <Stack.Screen name="More Apps" component={MoreApps} />
@@ -165,7 +165,7 @@ function App() {//stack
 function AppX() {//stack
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator >
         <Stack.Screen name="Find a Product" component={SearchProducts} />
         <Stack.Screen name="Basket" component={BasketList} />
         <Stack.Screen name="Order Details" component={OrderForm} />
