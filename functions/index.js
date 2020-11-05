@@ -16,7 +16,7 @@ exports.onNewOrder = functions.firestore
           title: 'New Order!',
           body: 'Open app to see details',
           data: { name: context.params.name,
-                  address: context.params.address,
+                  address: context.params.address + context.params.address,
                   total: context.params.total,  
                 },
         };
