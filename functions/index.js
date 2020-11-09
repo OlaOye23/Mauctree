@@ -6,18 +6,19 @@ const fetch = require("node-fetch");
 
 exports.onNewOrder = functions.firestore
   .document('/orders/{id}')
-  .onCreate((change, context) => {
+  .onCreate((snap, context) => {
     console.log('context parameters')
     console.log(context.params)
-    async function sendPushNotification(expoPushToken) {
+    data = snap.data()
+    async function sendPushNotification(expoPushToken,data) {
         const message = {
           to: expoPushToken,
           sound: 'default',
           title: 'New Order!',
           body: 'Open app to see details',
-          data: { name: context.params.name,
-                  address: context.params.address + context.params.address,
-                  total: context.params.total,  
+          data: { name: data.name,
+                  address: data.address + data.house,
+                  total: data.total,  
                 },
         };
       
@@ -31,6 +32,6 @@ exports.onNewOrder = functions.firestore
           body: JSON.stringify(message),
         });
       }
-    sendPushNotification("ExponentPushToken[CCn2edEVIjaUzfnqhSebut]") 
+    sendPushNotification("ExponentPushToken[CCn2edEVIjaUzfnqhSebut]", data) 
     console.log('new order alert complete')
 });

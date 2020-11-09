@@ -1,9 +1,11 @@
 import React from 'react'
-import {View, ScrollView, TextInput, Text, TouchableOpacity, Image, StyleSheet} from 'react-native'
+import {View, ScrollView, TextInput, Text, Image, StyleSheet} from 'react-native'
 import {getSelectProduct, getSelectStore}from '../../api/ShopsApi'
 import { AsyncStorage} from 'react-native'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'
+
+import { TouchableOpacity } from '../../web/react-native-web'; //'react-native' //
 
 
 
