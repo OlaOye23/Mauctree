@@ -421,7 +421,7 @@ export default class OrderForm extends Component{
       alert("your order is being submitted \n please wait...")
       const { navigation } = this.props;
       navigation.navigate(
-        'More Apps',
+        'Welcome',
       )
 
       try{
