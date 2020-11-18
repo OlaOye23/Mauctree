@@ -1,10 +1,9 @@
 import React, {Component} from 'react'
-import {StyleSheet, Image, TextInput, View, ScrollView} from 'react-native'
+import {StyleSheet, Image, TextInput, TouchableOpacity, View, ScrollView} from 'react-native'
 import {Button, Text} from 'react-native-elements'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'
 import logo from '../../../assets/logo.png'
-import { TouchableOpacity } from '../../web/react-native-web';//'react-native' //
 
 
 
@@ -94,8 +93,8 @@ export default class OrderComplete extends Component{
 
 const orderCompleteStyles = StyleSheet.create({
   modalPic:{
-    marginTop: hp(percWidth(25)),
-    width: hp(percWidth(250)),
+    marginTop: wp(percWidth(25)),
+    width: wp(percWidth(250)),
     height: hp(percHeight(250)),
     alignSelf:'center'
   },
@@ -132,7 +131,13 @@ const orderCompleteStyles = StyleSheet.create({
   },
     regForm: {
       alignSelf : 'center',
-      width: hp(percHeight(450)),
+      width: hp(percWidth(375)),
+      flex: 1,
+      paddingTop:  hp(percHeight(50)),
+      backgroundColor: 'white',
+      //paddingLeft:  hp(percHeight(60)),
+      //paddingRight:  hp(percHeight(60)),
+      
     },
     header: {
       fontSize: 24,

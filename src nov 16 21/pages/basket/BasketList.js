@@ -299,8 +299,8 @@ export default class BasketList extends React.Component{
   
     
     return (
-      <View style = {basketStyles.allContainer} >
-      <View  >
+      <View >
+      <View style = {basketStyles.allContainer}  >
       <Text style={basketStyles.modalText}>Total : N {this.total} </Text> 
           {this.state.store.open == "yes" ?
              <Text style = {basketStyles.goodCenterText}>store is open! closes at 11pm</Text> : 
@@ -319,7 +319,7 @@ export default class BasketList extends React.Component{
             </TouchableOpacity>
             
       </View>
-      <ScrollView 
+      <ScrollView styles = {basketStyles.allContainer}
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
@@ -361,7 +361,7 @@ const basketStyles = StyleSheet.create({
     color: 'black',
     //fontWeight: 'bold',
     fontSize: 9,
-    marginLeft: hp(percWidth(5)),
+    marginLeft: wp(percWidth(5)),
     alignSelf: 'center',
   },
 
@@ -487,7 +487,12 @@ const basketStyles = StyleSheet.create({
   
   allContainer:{
     alignSelf : 'center',
-    width: hp(percHeight(450)),
+    width: hp(percWidth(375)),
+    flex: 1,
+    paddingTop:  hp(percHeight(50)),
+    backgroundColor: 'white',
+    //paddingLeft:  hp(percHeight(60)),
+    //paddingRight:  hp(percHeight(60)),
   },
   titleContainer: {
     flexDirection: 'row',
@@ -502,7 +507,7 @@ const basketStyles = StyleSheet.create({
 
   },
   mainContainer: {
-    width: hp(percWidth(350)),
+    width: wp(percWidth(260)),
     margin : hp(percHeight(5)),
   },
   description: {
@@ -523,9 +528,9 @@ const basketStyles = StyleSheet.create({
   },
   
   productPic:{
-    width: hp(percWidth(80)),
-    height: hp(percWidth(80)),//used width to maintain ratio- very slight difference
-    margin: hp(percWidth(5)),
+    width: wp(percWidth(80)),
+    height: wp(percWidth(80)),//used width to maintain ratio- very slight difference
+    margin: wp(percWidth(5)),
   },
   productTitle:{
     fontSize: 12,

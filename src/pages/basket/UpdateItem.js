@@ -97,7 +97,7 @@ export default class UpdateItem extends React.Component{
 
 
   onCancelUpdate = () => {
-    obj = {name: "", qty: ""}
+    let obj = {name: "", qty: ""}
     this.setState({itemObj: obj})
     this.setState({disableUpdateButton: true})
     const { navigation } = this.props;
@@ -111,7 +111,7 @@ export default class UpdateItem extends React.Component{
 
   render(){
     return (
-          <View >
+          <View style={UpdateItemStyles.allContainer}>
             <ScrollView>
                 <View style={UpdateItemStyles.modal}>
                 <Text style = {UpdateItemStyles.modalText}>{this.state.current.name} </Text>
@@ -156,7 +156,7 @@ const UpdateItemStyles = StyleSheet.create({
     color: 'black',
     //fontWeight: 'bold',
     fontSize: 9,
-    marginLeft: wp(percWidth(5)),
+    marginLeft: hp(percWidth(5)),
     alignSelf: 'center',
   },
 
@@ -285,7 +285,8 @@ const UpdateItemStyles = StyleSheet.create({
   },
   
   allContainer:{
-    marginTop: hp(percHeight(100)),  // doesnt do anything
+    alignSelf : 'center',
+    width: hp(percHeight(450)),
   },
   titleContainer: {
     flexDirection: 'row',
@@ -300,7 +301,7 @@ const UpdateItemStyles = StyleSheet.create({
 
   },
   mainContainer: {
-    width: hp(percHeight(260)),
+    width: hp(percHeight(350)),
     margin : hp(percHeight(5)),
 
   },

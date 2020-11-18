@@ -108,7 +108,7 @@ function App() {//stack
         
         {/*<Stack.Screen name="Welcome" component={LogoPage} />*/}
         
-        <Stack.Screen name="More Apps" component={MoreApps} />
+        <Stack.Screen name="Welcome" component={MoreApps} />
 
         <Stack.Screen name="Search Products" component={SearchProducts} />
         <Stack.Screen name="Add Item" component={AddItem} />

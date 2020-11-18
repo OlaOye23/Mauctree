@@ -175,9 +175,11 @@ openGps = (lat, lng) => {
   render(){
   return (
       
-      <View style = {orderHistoryStyles.allContainer}>
+      <View >
 
-      <ScrollView 
+
+
+      <ScrollView style = {orderHistoryStyles.allContainer}
        refreshControl={
         <RefreshControl
           refreshing={this.state.refreshing}
@@ -220,8 +222,8 @@ const orderHistoryStyles = StyleSheet.create({
   neutralText: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 12,
-    marginLeft: hp(percWidth(5)),
+    fontSize: wp(percWidth(12)),
+    marginLeft: wp(percWidth(5)),
     //alignSelf: 'center',
   },
   warnText: {
@@ -234,18 +236,18 @@ const orderHistoryStyles = StyleSheet.create({
     color: 'red',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percWidth(5)),
+    marginLeft: wp(percWidth(5)),
     //alignSelf: 'center',
   },
   goodText: {
     color: 'green',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percWidth(5)),
+    marginLeft: wp(percWidth(5)),
     //alignSelf: 'center',
   },
   searchBox: {
-    height: hp(percWidth(50)),
+    height: wp(percWidth(50)),
     marginTop: 0,
     marginBottom: 0,
     paddingLeft: 0,
@@ -257,29 +259,29 @@ const orderHistoryStyles = StyleSheet.create({
   },
   
   productPic:{
-    width: hp(percWidth(80)),
-    height: hp(percWidth(80)),
-    margin: hp(percWidth(5)),
+    width: wp(percWidth(80)),
+    height: wp(percWidth(80)),
+    margin: wp(percWidth(5)),
 
   },
 
   modal: { 
-    marginTop: hp(percWidth(50)),
+    marginTop: wp(percWidth(50)),
     alignContent: 'center',
    },
 
   modalPic:{
-    width: hp(percWidth(250)),
-    height: hp(percWidth(250)),
+    width: wp(percWidth(250)),
+    height: wp(percWidth(250)),
     alignSelf:'center'
   },
 
   modalTextFirst: {
-    marginTop: hp(percWidth(50)),
+    marginTop: wp(percWidth(50)),
     fontWeight: 'bold',
     fontSize: 20,
     alignSelf: 'center',
-    padding: hp(percWidth(5)),
+    padding: wp(percWidth(5)),
     textAlign: 'center',
   },
 
@@ -287,39 +289,39 @@ const orderHistoryStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     alignSelf: 'center',
-    padding: hp(percWidth(5)),
+    padding: wp(percWidth(5)),
     textAlign: 'center',
   },
   modalButtonFirst: {
-    margin: hp(percWidth(10)),
-    marginTop: hp(percWidth(50)),
-    marginBottom: hp(percWidth(20)),
+    margin: wp(percWidth(10)),
+    marginTop: wp(percWidth(50)),
+    marginBottom: wp(percWidth(20)),
     alignItems: 'stretch',
-    paddingTop: hp(percWidth(10)),
-    paddingBottom: hp(percWidth(10)),
+    paddingTop: wp(percWidth(10)),
+    paddingBottom: wp(percWidth(10)),
     backgroundColor: 'black',
   },
   
   modalButton: {
-    margin: hp(percWidth(5)),
-    marginTop: hp(percWidth(5)),
-    marginBottom: hp(percWidth(5)),
+    margin: wp(percWidth(5)),
+    marginTop: wp(percWidth(5)),
+    marginBottom: wp(percWidth(5)),
     alignItems: 'stretch',
-    paddingTop: hp(percWidth(10)),
-    paddingBottom: hp(percWidth(10)),
+    paddingTop: wp(percWidth(10)),
+    paddingBottom: wp(percWidth(10)),
     backgroundColor: 'black',
   },
 
   textInput:{
     alignSelf: 'center',
     textAlign: 'center',
-    height: hp(percWidth(40)),
-    width: hp(percWidth(60)),
-    marginLeft: hp(percWidth(10)),
-    marginBottom: hp(percWidth(10)),
+    height: wp(percWidth(40)),
+    width: wp(percWidth(60)),
+    marginLeft: wp(percWidth(10)),
+    marginBottom: wp(percWidth(10)),
     color: 'black',
     borderBottomColor: 'black' ,
-    borderBottomWidth: hp(percWidth(1)),
+    borderBottomWidth: wp(percWidth(1)),
   },
   buttonText: {
     fontSize: 12,
@@ -330,27 +332,32 @@ const orderHistoryStyles = StyleSheet.create({
   
   allContainer:{
     alignSelf : 'center',
-    width: hp(percHeight(450)),
+    width: hp(percWidth(375)),
+    flex: 1,
+    paddingTop:  hp(percHeight(50)),
+    backgroundColor: 'white',
+    //paddingLeft:  hp(percHeight(60)),
+    //paddingRight:  hp(percHeight(60)),
   },
   titleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: hp(percWidth(5)),
+    margin: wp(percWidth(5)),
 
   },
   superContainer:{
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: hp(percWidth(5)),
+    margin: wp(percWidth(5)),
 
   },
   mainContainer: {
-    width: hp(percWidth(350)),
-    margin : hp(percWidth(5)),
+    width: wp(percWidth(260)),
+    margin : wp(percWidth(5)),
 
   },
   description: {
-    margin: hp(percWidth(5)),
+    margin: wp(percWidth(5)),
     fontSize: 10,
 
   },
@@ -367,25 +374,25 @@ const orderHistoryStyles = StyleSheet.create({
   },
   
   orderPic:{
-    width: hp(percWidth(80)),
-    height: hp(percWidth(80)),
-    margin: hp(percWidth(5)),
+    width: wp(percWidth(80)),
+    height: wp(percWidth(80)),
+    margin: wp(percWidth(5)),
 
   },
   orderTitle:{
     fontSize: 12,
     fontWeight: 'bold',
-    marginLeft: hp(percWidth(5)),
+    marginLeft: wp(percWidth(5)),
   },
   location2: {
-    height: hp(percWidth(45)),
-    marginTop: hp(percWidth(0)),
-    marginBottom: hp(percWidth(5)),
+    height: wp(percWidth(45)),
+    marginTop: wp(percWidth(0)),
+    marginBottom: wp(percWidth(5)),
     textAlign: 'center',
     fontSize: 16,
     color: 'grey',
     borderColor: 'grey',
-    borderWidth: hp(percWidth(1)),
+    borderWidth: wp(percWidth(1)),
   },    
 
 

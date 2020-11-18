@@ -1,25 +1,15 @@
 import React, {Component} from 'react'
 import {addOrder, updateProduct, getSelectStore, getSelectProduct} from '../../api/ShopsApi'
-import {StyleSheet, Modal, Image, TextInput, View, ScrollView} from 'react-native'
+import {StyleSheet, Modal, Image, TextInput, TouchableOpacity, View, ScrollView} from 'react-native'
 import {Button, Text} from 'react-native-elements'
+import { Dropdown } from 'react-native-material-dropdown';
+import Geocoder from 'react-native-geocoding'; 
 import { AsyncStorage } from 'react-native';
 import * as yup from 'yup';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'
-import * as defaultCheckout from '../../../assets/defaultCheckout.json'
-
-import Constants from 'expo-constants';
-import * as Notifications from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
-
-import config from '../../../config'
-
-import uuid4 from "uuid4"
-import { TouchableOpacity } from '../../web/react-native-web';//'react-native' //
-
-//import { Expo } from 'expo-server-sdk';
-
-//import uuid from 'react-native-uuid'
+import syncforeach from 'sync-foreach'
+import * as defaultCheckout from '../../assets/defaultCheckout.json'
 
 
 
@@ -30,11 +20,10 @@ export default class OrderForm extends Component{
         this.state = {
             id: null,
             status: null,
-            name: "",
-            address: "",
-            house: "",
-            phoneNumber: "",
-            phoneNumber2: "",
+            name: null,
+            address: null,
+            house: null,
+            phoneNumber: null,
             longitude: null, 
             latitude: null,
             long2dp: null,
@@ -49,7 +38,6 @@ export default class OrderForm extends Component{
             disableSubmit: true,
             invalidName: true,
             invalidPhone: true,
-            invalidPhone2: true,
             invalidAddress: true,
             invalidHouse: true,
             store:{
@@ -57,7 +45,6 @@ export default class OrderForm extends Component{
               name: "VGC",
               open: ""
             },
-            token: ""
         }
     }
 
@@ -75,108 +62,28 @@ export default class OrderForm extends Component{
     const { route } = this.props;
     const { total } = route.params;
     this.setState({total : total })
-
-    
-
     this.getAllLocalData() 
     this.setGeoLoc()
-    this.checkValidity()
+    try{
+      this.setState({name: JSON.parse(this.retrieveLocalData(deafultCheckoutName))})
+      this.setState({phoneNumber: JSON.parse(this.retrieveLocalData(deafultCheckoutPhoneNumber))})
+      this.setState({address: JSON.parse(this.retrieveLocalData(deafultCheckoutAddress))})
+      this.setState({house: JSON.parse(this.retrieveLocalData(deafultCheckoutHouse))})
+      this.checkValidity()
+    }catch(error){
+      console.warn(error)
+    }
+    
     //this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
-
-    //let _token = await this.registerForPushNotificationsAsync()
-    let name = await AsyncStorage.getItem("checkoutName")
-    let address = await AsyncStorage.getItem("checkoutAddr")
-    let house = await AsyncStorage.getItem("checkoutHouse")
-    let phoneNumber = await AsyncStorage.getItem("checkoutPhone")
-
-    this.setState({name: name})
-    this.setState({address: address})
-    this.setState({house: house})
-    this.setState({phoneNumber: phoneNumber})
-
-    /*
-    let _token = await this.getUID()
-    this.setState({token: _token})
-    console.warn(_token)
-    */
-  }
-
-  
-  getUID = async () =>{
-    let id = await AsyncStorage.getItem("uid")
-    console.log(id)
-    if ((id == undefined) || (id == null) || (id == "")){
-      let uid = uuid4();
-      await this.storeLocalData("uid", uid)
-      console.log(uid)
-    }
-    return await AsyncStorage.getItem("uid")
-  }
-  
-/*
- getUID = async () =>{
-    let id = await AsyncStorage.getItem("uid")
-    if ((id == undefined) || (id == null) || (id == "")){
-      let uid = uuid.v4();
-      await this.storeLocalData("uid", uid)
-    }
-    return await AsyncStorage.getItem("uid")
-  }
-
-  */
-
-  storeHistory = async () =>{
-    let history = await AsyncStorage.getItem("history")
-    if ((history == undefined) || (history == null) || (history == "")){
-      let history = []
-      await this.storeLocalData("history", JSON.stringify(history))
-    }
-    let hist = JSON.parse(await AsyncStorage.getItem("history"))
-    hist.push(this.state)
-    await this.storeLocalData("history", JSON.stringify(hist))
-  }
-
-
-
-
-  registerForPushNotificationsAsync = async () => {
-    let token;
-    if (Constants.isDevice) {
-      const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-      let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
-        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-        finalStatus = status;
-      }
-      if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
-        return;
-      }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-      //console.log("token: ",token); // log token to send to user
-    } else {
-      alert('Must use physical device for Push Notifications');
-    }
-  
-    if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
-      });
-    }
-    return token;
   }
 
   setGeoLoc = async () =>{
     if (navigator.geolocation) {//if navigation is enabled
       const position =  await this.getCoordinates()
-      let lat = position.coords.latitude//.toFixed(4);
-      let long = position.coords.longitude//.toFixed(4);
+      lat = position.coords.latitude//.toFixed(4);
+      long = position.coords.longitude//.toFixed(4);
       this.setState({latitude: lat, longitude: long})
       this.setState({lat2dp: parseFloat(lat).toFixed(2), long2dp: parseFloat(long).toFixed(2)})//not actually used here
-      console.log(this.state)
     }
   }
 
@@ -188,14 +95,10 @@ export default class OrderForm extends Component{
             stores.map((result, i, store) => {
               let key = store[i][0];
               let value = store[i][1];
-              try{
-                let prodObj = JSON.parse(value)
-                if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
-                  this.basket.push(prodObj)
-                  console.log('hahaha'+this.basket)
-                }
-              }catch(error){
-                console.log(error)
+              let prodObj = JSON.parse(value)
+              if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
+                this.basket.push(prodObj)
+                console.log('hahaha'+this.basket)
               }
             });
           });
@@ -209,7 +112,7 @@ export default class OrderForm extends Component{
       console.log('out async get')
     }
 
-    clearAllLocalData = async () =>{
+    clearAllLocalData = async () =>{//actually: clearbasket only
       console.log('in async get')
       try{
         await AsyncStorage.getAllKeys( async (err, keys) => {
@@ -217,14 +120,10 @@ export default class OrderForm extends Component{
             stores.map(async (result, i, store) => {
               let key = store[i][0];
               let value = store[i][1];
-              try{
               let prodObj = JSON.parse(value)
               if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
-                await AsyncStorage.setItem(key, JSON.stringify({"null": "null"}))
+                await AsyncStorage.setItem(key, JSON.stringify({"": ""}))
               }
-            }catch(error){
-              console.warn(error)
-            }
             });
           });
           console.log('done')   
@@ -246,6 +145,22 @@ export default class OrderForm extends Component{
       }
     }
 
+    retrieveLocalData = async (key) => {
+      try {
+        const value = await AsyncStorage.getItem(key);
+        if (value !== null) {
+          // We have data!!
+          console.log(value);
+        }
+        else{
+          console.log('empty')
+        }
+      } catch (error) {
+        console.warn(error)
+        alert('Error: please try again or restart')
+      }
+      return value
+    }
 
     getCoordinates() {
       return new Promise(function(resolve, reject) {
@@ -257,7 +172,56 @@ export default class OrderForm extends Component{
         navigator.geolocation.getCurrentPosition(resolve, reject, options);
       });
     }
+    
+    
+    getGeolocation = async (address) =>{
+        console.log('getting order geolocation')
+        if (address === ''){
+          console.log('no address entered')
+          return
+        }
+        try{
+          Geocoder.init('AIzaSyAitgbYx6XMFSzLbwMccZxQ6lQg32hFkPc')
+          json = await Geocoder.from(address+" Victoria Garden City, Ajah, Lagos, Nigeria")
+          let location = json.results[0].geometry.location
+          this.setState({latitude: location.lat, longitude: location.lng, address: address})
+          
+          jsonLagos = await Geocoder.from(" Victoria Garden City, Ajah, Lagos, Nigeria")
+          let locationLagos = jsonLagos.results[0].geometry.location
+          if (location.lat === locationLagos.lat && location.lng == locationLagos.lng){
+              console.log('irreconcilable address')
+              return
+          }
+          else{
+              this.setState({latitude: location.lat, longitude: location.lng, address: address})
+          }
+        } catch (error) {
+            console.warn(error)
+            alert('Error: please try again or restart')
+        }
+    }
+    getAddress = async (lat, long) => {
+      Geocoder.init('AIzaSyAitgbYx6XMFSzLbwMccZxQ6lQg32hFkPc')
+      try{
+          let json = await Geocoder.from(lat, long)
+          let addressComponent = json.results[0].address_components[0]['short_name']+',' +json.results[0].address_components[1]['short_name'] + ','+json.results[0].address_components[2]['short_name'];
+          this.setState({geoAddress: addressComponent})
+          console.log(addressComponent)
+          return addressComponent
+      } catch (error) {
+          console.warn(error)
+          alert('Error: please try again or restart')
+      }
+    }
 
+
+
+
+    
+    updateLocation = async (address) => {
+      await this.getGeolocation(address)
+      await this.getAddress(this.state.latitude, this.state.longitude)
+    }
 
     onProductUploaded = () =>{
       console.log('product stock updated')
@@ -280,56 +244,21 @@ export default class OrderForm extends Component{
       
         await fetch('https://exp.host/--/api/v2/push/send', {
           method: 'POST',
-          'mode': 'no-cors',
-            'method': 'POST',
-            'headers': {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
+          headers: {
+            Accept: 'application/json',
+            'Accept-encoding': 'gzip, deflate',
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify(message),
         });
       }
       try{
-        sendPushNotification(config.PUSH_TOKEN) 
+        sendPushNotification("ExponentPushToken[qY0HHeKM_FS_EwLWGjf0PI]") 
       } catch (error) {
         console.warn(error)
         alert('Error: please try again or restart')
       }
     console.log('new order alert complete')
-    }
-    
-    sendAlertSDK = async (orderObj) =>{
-      let expo = new Expo();
-      let messages = []
-      const message = {
-        to: config.PUSH_TOKEN,
-        sound: 'default',
-        title: 'New Order!',
-        body: 'Open app to see details',
-        data: { name: orderObj.name,
-                address: orderObj.address,
-                total: orderObj.total,  
-              },
-      }
-      messages.push(message)
-
-      let chunks = expo.chunkPushNotifications(messages);
-      let tickets = [];
-      (async () => {
-     
-        for (let chunk of chunks) {
-          try {
-            let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-            console.log(ticketChunk);
-            tickets.push(...ticketChunk);
-            
-          } catch (error) {
-            console.error(error);
-          }
-        }
-      })();
-
-      
     }
 
 
@@ -377,7 +306,7 @@ export default class OrderForm extends Component{
           return fail
         }
         await this.asyncForEach(items, async (basketItem) => { 
-          let dbItem = await getSelectProduct(basketItem.info, this.onRetrieved)   
+          dbItem = await getSelectProduct(basketItem.info, this.onRetrieved)   
           if (parseInt(dbItem.price) == parseInt(basketItem.info.price)){
             console.log('price equal')
           }
@@ -414,27 +343,18 @@ export default class OrderForm extends Component{
     }
 
     onClickSubmit = async () => {
-      await this.storeLocalData("checkoutName",  this.state.name)
-      await this.storeLocalData("checkoutAddr", this.state.address)
-      await this.storeLocalData("checkoutHouse", this.state.house)
-      await this.storeLocalData("checkoutPhone", this.state.phoneNumber)
-      alert("your order is being submitted \n please wait...")
-      const { navigation } = this.props;
-      navigation.navigate(
-        'More Apps',
-      )
-
+      fail = true
       try{
          await this.checkOutCheck().then( async (fail)=>{
           console.log('fail on submit i.e 2 '+ fail)
           if (fail === false){
-
-            setTimeout(async ()=> {await this.sendAlert(this.state)}, 1000) //comment only in test
+            //await this.sendAlert(this.state) //comment only in test
             await addOrder(this.state, this.onOrderUploaded)
             await this.clearAllLocalData()
+            this.setState({modalVisible: true})
             let prods =  this.basket
-            await this.asyncForEach(prods,async (prod)=>{//change to asyncforech
-              let dbItem = await getSelectProduct(prod.info)
+            prods.forEach( async (prod)=>{
+              dbItem = await getSelectProduct(prod.info)
               prod.info.stock = Math.max(dbItem.stock - prod.qty,0)
               await updateProduct(prod.info, this.onProductUploaded)
             })
@@ -448,19 +368,16 @@ export default class OrderForm extends Component{
         console.warn(error)
         alert('Error: please try again or restart')
       }
-      await this.storeHistory()
-
-      navigation.navigate(
-        'Order Complete',
-        {order: this.state}
-      )
     }
 
- 
+    onCloseModal = () => {
+      const { navigation } = this.props
+      navigation.navigate('Find a Product')
+    }
     
 
 
-    checkValidity = async () => {
+    checkValidity = () => {
       this.state.disableSubmit = false
       //check name
       if (this.state.name === null || this.state.name === ""){
@@ -477,14 +394,6 @@ export default class OrderForm extends Component{
       }
       else{
         this.state.invalidPhone = false
-      }
-      //check phoneNumber2
-      if (this.state.phoneNumber2 !== this.state.phoneNumber){
-        console.log('invalid phone')
-        this.state.invalidPhone2 = true
-      }
-      else{
-        this.state.invalidPhone2 = false
       }
       //check address
       if (this.state.address === null || this.state.address === ""){
@@ -504,10 +413,10 @@ export default class OrderForm extends Component{
       }
 
       
-      if (this.state.invalidAddress || this.state.invalidPhone || this.state.invalidPhone2 || this.state.invalidName ){
+      if (this.state.invalidAddress || this.state.invalidPhone || this.state.invalidName){
         this.state.disableSubmit = true
       }
-      else if (this.state.invalidAddress && this.state.invalidPhone && this.state.invalidPhone2 && this.state.invalidName){
+      else if (this.state.invalidAddress && this.state.invalidPhone && this.state.invalidName){
         this.state.disableSubmit = false
       }
 
@@ -515,33 +424,26 @@ export default class OrderForm extends Component{
       console.log(this.state.invalidPhone)
       console.log(this.state.invalidName)
       console.log(this.state.disableSubmit)
-
-
-      //CHANGE TO ASYNCSTORE(checkoutname, checkoutaddr, checkouthouse, checkoutphone)
-      /*
-      await storeLocalData("checkoutName",  this.state.name)
-      await storeLocalData("checkoutAddr", this.state.address)
-      await storeLocalData("checkoutHouse", this.state.house)
-      await storeLocalData("checkoutPhone", this.state.phoneNumber)
-      */
-
-      /*
-      defaultCheckout.name = this.state.name
-      defaultCheckout.address = this.state.address
-      defaultCheckout.house = this.state.house
-      defaultCheckout.phoneNumber = this.state.phoneNumber
-      */
-
-      console.log(defaultCheckout.name )
+      
+      try{
+        this.storeLocalData("deafultCheckoutName", JSON.stringify(this.state.name))
+        this.storeLocalData("deafultCheckoutPhoneNumber", JSON.stringify(this.state.phoneNumber))
+        this.storeLocalData("deafultCheckoutAddress", JSON.stringify(this.state.address))
+        this.storeLocalData("deafultCheckoutHouse", JSON.stringify(this.state.house))
+      } catch(error){
+        console.warn(error)
+      }
 
       this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
-
+      
     }
     
 
 
     render(){
         return(
+         
+            
             <ScrollView style = {orderFormStyles.regForm}>
                 <View style = {{marginBottom: 300}}>
                 <Text style = {orderFormStyles.header} >delivery details</Text>
@@ -554,6 +456,18 @@ export default class OrderForm extends Component{
                   value={this.state.name}
                   onChangeText={(text) =>{
                     this.setState({ name: text})
+                    setTimeout(()=>this.checkValidity(),500)
+                    }}/>
+
+                <Text style = {orderFormStyles.subHeader} >your contact number</Text>  
+                <TextInput style = {this.state.invalidPhone === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
+                  keyboardType="numeric"
+                  placeholderTextColor = {'grey'}
+                  placeholder = {"e.g 0801 234 5678"}
+                  underlineColorAndroid= {'transparent'}
+                  value={this.state.phoneNumber}
+                  onChangeText={(text) =>{
+                    this.setState({ phoneNumber: text})
                     setTimeout(()=>this.checkValidity(),500)
                     }}/>
              
@@ -579,30 +493,6 @@ export default class OrderForm extends Component{
                      this.setState({ address: text})
                      setTimeout(()=>this.checkValidity(),500)
                      }}/>
-
-                <Text style = {orderFormStyles.subHeader} >your contact number</Text>  
-                <TextInput style = {this.state.invalidPhone === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
-                  keyboardType="numeric"
-                  placeholderTextColor = {'grey'}
-                  placeholder = {"e.g 0801 234 5678"}
-                  underlineColorAndroid= {'transparent'}
-                  value={this.state.phoneNumber}
-                  onChangeText={(text) =>{
-                    this.setState({ phoneNumber: text})
-                    setTimeout(()=>this.checkValidity(),500)
-                    }}/>
-
-                <Text style = {orderFormStyles.subHeader} >confirm contact number</Text>  
-                <TextInput style = {this.state.invalidPhone2 === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
-                  keyboardType="numeric"
-                  placeholderTextColor = {'grey'}
-                  placeholder = {"e.g 0801 234 5678"}
-                  underlineColorAndroid= {'transparent'}
-                  value={this.state.phoneNumber2}
-                  onChangeText={(text) =>{
-                    this.setState({ phoneNumber2: text})
-                    setTimeout(()=>this.checkValidity(),500)
-                    }}/>
 
                {/* <TouchableOpacity style = {orderFormStyles.loadButton} onPress = {() => this.updateLocation(this.state.address)}>
                 <Text style = {orderFormStyles.buttonText}>FIND CLOSE BY</Text>
@@ -632,7 +522,7 @@ export default class OrderForm extends Component{
                 <TouchableOpacity 
                   disabled = {this.state.disableSubmit}
                   style = {this.state.disableSubmit === false? orderFormStyles.loadButton: orderFormStyles.modalDisabledButton} 
-                  onPress = {() => this.onClickSubmit()}>
+                  onPress = {this.onClickSubmit}>
                   <Text style = {orderFormStyles.buttonText}>SUBMIT</Text>
                 </TouchableOpacity>
 
@@ -641,7 +531,27 @@ export default class OrderForm extends Component{
 
                 </View>
 
-                
+                <Modal visible={this.state.modalVisible} transparent={false}>
+                  <ScrollView>
+                  <Image source = {{uri:'./logo.png'}} style={orderFormStyles.modalPic}/>
+                      <View style={orderFormStyles.modal}>
+                      <Text style = {orderFormStyles.modalText}>We're on our way!</Text>
+                      <Text style = {orderFormStyles.modalText}>your order has been submitted! {"\n"}</Text>
+                      <Text style = {orderFormStyles.modalSmallText}>phone number:{this.state.phoneNumber}</Text>
+                      <Text style = {orderFormStyles.modalSmallText}>address {this.state.address + " " + this.state.address}</Text>
+                      <Text style = {orderFormStyles.modalText}>{"\n"} Expect our call in 1 minute </Text>
+                      <Text style = {orderFormStyles.modalText}>Expect delivery in 15 minutes </Text>
+                      <Text style = {orderFormStyles.modalText}>Thank you for shopping with us! </Text>
+                     
+                      <TouchableOpacity 
+                        disabled = {this.state.disableSubmit }
+                        style = {orderFormStyles.loadButton} 
+                        onPress = {() => this.onCloseModal() }>
+                        <Text style = {orderFormStyles.buttonText}>CLOSE</Text>
+                      </TouchableOpacity>
+                      </View>
+                  </ScrollView>
+                </Modal>
             </ScrollView>
       
         )
@@ -650,10 +560,9 @@ export default class OrderForm extends Component{
 }
 
 
-const orderFormStyles = StyleSheet.create({
+orderFormStyles = StyleSheet.create({
   modalPic:{
-    marginTop: hp(percWidth(25)),
-    width: hp(percWidth(250)),
+    width: wp(percWidth(250)),
     height: hp(percHeight(250)),
     alignSelf:'center'
   },
@@ -689,8 +598,12 @@ const orderFormStyles = StyleSheet.create({
     textAlign: 'center',
   },
     regForm: {
-      alignSelf : 'center',
-      width: hp(percHeight(450)),
+      alignSelf : 'stretch',
+      flex: 1,
+      paddingTop:  hp(percHeight(50)),
+      backgroundColor: 'white',
+      paddingLeft:  hp(percHeight(60)),
+      paddingRight:  hp(percHeight(60)),
       
     },
     header: {

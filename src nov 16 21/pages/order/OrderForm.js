@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {addOrder, updateProduct, getSelectStore, getSelectProduct} from '../../api/ShopsApi'
-import {StyleSheet, Modal, Image, TextInput, View, ScrollView} from 'react-native'
+import {StyleSheet, Modal, Image, TextInput, TouchableOpacity, View, ScrollView} from 'react-native'
 import {Button, Text} from 'react-native-elements'
 import { AsyncStorage } from 'react-native';
 import * as yup from 'yup';
@@ -15,9 +15,8 @@ import * as Permissions from 'expo-permissions';
 import config from '../../../config'
 
 import uuid4 from "uuid4"
-import { TouchableOpacity } from '../../web/react-native-web';//'react-native' //
 
-//import { Expo } from 'expo-server-sdk';
+import { Expo } from 'expo-server-sdk';
 
 //import uuid from 'react-native-uuid'
 
@@ -652,8 +651,8 @@ export default class OrderForm extends Component{
 
 const orderFormStyles = StyleSheet.create({
   modalPic:{
-    marginTop: hp(percWidth(25)),
-    width: hp(percWidth(250)),
+    marginTop: wp(percWidth(25)),
+    width: wp(percWidth(250)),
     height: hp(percHeight(250)),
     alignSelf:'center'
   },
@@ -690,7 +689,12 @@ const orderFormStyles = StyleSheet.create({
   },
     regForm: {
       alignSelf : 'center',
-      width: hp(percHeight(450)),
+      width: hp(percWidth(375)),
+      flex: 1,
+      paddingTop:  hp(percHeight(50)),
+      backgroundColor: 'white',
+      //paddingLeft:  hp(percHeight(60)),
+      //paddingRight:  hp(percHeight(60)),
       
     },
     header: {

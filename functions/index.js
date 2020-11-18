@@ -15,7 +15,7 @@ exports.onNewOrder = functions.firestore
           to: expoPushToken,
           sound: 'default',
           title: 'New Order!',
-          body:  data.house + " " + data.road '\nOpen app to see details',
+          body:  data.house + " " + data.road + " " + data.road + "\n " + data.total+  '\nOpen app to see details',
           data: { name: data.name,
                   address: data.address + data.house,
                   total: data.total,  

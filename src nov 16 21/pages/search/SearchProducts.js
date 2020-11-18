@@ -158,8 +158,8 @@ onClearSearch  = () =>{
 render(){
   
   return (
-      <View style = {SearchProdStyles.allContainer}>
-     <View >
+      <View >
+     <View style = {SearchProdStyles.allContainer}>
         <TextInput 
             placeholder= "search for a product"  
             style={SearchProdStyles.searchBox} 
@@ -284,21 +284,21 @@ const SearchProdStyles = StyleSheet.create({
     color: 'black',
     //fontWeight: 'bold',
     fontSize: 9,
-    marginLeft: hp(percHeight(5)),
+    marginLeft: wp(percWidth(5)),
     alignSelf: 'center',
   },
   neutralCenterText: {
     color: 'black',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percHeight(5)),
+    marginLeft: wp(percWidth(5)),
     alignSelf: 'center',
   },
   goodCenterText: {
     color: 'green',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percHeight(5)),
+    marginLeft: wp(percWidth(5)),
     alignSelf: 'center',
   },
   badCenterText: {
@@ -311,14 +311,14 @@ const SearchProdStyles = StyleSheet.create({
     color: 'red',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percHeight(5)),
+    marginLeft: wp(percWidth(5)),
     //alignSelf: 'center',
   },
   goodText: {
     color: 'green',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percHeight(5)),
+    marginLeft: wp(percWidth(5)),
     //alignSelf: 'center',
   },
   searchBox: {
@@ -339,7 +339,7 @@ const SearchProdStyles = StyleSheet.create({
    },
 
   modalPic:{
-    width: hp(percHeight(250)),
+    width: wp(percWidth(250)),
     height: hp(percHeight(250)),
     alignSelf:'center'
   },
@@ -392,8 +392,8 @@ const SearchProdStyles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     height: hp(percHeight(40)),
-    width: hp(percHeight(60)),
-    marginLeft: hp(percHeight(10)),
+    width: wp(percWidth(60)),
+    marginLeft: wp(percWidth(10)),
     marginBottom: hp(percHeight(10)),
     color: 'black',
     borderBottomColor: 'black' ,
@@ -407,8 +407,7 @@ const SearchProdStyles = StyleSheet.create({
   },
   
   allContainer:{
-    alignSelf : 'center',
-    width: hp(percHeight(450)),
+    //width: hp(percHeight(450)),
   },
   titleContainer: {
     flexDirection: 'row',
@@ -426,7 +425,7 @@ const SearchProdStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     margin: 0,
-    marginLeft: hp(percHeight(5)),
+    marginLeft: wp(percWidth(5)),
 
   },
   superContainer:{
@@ -436,7 +435,7 @@ const SearchProdStyles = StyleSheet.create({
 
   },
   mainContainer: {
-    width: hp(percHeight(350)),
+    width: wp(percWidth(260)),
     margin : hp(percHeight(5)),
 
   },
@@ -457,14 +456,14 @@ const SearchProdStyles = StyleSheet.create({
   },
   
   productPic:{
-    width: hp(percHeight(80)),
-    height: hp(percHeight(80)),//used width to maintain ratio- very slight difference
-    margin: hp(percHeight(5)),
+    width: wp(percWidth(80)),
+    height: wp(percWidth(80)),//used width to maintain ratio- very slight difference
+    margin: wp(percWidth(5)),
   },
   productTitle:{
     fontSize: 12,
     fontWeight: 'bold',
-    marginLeft: hp(percHeight(5)),
+    marginLeft: wp(percWidth(5)),
   },
   location2: {
     height: hp(percHeight(45)),

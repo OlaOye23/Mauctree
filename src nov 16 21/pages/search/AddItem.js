@@ -1,10 +1,8 @@
 import React from 'react'
-import {View, ScrollView, TextInput, Text, Image, StyleSheet} from 'react-native'
+import {View, ScrollView, TextInput, Text, TouchableOpacity, Image, StyleSheet} from 'react-native'
 import { AsyncStorage, RefreshControl } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'
-
-import { TouchableOpacity } from '../../web/react-native-web';//'react-native' //
 
 
 
@@ -120,8 +118,8 @@ export default class AddItem extends React.Component{
   render(){
     return (
       
-          <View style={addItemStyles.allContainer}>
-            <ScrollView >
+          <View >
+            <ScrollView style={addItemStyles.allContainer}>
                 <View style={addItemStyles.modal}>
                 <Text style = {addItemStyles.modalText}>{this.state.current.name} </Text>
                 <Text style = {addItemStyles.modalText}>{this.state.current.size} </Text>
@@ -166,21 +164,21 @@ const addItemStyles = StyleSheet.create({
     color: 'black',
     //fontWeight: 'bold',
     fontSize: 9,
-    marginLeft: hp(percWidth(5)),
+    marginLeft: wp(percWidth(5)),
     alignSelf: 'center',
   },
   neutralCenterText: {
     color: 'black',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percWidth(5)),
+    marginLeft: wp(percWidth(5)),
     alignSelf: 'center',
   },
   goodCenterText: {
     color: 'green',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percWidth(5)),
+    marginLeft: wp(percWidth(5)),
     alignSelf: 'center',
   },
   badCenterText: {
@@ -193,14 +191,14 @@ const addItemStyles = StyleSheet.create({
     color: 'red',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percWidth(5)),
+    marginLeft: wp(percWidth(5)),
     //alignSelf: 'center',
   },
   goodText: {
     color: 'green',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percWidth(5)),
+    marginLeft: wp(percWidth(5)),
     //alignSelf: 'center',
   },
   searchBox: {
@@ -221,7 +219,7 @@ const addItemStyles = StyleSheet.create({
    },
 
   modalPic:{
-    width: hp(percWidth(250)),
+    width: wp(percWidth(250)),
     height: hp(percHeight(250)),
     alignSelf:'center'
   },
@@ -267,8 +265,8 @@ const addItemStyles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     height: hp(percHeight(40)),
-    width: hp(percWidth(60)),
-    marginLeft: hp(percWidth(10)),
+    width: wp(percWidth(60)),
+    marginLeft: wp(percWidth(10)),
     marginBottom: hp(percHeight(10)),
     color: 'black',
     borderBottomColor: 'black' ,
@@ -283,7 +281,12 @@ const addItemStyles = StyleSheet.create({
   
   allContainer:{
     alignSelf : 'center',
-    width: hp(percHeight(450)),
+    width: hp(percWidth(375)),
+    flex: 1,
+    paddingTop:  hp(percHeight(50)),
+    backgroundColor: 'white',
+    //paddingLeft:  hp(percHeight(60)),
+    //paddingRight:  hp(percHeight(60)),
   },
   titleContainer: {
     flexDirection: 'row',
@@ -295,7 +298,7 @@ const addItemStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     margin: 0,
-    marginLeft: hp(percWidth(5)),
+    marginLeft: wp(percWidth(5)),
 
   },
   superContainer:{
@@ -305,7 +308,7 @@ const addItemStyles = StyleSheet.create({
 
   },
   mainContainer: {
-    width: hp(percWidth(350)),
+    width: wp(percWidth(260)),
     margin : hp(percHeight(5)),
 
   },
@@ -326,15 +329,15 @@ const addItemStyles = StyleSheet.create({
   },
   
   productPic:{
-    width: hp(percWidth(80)),
-    height: hp(percWidth(80)),//used width to maintain ratio- very slight difference
-    margin: hp(percWidth(5)),
+    width: wp(percWidth(80)),
+    height: wp(percWidth(80)),//used width to maintain ratio- very slight difference
+    margin: wp(percWidth(5)),
 
   },
   productTitle:{
     fontSize: 12,
     fontWeight: 'bold',
-    marginLeft: hp(percWidth(5)),
+    marginLeft: wp(percWidth(5)),
   },
   location2: {
     height: hp(percHeight(45)),
