@@ -39,6 +39,14 @@ export default class MoreApps extends React.Component{
             "nav": "store",
             "link": "https://play.google.com/store/apps/details?id=com.adadevng.shopmob"
           },
+
+          {
+            "name": "Contact us on Whatsapp",
+            "description": "Chat with our representative on Whatsapp. Send us your questions, reviews, suggestions, requests, and complaints.",
+            "imgAddr": require('../../../assets/whatsapp.jpg'),
+            "nav": "store",
+            "link": "http://api.whatsapp.com/send?phone=+2348090653657"
+          },
       ]
       /*
 
