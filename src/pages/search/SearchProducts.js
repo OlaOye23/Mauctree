@@ -326,8 +326,8 @@ const SearchProdStyles = StyleSheet.create({
     //alignSelf: 'center',
   },
   searchBox: {
-    height: hp(percHeight(50)),
-    marginTop: 0,
+    height: hp(percHeight(50)), 
+    marginTop: 5,
     marginBottom: 10,
     paddingLeft: 0,
     textAlign: 'center',
