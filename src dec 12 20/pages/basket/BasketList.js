@@ -306,23 +306,17 @@ export default class BasketList extends React.Component{
              <Text style = {basketStyles.goodCenterText}>store is open! closes at 11pm</Text> : 
              this.state.store.open == "no" ? <Text style = {basketStyles.badCenterText}>store is closed! opens at 8am</Text>:
              <Text style = {basketStyles.neutralCenterText}>checking store...</Text>}
+            <TouchableOpacity 
+              disabled = {this.state.disableCheckout}
+              style = {this.state.disableCheckout === false? basketStyles.modalButton: basketStyles.modalDisabledButton}
+              onPress = {() => this.onCheckOut()}
+              >
+              <Text style = {basketStyles.buttonText}>CHECKOUT</Text>
+            </TouchableOpacity>
 
             <TouchableOpacity style = {basketStyles.modalButton} onPress = {() =>this.onClearBasket()}>
                 <Text style = {basketStyles.buttonText}>CLEAR BASKET</Text>
             </TouchableOpacity>
-
-
-            <TouchableOpacity 
-              disabled = {this.state.disableCheckout}
-              style = {this.state.disableCheckout === false? basketStyles.modalButton: basketStyles.modalDisabledButton}
-              onPress = {() => {
-                if (!this.state.disableCheckout){
-                  this.onCheckOut() 
-                }} }>
-              <Text style = {basketStyles.buttonText}>CHECKOUT</Text>
-            </TouchableOpacity>
-
-            
             
       </View>
       <ScrollView 

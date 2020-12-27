@@ -1,54 +1,40 @@
 import React from 'react'
-import {View, ScrollView, TextInput, Text, Image, StyleSheet, Linking} from 'react-native'
-import { AsyncStorage, RefreshControl } from 'react-native';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import {View, ScrollView, TextInput, Text, Image, StyleSheet} from 'react-native'
+import {getSelectProduct, getSelectStore}from '../../api/ShopsApi'
+import { AsyncStorage} from 'react-native'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'
 
-import { TouchableOpacity } from '../../web/react-native-web';//'react-native' //
-
-import * as Analytics from 'expo-firebase-analytics';
+import { TouchableOpacity } from '../../web/react-native-web'; //'react-native' //
 
 
 
 
-export default class AddItem extends React.Component{
+
+export default class UpdateItem extends React.Component{
   constructor(props){
       super(props)
-      this.prodList = []
+      this.basket = []
+      this.total = 0
       this.state = {
           forceRefresh: Math.floor(Math.random() * 100000000),//to force a re-render
           itemObj:{
-            name: "", 
+            name: null, 
             qty: "",
           },
-          current: {
-            name : "",
-            price: "",
-            imgURL: "",
-            stock: "",
-          },
-          disableAddButton: true,
-          
+          current: {},
+          disableUpdateButton: true, 
       }
   }
 
-  static navigationOptions = {
-    title: "Add Item",
-  };  
-
-
+   
   componentDidMount = async () =>{
     const { route } = this.props;
     const { current } = route.params;
     const { itemObj } = route.params;
-    this.setState({ current: current, itemObj: itemObj}, ()=>{
-      Analytics.logEvent('openItem', {
-        item: this.state.current,
-      })
-    })
+    this.setState({ current: current, itemObj: itemObj })
     //this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
   }
-
 
   static getDerivedStateFromError(error) {
     // Update state so the next render will show the fallback UI.
@@ -60,8 +46,8 @@ export default class AddItem extends React.Component{
     // You can also log the error to an error reporting service
     logErrorToMyService(error, errorInfo);
   }
-  
 
+  
   storeLocalData = async (key, val) => {
     try {
       await AsyncStorage.setItem(key, val)
@@ -71,10 +57,10 @@ export default class AddItem extends React.Component{
     }
   }
 
-
+  
   onChangeQty = (info, name, qty) =>{
-    this.setState({disableAddButton: true})
-    if (qty <= 0 || isNaN(parseInt(qty)) || qty == "" ){
+    this.setState({disableUpdateButton: true})
+    if (parseInt(qty) < 0 || isNaN(parseInt(qty)) || qty == "" ){
       qty = 0
     }
     let obj = {info : info, name : name, qty : parseInt(qty)}
@@ -82,19 +68,16 @@ export default class AddItem extends React.Component{
     console.log(qty)
     console.log(this.state.itemObj.qty)
     console.log(this.state.current.stock)
-    if ((qty == "") || (parseInt(qty) <= 0) || (parseInt(qty) > parseInt(this.state.current.stock) ) ){
-      this.setState({disableAddButton: true})
+    if ((qty == "") || (parseInt(qty) > parseInt(this.state.current.stock) ) ){//different from search page
+      this.setState({disableUpdateButton: true})
     }
     else{
-      this.setState({disableAddButton: false})
+      this.setState({disableUpdateButton: false})
     }
     console.log('onChangeQty', this.state.itemObj)
   }
 
-  onAddItem = () =>{
-    Analytics.logEvent('addToBasket', {
-      item: this.state.current,
-    })
+  onUpdateItem = () =>{
     //COPY TO ASYNCSTORAGE .....
     console.log(this.state.itemObj)
     if (this.state.itemObj.name){
@@ -105,77 +88,60 @@ export default class AddItem extends React.Component{
     this.setState({disableUpdateButton: true})
     const { navigation } = this.props;
     navigation.navigate(
-        'Search Products',
+        'Basket',
         //{state: this.state}
     )
     alert("Item Added")
-    console.log('onAddItem', this.state.itemObj)
+    console.log('onUpdateItem', this.state.itemObj)
   }
 
 
-  onCancelAdd = () => {
+  onCancelUpdate = () => {
     let obj = {name: "", qty: ""}
     this.setState({itemObj: obj})
-    this.setState({disableAddButton: true})
+    this.setState({disableUpdateButton: true})
     const { navigation } = this.props;
     navigation.navigate(
-        'Search Products',
+        'Basket',
         //{state: this.state}
     )
-    console.log('onCancelAdd', this.state.obj)
+    console.log('onCancelUpdate', this.state.obj)
   }
 
-  onMoreInfo = (item) =>{
-    let msg = `More Information Request%0A %0AItem: ${item.name} %0A %0AMessage:`
-    let chat = `http://api.whatsapp.com/send?text=${msg}&phone=+2348090653657`
-    Linking.openURL(chat)
-  }
 
-  
   render(){
     return (
-      
-          <View style={addItemStyles.allContainer}>
-            <ScrollView >
-                <View style={addItemStyles.modal}>
-                <Text style = {addItemStyles.modalText}>{this.state.current.name} </Text>
-                <Text style = {addItemStyles.modalText}>{this.state.current.size} </Text>
-                <Image source = {{uri:this.state.current.imgURL}} style = {addItemStyles.modalPic} />
-                <Text style = {addItemStyles.modalText}> N{this.state.current.price}</Text>
-                <Text style = {addItemStyles.modalText} >enter quantity:</Text>  
-                <Text style = {parseInt(this.state.current.stock) > 0? addItemStyles.goodCenterText: addItemStyles.badCenterText} >
+          <View style={UpdateItemStyles.allContainer}>
+            <ScrollView>
+                <View style={UpdateItemStyles.modal}>
+                <Text style = {UpdateItemStyles.modalText}>{this.state.current.name} </Text>
+                <Image source = {{uri:this.state.current.imgURL}} style = {UpdateItemStyles.modalPic} />
+                <Text style = {UpdateItemStyles.modalText}> N{this.state.current.price}</Text>
+                <Text style = {UpdateItemStyles.modalText} >enter quantity:</Text>  
+                <Text style = {parseInt(this.state.current.stock) > 0? UpdateItemStyles.goodCenterText: UpdateItemStyles.badCenterText} >
                     {this.state.current.stock} units available 
                 </Text>  
                   <TextInput 
                     keyboardType="numeric"
-                    style = {addItemStyles.textInput}
+                    style = {UpdateItemStyles.textInput}
                     placeholderTextColor = {'grey'}
                     placeholder = {String(0)}
                     underlineColorAndroid= {'transparent'}
                     value={String(this.state.itemObj.qty)}
                     onChangeText={(text) => this.onChangeQty(this.state.current,this.state.current.name, text)}
                   />
-                <Text style = {addItemStyles.badCenterText} >
+                <Text style = {UpdateItemStyles.badCenterText} >
                   {parseInt(this.state.itemObj.qty) > parseInt(this.state.current.stock)? "Not enough items in stock" : "" }
                 </Text> 
-                <Text style = {addItemStyles.modalText}> Total: N{this.state.current.price * this.state.itemObj.qty}</Text>
+                <Text style = {UpdateItemStyles.modalText}> Total: N{this.state.current.price * this.state.itemObj.qty}</Text>
                 <TouchableOpacity 
-                  disabled = {this.state.disableAddButton}
-                  style = {this.state.disableAddButton === false? addItemStyles.modalButton: addItemStyles.modalDisabledButton} 
-                  onPress = {() => {
-                    if (!this.state.disableAddButton){
-                      this.onAddItem() 
-                    }} }>
-                  <Text style = {addItemStyles.buttonText}>ADD TO BASKET</Text>
+                  disabled = {this.state.disableUpdateButton}
+                  style = {this.state.disableUpdateButton === false? UpdateItemStyles.modalButton: UpdateItemStyles.modalDisabledButton} 
+                  onPress = {() => this.onUpdateItem() }>
+                  <Text style = {UpdateItemStyles.buttonText}>UPDATE QUANTITY</Text>
                 </TouchableOpacity>
-                
-
-                <TouchableOpacity style = {addItemStyles.modalButton} onPress = {() => this.onMoreInfo(this.state.current) }>
-                  <Text style = {addItemStyles.buttonText}>MORE INFORMATION</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style = {addItemStyles.modalButton} onPress = {() => this.onCancelAdd() }>
-                  <Text style = {addItemStyles.buttonText}>CANCEL</Text>
+                <TouchableOpacity style = {UpdateItemStyles.modalButton} onPress = {() => this.onCancelUpdate() }>
+                  <Text style = {UpdateItemStyles.buttonText}>CANCEL</Text>
                 </TouchableOpacity>
                 </View>
               </ScrollView>
@@ -185,7 +151,7 @@ export default class AddItem extends React.Component{
 }
 
 
-const addItemStyles = StyleSheet.create({
+const UpdateItemStyles = StyleSheet.create({
   refreshText: {
     color: 'black',
     //fontWeight: 'bold',
@@ -193,18 +159,30 @@ const addItemStyles = StyleSheet.create({
     marginLeft: hp(percWidth(5)),
     alignSelf: 'center',
   },
+
+  totalContainer:{
+    marginBottom:hp(percHeight(10))
+  },
+
   neutralCenterText: {
     color: 'black',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percWidth(5)),
+    marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
+  },
+  neutralText: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 12,
+    marginLeft: hp(percHeight(5)),
+    //alignSelf: 'center',
   },
   goodCenterText: {
     color: 'green',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percWidth(5)),
+    marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
   badCenterText: {
@@ -217,14 +195,14 @@ const addItemStyles = StyleSheet.create({
     color: 'red',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percWidth(5)),
+    marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
   goodText: {
     color: 'green',
     fontWeight: 'bold',
     fontSize: 12,
-    marginLeft: hp(percWidth(5)),
+    marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
   searchBox: {
@@ -240,12 +218,12 @@ const addItemStyles = StyleSheet.create({
   },
 
   modal: { 
-    marginTop: hp(percHeight(25)),
+    marginTop: hp(percHeight(50)),
     alignContent: 'center',
    },
 
   modalPic:{
-    width: hp(percWidth(250)),
+    width: hp(percHeight(250)),
     height: hp(percHeight(250)),
     alignSelf:'center'
   },
@@ -263,7 +241,7 @@ const addItemStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     alignSelf: 'center',
-    padding: hp(percHeight(5)),
+    padding: 5,
     textAlign: 'center',
   },
   
@@ -287,12 +265,13 @@ const addItemStyles = StyleSheet.create({
     backgroundColor: 'grey',
   },
 
+
   textInput:{
     alignSelf: 'center',
     textAlign: 'center',
     height: hp(percHeight(40)),
-    width: hp(percWidth(60)),
-    marginLeft: hp(percWidth(10)),
+    width: hp(percHeight(60)),
+    marginLeft: hp(percHeight(10)),
     marginBottom: hp(percHeight(10)),
     color: 'black',
     borderBottomColor: 'black' ,
@@ -315,13 +294,6 @@ const addItemStyles = StyleSheet.create({
     margin: hp(percHeight(5)),
 
   },
-  sizeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    margin: 0,
-    marginLeft: hp(percWidth(5)),
-
-  },
   superContainer:{
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -329,7 +301,7 @@ const addItemStyles = StyleSheet.create({
 
   },
   mainContainer: {
-    width: hp(percWidth(350)),
+    width: hp(percHeight(350)),
     margin : hp(percHeight(5)),
 
   },
@@ -347,18 +319,19 @@ const addItemStyles = StyleSheet.create({
   newItemText: {
     fontWeight: 'bold',
     fontSize: 12,
+
   },
   
   productPic:{
-    width: hp(percWidth(80)),
-    height: hp(percWidth(80)),//used width to maintain ratio- very slight difference
-    margin: hp(percWidth(5)),
+    width: hp(percHeight(80)),
+    height: hp(percHeight(80)),
+    margin: hp(percHeight(5)),
 
   },
   productTitle:{
     fontSize: 12,
     fontWeight: 'bold',
-    marginLeft: hp(percWidth(5)),
+    marginLeft: hp(percHeight(5)),
   },
   location2: {
     height: hp(percHeight(45)),
@@ -373,3 +346,4 @@ const addItemStyles = StyleSheet.create({
 
 
 })
+

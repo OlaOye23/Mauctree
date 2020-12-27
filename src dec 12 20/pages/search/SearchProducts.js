@@ -42,10 +42,16 @@ export default class SearchProducts extends React.Component{
           searchQuery: "",
           itemAdded: false,
           disableAddButton: true,
-          loadingPic: true,
       }
 
-      
+      this.actions = [
+        {
+          text: "Accessibility",
+          icon: require("'../../../assets/icon.png"),
+          name: "bt_accessibility",
+          position: 1,
+        },
+      ]
       
   }
 
@@ -61,10 +67,7 @@ export default class SearchProducts extends React.Component{
     }
     try{
       this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
-      await getProducts(this.productsRetrieved)//, ()=>{
-      this.setState({loadingPic: false})
-      console.log('loading pic: '+ this.state.loadingPic)
-      //})
+      await getProducts(this.productsRetrieved)
     }
     catch (error){
       console.warn(error)
@@ -182,8 +185,6 @@ render(){
       </View>
 
       
-            <Image source = {{uri: require("../../../assets/loading.gif")}} style = {this.state.loadingPic == true? SearchProdStyles.loadingPic: SearchProdStyles.loadingPicHide} />
-          
       
       <ScrollView 
         refreshControl={
@@ -346,18 +347,6 @@ const SearchProdStyles = StyleSheet.create({
     width: hp(percHeight(250)),
     height: hp(percHeight(250)),
     alignSelf:'center'
-  },
-  loadingPic:{
-    width: hp(percHeight(50)),
-    height: hp(percHeight(50)),
-    alignSelf:'center',
-    alignContent: 'center',
-  },
-  loadingPicHide:{
-    width: hp(percHeight(1)),
-    height: hp(percHeight(1)),
-    alignSelf:'center',
-    alignContent: 'center',
   },
 
   modalText: {

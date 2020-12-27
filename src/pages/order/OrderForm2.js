@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {addOrder, updateProduct, getSelectStore, getSelectProduct} from '../../api/ShopsApi'
-import {StyleSheet, Modal, Image, TextInput, View, ScrollView, Linking, Platform} from 'react-native'
+import {StyleSheet, Modal, Image, TextInput, View, ScrollView} from 'react-native'
 import {Button, Text} from 'react-native-elements'
 import { AsyncStorage } from 'react-native';
 import * as yup from 'yup';
@@ -427,26 +427,11 @@ export default class OrderForm extends Component{
       await this.storeLocalData("checkoutPhone", this.state.phoneNumber)
       alert("your order is being submitted \n please wait...")
       const { navigation } = this.props;
-
-      let items = this.basket
-      let msg = "Order Items:%0A"
-      let i = 1
-      await this.asyncForEach(items, async (basketItem) => { 
-        msg += "%20" + i + ")" + basketItem.name + " x " + basketItem.qty + "%0A"
-        i += 1
-        })
-      msg += "%0AName: " + this.state.name + "%0A"
-      msg += "Address: " + this.state.house + "%20" + this.state.address + "%0A"
-      //msg += "Total: " + this.state.total + "%0A"
-
-      let link = `http://api.whatsapp.com/send?text=${msg}&phone=+2348090653657`
-      Linking.openURL(link)
-
-
-     
-
-      
-
+      navigation.navigate(
+        'Payment',
+        {order: this.state}
+      )
+/*
       try{
          await this.checkOutCheck().then( async (fail)=>{
           console.log('fail on submit i.e 2 '+ fail)
@@ -474,15 +459,11 @@ export default class OrderForm extends Component{
       }
       await this.storeHistory()
 
-       navigation.navigate(
-        'More Apps',
-        {order: this.state}
-      )
-
       navigation.navigate(
         'Order Complete',
-        {order: this.state}
+        {total: this.state.total}
       )
+  */
     }
 
  
@@ -633,39 +614,80 @@ export default class OrderForm extends Component{
                     setTimeout(()=>this.checkValidity(),500)
                     }}/>
 
-                <Text style={orderFormStyles.modalText}>your total is: N {this.state.total} </Text> 
+              
 
-                {/*<Text style={orderFormStyles.titleText}>items: N {this.state.total} </Text> 
-                <Text style={orderFormStyles.titleText}>paayment charges: N {100 + this.state.total * 0.015} </Text> */}
 
+
+              <View style = {{marginBottom: 300}}>
+                <Text style = {orderFormStyles.header} >payment details</Text>
+
+               
+
+                <Text style = {orderFormStyles.subHeader} >email address</Text>
+                <TextInput style = {this.state.invalidName === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
+                  placeholderTextColor = {'grey'}
+                  placeholder = {"e.g. Ola"}
+                  underlineColorAndroid= {'transparent'}
+                  value={this.state.email}
+                  onChangeText={(text) =>{
+                    this.setState({ email: text})
+                    setTimeout(()=>this.checkValidity(),500)
+                    }}/>
+
+                <Text style = {orderFormStyles.subHeader} >Card number</Text>  
+                <TextInput style = {this.state.invalidPhone === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
+                  keyboardType="numeric"
+                  placeholderTextColor = {'grey'}
+                  placeholder = {"e.g 1234 5678 9876 5432"}
+                  underlineColorAndroid= {'transparent'}
+                  value={this.state.cardNumber}
+                  onChangeText={(text) =>{
+                    this.setState({ cardNumber: text})
+                    setTimeout(()=>this.checkValidity(),500)
+                    }}/>
+
+                <Text style = {orderFormStyles.subHeader} >CVC 3-digit number</Text>  
+                <TextInput style = {this.state.invalidPhone === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
+                  keyboardType="numeric"
+                  placeholderTextColor = {'grey'}
+                  placeholder = {"e.g 234"}
+                  underlineColorAndroid= {'transparent'}
+                  value={this.state.cvc}
+                  onChangeText={(text) =>{
+                    this.setState({ cvc: text})
+                    setTimeout(()=>this.checkValidity(),500)
+                    }}/>
+
+                <Text style = {orderFormStyles.subHeader} >Expirty date</Text>  
+                <TextInput style = {this.state.invalidPhone === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
+                  keyboardType="numeric"
+                  placeholderTextColor = {'grey'}
+                  placeholder = {"MMYY"}
+                  underlineColorAndroid= {'transparent'}
+                  value={this.state.expiry.month + this.state.expiry.year}
+                  onChangeText={(text) =>{
+                    if (text.length == 4){
+                    let vExpiry = this.state.expiry
+                    vExpiry.month = text[0]+text[1] 
+                    vExpiry.year = text[2] + text[3]
+                    this.setState({ expiry: vExpiry})
+                    setTimeout(()=>this.checkValidity(),500)
+                    }}}/>
+                    
+             
+                    </View>
 
                 <TouchableOpacity 
                   disabled = {this.state.disableSubmit}
                   style = {this.state.disableSubmit === false? orderFormStyles.loadButton: orderFormStyles.modalDisabledButton} 
-                  onPress = {() => {
-                    if (!this.state.disableSubmit){
-                      this.onClickSubmit() 
-                    }} }>
-                  <Text style = {orderFormStyles.buttonText}>PAY WITH WHATSAPP</Text>
+                  onPress = {() => this.onClickSubmit()}>
+                  <Text style = {orderFormStyles.buttonText}>SUBMIT</Text>
                 </TouchableOpacity>
 
-                <Text style={orderFormStyles.titleText}>OR DOWNLOAD APP FOR MORE PAYMENT OPTIONS </Text> 
-                <TouchableOpacity 
-                  style = {orderFormStyles.loadButton} 
-                  onPress = {() => {
-                    Linking.openURL("https://play.google.com/store/apps/details?id=com.adadevng.shopmob")
-                  }}>
-                  <Text style = {orderFormStyles.buttonText}>DOWNLOAD ANDROID APP </Text>
-                  </TouchableOpacity>
+                <Text style={orderFormStyles.modalText}>your total is: N {this.state.total + 100 + this.state.total * 0.015} </Text> 
 
-                  <TouchableOpacity 
-                  style = {orderFormStyles.loadButton} 
-                  onPress = {() => {
-                    alert("iPhone app coming soon (1 week)...\n Please click PAY WITH WHATSAPP to continue")
-                  }}>
-                  <Text style = {orderFormStyles.buttonText}>DOWNLOAD IOS APP </Text>
-                  </TouchableOpacity>
-                
+                <Text style={orderFormStyles.titleText}>items: N {this.state.total} </Text> 
+                <Text style={orderFormStyles.titleText}>paayment charges: N {100 + this.state.total * 0.015} </Text> 
 
                 </View>
 

@@ -8,6 +8,7 @@ import AddItem from './src/pages/search/AddItem'
 
 import OrderForm from './src/pages/order/OrderForm'
 import OrderComplete from './src/pages/order/OrderComplete'
+//import OrderPayment from './src/pages/order/OrderPayment'
 
 import BasketList from './src/pages/basket/BasketList'
 import UpdateItem from './src/pages/basket/UpdateItem'
@@ -29,6 +30,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, Button, Platform } from 'react-native';
 
 import * as myEPT from './assets/myEPT.json'
+
+import * as Analytics from 'expo-firebase-analytics';
 
 
 const Tab = createBottomTabNavigator();
@@ -101,23 +104,39 @@ async function registerForPushNotificationsAsync() {
 }
 
 function App() {//stack
+  const routeNameRef = React.useRef();
+  const navigationRef = React.useRef();
+
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="More Apps">
+    <NavigationContainer
+      ref={navigationRef}
+        onReady={() => routeNameRef.current = navigationRef.current.getCurrentRoute().name}
+        onStateChange={() => {
+          const previousRouteName = routeNameRef.current;
+          const currentRouteName = navigationRef.current.getCurrentRoute().name
+
+          if (previousRouteName !== currentRouteName) {
+            Analytics.setCurrentScreen(currentRouteName);
+          }
+          routeNameRef.current = currentRouteName;
+        }}
+    >
+
+      <Stack.Navigator initialRouteName="Welcome">
         
         {/*<Stack.Screen name="Welcome" component={LogoPage} />*/}
         
-        <Stack.Screen name="Welcome" component={MoreApps} />
+        <Stack.Screen name="More Apps" component={MoreApps} options={{ title: 'Welcome' }}/>
+        <Stack.Screen name="Search Products" component={SearchProducts} options={{ title: 'Browse' }}/>
+        <Stack.Screen name="Add Item" component={AddItem} options={{ title: ' ' }}/>
+        <Stack.Screen name="Basket" component={BasketList} options={{ title: 'Basket' }}/>
+        <Stack.Screen name="Update Item" component={UpdateItem} options={{ title: ' ' }}/>
+        <Stack.Screen name="Order Details" component={OrderForm} options={{ title: 'Delivery' }}/>
+        <Stack.Screen name="Order Complete" component={OrderComplete} options={{ title: ' ' }}/>
+        <Stack.Screen name="My Orders" component={MyOrders} options={{ title: 'History' }}/>
+        <Stack.Screen name="View Order" component={ViewOrder} options={{ title: ' ' }}/>
 
-        <Stack.Screen name="Search Products" component={SearchProducts} />
-        <Stack.Screen name="Add Item" component={AddItem} />
-        <Stack.Screen name="Basket" component={BasketList} />
-        <Stack.Screen name="Update Item" component={UpdateItem} />
-        <Stack.Screen name="Order Details" component={OrderForm} />
-        <Stack.Screen name="Order Complete" component={OrderComplete} />
-        <Stack.Screen name="My Orders" component={MyOrders} />
-        <Stack.Screen name="View Order" component={ViewOrder} />
         
         
         {/*

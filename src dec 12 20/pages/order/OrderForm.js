@@ -642,10 +642,7 @@ export default class OrderForm extends Component{
                 <TouchableOpacity 
                   disabled = {this.state.disableSubmit}
                   style = {this.state.disableSubmit === false? orderFormStyles.loadButton: orderFormStyles.modalDisabledButton} 
-                  onPress = {() => {
-                    if (!this.state.disableSubmit){
-                      this.onClickSubmit() 
-                    }} }>
+                  onPress = {() => this.onClickSubmit()}>
                   <Text style = {orderFormStyles.buttonText}>PAY WITH WHATSAPP</Text>
                 </TouchableOpacity>
 

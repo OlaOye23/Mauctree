@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, ScrollView, TextInput, Text, Image, StyleSheet, Linking} from 'react-native'
+import {View, ScrollView, TextInput, Text, Image, StyleSheet} from 'react-native'
 import { AsyncStorage, RefreshControl } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {percWidth, percHeight} from '../../api/StyleFuncs'
@@ -125,12 +125,6 @@ export default class AddItem extends React.Component{
     console.log('onCancelAdd', this.state.obj)
   }
 
-  onMoreInfo = (item) =>{
-    let msg = `More Information Request%0A %0AItem: ${item.name} %0A %0AMessage:`
-    let chat = `http://api.whatsapp.com/send?text=${msg}&phone=+2348090653657`
-    Linking.openURL(chat)
-  }
-
   
   render(){
     return (
@@ -162,18 +156,9 @@ export default class AddItem extends React.Component{
                 <TouchableOpacity 
                   disabled = {this.state.disableAddButton}
                   style = {this.state.disableAddButton === false? addItemStyles.modalButton: addItemStyles.modalDisabledButton} 
-                  onPress = {() => {
-                    if (!this.state.disableAddButton){
-                      this.onAddItem() 
-                    }} }>
+                  onPress = {() => this.onAddItem() }>
                   <Text style = {addItemStyles.buttonText}>ADD TO BASKET</Text>
                 </TouchableOpacity>
-                
-
-                <TouchableOpacity style = {addItemStyles.modalButton} onPress = {() => this.onMoreInfo(this.state.current) }>
-                  <Text style = {addItemStyles.buttonText}>MORE INFORMATION</Text>
-                </TouchableOpacity>
-
                 <TouchableOpacity style = {addItemStyles.modalButton} onPress = {() => this.onCancelAdd() }>
                   <Text style = {addItemStyles.buttonText}>CANCEL</Text>
                 </TouchableOpacity>
