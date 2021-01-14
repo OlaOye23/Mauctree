@@ -153,44 +153,6 @@ openGps = (lat, lng) => {
 
 
 const orderHistoryStyles = StyleSheet.create({
-  neutralText: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: hp(percWidth(12)),
-    marginLeft: hp(percWidth(5)),
-    //alignSelf: 'center',
-  },
-  warnText: {
-    color: 'red',
-    fontWeight: 'bold',
-    fontSize: 12,
-    alignSelf: 'center',
-  },
-  badText: {
-    color: 'red',
-    fontWeight: 'bold',
-    fontSize: 12,
-    marginLeft: hp(percWidth(5)),
-    //alignSelf: 'center',
-  },
-  goodText: {
-    color: 'green',
-    fontWeight: 'bold',
-    fontSize: 12,
-    marginLeft: hp(percWidth(5)),
-    //alignSelf: 'center',
-  },
-  searchBox: {
-    height: hp(percWidth(50)),
-    marginTop: 0,
-    marginBottom: 0,
-    paddingLeft: 0,
-    textAlign: 'center',
-    fontSize: 18,
-    color: '#707070',
-    borderColor: '#c0c0c0',
-    borderWidth: 1,
-  },
   
   productPic:{
     width: hp(percWidth(80)),
@@ -204,11 +166,7 @@ const orderHistoryStyles = StyleSheet.create({
     alignContent: 'center',
    },
 
-  modalPic:{
-    width: hp(percWidth(250)),
-    height: hp(percWidth(250)),
-    alignSelf:'center'
-  },
+  
 
   modalTextFirst: {
     marginTop: hp(percWidth(50)),
@@ -226,15 +184,7 @@ const orderHistoryStyles = StyleSheet.create({
     padding: hp(percWidth(5)),
     textAlign: 'center',
   },
-  modalButtonFirst: {
-    margin: hp(percWidth(10)),
-    marginTop: hp(percWidth(50)),
-    marginBottom: hp(percWidth(20)),
-    alignItems: 'stretch',
-    paddingTop: hp(percWidth(10)),
-    paddingBottom: hp(percWidth(10)),
-    backgroundColor: 'black',
-  },
+ 
   
   modalButton: {
     margin: hp(percWidth(5)),
@@ -246,17 +196,7 @@ const orderHistoryStyles = StyleSheet.create({
     backgroundColor: 'black',
   },
 
-  textInput:{
-    alignSelf: 'center',
-    textAlign: 'center',
-    height: hp(percWidth(40)),
-    width: hp(percWidth(60)),
-    marginLeft: hp(percWidth(10)),
-    marginBottom: hp(percWidth(10)),
-    color: 'black',
-    borderBottomColor: 'black' ,
-    borderBottomWidth: hp(percWidth(1)),
-  },
+  
   buttonText: {
     fontSize: 12,
     textAlign: 'center',
@@ -266,7 +206,7 @@ const orderHistoryStyles = StyleSheet.create({
   
   allContainer:{
     alignSelf : 'center',
-    width: "100%"//hp(percHeight(450)),
+    width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),//hp(percHeight(450)),
   },
   titleContainer: {
     flexDirection: 'row',
@@ -285,44 +225,23 @@ const orderHistoryStyles = StyleSheet.create({
     margin : hp(percWidth(5)),
 
   },
-  description: {
-    margin: hp(percWidth(5)),
-    fontSize: 10,
-
-  },
+  
   titleText: {
     fontWeight: 'bold',
     fontSize: 12,
     alignSelf: 'center',
   },
   
-  newItemText: {
-    fontWeight: 'bold',
-    fontSize: 12,
-
-  },
+  
   
   orderPic:{
-    width: hp(percWidth(80)),
-    height: hp(percWidth(80)),
+    width: "20%",//hp(percWidth(80)),
+    height: wp("20%") < hp(percHeight(80))? wp("20%") : hp(percHeight(80)),
     margin: hp(percWidth(5)),
 
   },
-  orderTitle:{
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginLeft: hp(percWidth(5)),
-  },
-  location2: {
-    height: hp(percWidth(45)),
-    marginTop: hp(percWidth(0)),
-    marginBottom: hp(percWidth(5)),
-    textAlign: 'center',
-    fontSize: 16,
-    color: 'grey',
-    borderColor: 'grey',
-    borderWidth: hp(percWidth(1)),
-  },    
+  
+  
 
 
 })

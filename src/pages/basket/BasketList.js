@@ -188,8 +188,8 @@ export default class BasketList extends React.Component{
   onOpenItem =(product) => {
     console.log("Item pressed")
     /*let obj = this.state.itemObj
-    obj.qty = 1 */
-    this.setState({itemObj : obj})
+    obj.qty = 1 
+    this.setState({itemObj : obj})*/
     const { navigation } = this.props;
     navigation.navigate(
       'Update Item',
@@ -365,17 +365,9 @@ export default class BasketList extends React.Component{
 
 
 const basketStyles = StyleSheet.create({
-  refreshText: {
-    color: 'black',
-    //fontWeight: 'bold',
-    fontSize: 9,
-    marginLeft: hp(percWidth(5)),
-    alignSelf: 'center',
-  },
+  
 
-  totalContainer:{
-    marginBottom:hp(percHeight(10))
-  },
+  
 
   neutralCenterText: {
     color: 'black',
@@ -404,31 +396,9 @@ const basketStyles = StyleSheet.create({
     fontSize: 12,
     alignSelf: 'center',
   },
-  badText: {
-    color: 'red',
-    fontWeight: 'bold',
-    fontSize: 12,
-    marginLeft: hp(percHeight(5)),
-    //alignSelf: 'center',
-  },
-  goodText: {
-    color: 'green',
-    fontWeight: 'bold',
-    fontSize: 12,
-    marginLeft: hp(percHeight(5)),
-    //alignSelf: 'center',
-  },
-  searchBox: {
-    height: hp(percHeight(50)),
-    marginTop: 0,
-    marginBottom: 0,
-    paddingLeft: 0,
-    textAlign: 'center',
-    fontSize: 18,
-    color: '#707070',
-    borderColor: '#c0c0c0',
-    borderWidth: 1,
-  },
+  
+  
+  
 
   modal: { 
     marginTop: hp(percHeight(50)),
@@ -449,14 +419,7 @@ const basketStyles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  addConfirmText: {
-    marginTop: hp(percHeight(200)),
-    fontWeight: 'bold',
-    fontSize: 20,
-    alignSelf: 'center',
-    padding: 5,
-    textAlign: 'center',
-  },
+  
   
   modalButton: {
     margin: hp(percHeight(5)),
@@ -495,7 +458,7 @@ const basketStyles = StyleSheet.create({
   
   allContainer:{
     alignSelf : 'center',
-    width: "100%"//hp(percHeight(450)),
+    width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),//hp(percHeight(450)),
   },
   titleContainer: {
     flexDirection: 'row',
@@ -513,43 +476,22 @@ const basketStyles = StyleSheet.create({
     width: "75%",//hp(percWidth(350)),
     margin : hp(percHeight(5)),
   },
-  description: {
-    margin: hp(percHeight(5)),
-    fontSize: 12,
-
-  },
+  
   titleText: {
     fontWeight: 'bold',
     fontSize: 12,
     alignSelf: 'center',
   },
   
-  newItemText: {
-    fontWeight: 'bold',
-    fontSize: 12,
-
-  },
+  
   
   productPic:{
     width: "20%",
-    height: hp(percWidth(80)),//used width to maintain ratio- very slight difference
+    height: wp("20%") < hp(percHeight(80))? wp("20%") : hp(percHeight(80)),//used width to maintain ratio- very slight difference
     margin: hp(percWidth(5)),
   },
-  productTitle:{
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginLeft: hp(percHeight(5)),
-  },
-  location2: {
-    height: hp(percHeight(45)),
-    marginTop: 0,
-    marginBottom: hp(percHeight(5)),
-    textAlign: 'center',
-    fontSize: 16,
-    color: 'grey',
-    borderColor: 'grey',
-    borderWidth: 1,
-  },    
+  
+     
 
 
 })

@@ -271,57 +271,38 @@ render(){
 
 
 const SearchProdStyles = StyleSheet.create({
-  floatingActionButton: {
-    position: 'absolute',
-    width: 20,
-    height: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    right: 20,
-    bottom: 20,
-    backgroundColor: 'black',
-    borderRadius: 30,
-    elevation: 8
-  },
 
-  refreshText: {
-    color: 'black',
-    //fontWeight: 'bold',
-    fontSize: 9,
-    marginLeft: hp(percHeight(5)),
-    alignSelf: 'center',
-  },
-  neutralCenterText: {
+  alCenterText: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
   goodCenterText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
   badCenterText: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
     alignSelf: 'center',
   },
   badText: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
     marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
   goodText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
     marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
@@ -331,7 +312,7 @@ const SearchProdStyles = StyleSheet.create({
     marginBottom: 10,
     paddingLeft: 0,
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: hp(percHeight(18)),
     color: '#707070',
     borderColor: '#c0c0c0',
     borderWidth: 1,
@@ -362,20 +343,13 @@ const SearchProdStyles = StyleSheet.create({
 
   modalText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: hp(percHeight(20)),
     alignSelf: 'center',
     padding: hp(percHeight(5)),
     textAlign: 'center',
   },
 
-  addConfirmText: {
-    marginTop: hp(percHeight(200)),
-    fontWeight: 'bold',
-    fontSize: 20,
-    alignSelf: 'center',
-    padding: hp(percHeight(5)),
-    textAlign: 'center',
-  },
+  
   
   modalButton: {
     margin: hp(percHeight(5)),
@@ -416,7 +390,7 @@ const SearchProdStyles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   buttonText: {
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
@@ -424,7 +398,7 @@ const SearchProdStyles = StyleSheet.create({
   
   allContainer:{
     alignSelf : 'center',
-    width: "100%",//hp("67%") < wp("100%")? hp("67%"): wp("100%"),- BS
+    width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),//hp("67%") < wp("100%")? hp("67%"): wp("100%"),- BS
   },
   titleContainer: {
     flexDirection: 'row',
@@ -458,40 +432,24 @@ const SearchProdStyles = StyleSheet.create({
   },
   description: {
     margin: hp(percHeight(5)),
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
 
   },
   titleText: {
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
     alignSelf: 'center',
   },
   
-  newItemText: {
-    fontWeight: 'bold',
-    fontSize: 12,
-  },
+  
   
   productPic:{
     width: "20%",//hp(percHeight(80)),
-    //height: percHeight(80),//used width to maintain ratio- very slight difference
+    height: wp("20%") < hp(percHeight(80))? wp("20%") : hp(percHeight(80)),//used width to maintain ratio- very slight difference
     margin: hp(percHeight(5)),
   },
-  productTitle:{
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginLeft: hp(percHeight(5)),
-  },
-  location2: {
-    height: hp(percHeight(45)),
-    marginTop: 0,
-    marginBottom: hp(percHeight(5)),
-    textAlign: 'center',
-    fontSize: 16,
-    color: 'grey',
-    borderColor: 'grey',
-    borderWidth: 1,
-  },    
+  
+     
 
 
 })

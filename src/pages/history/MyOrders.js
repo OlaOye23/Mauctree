@@ -330,7 +330,7 @@ const orderHistoryStyles = StyleSheet.create({
   
   allContainer:{
     alignSelf : 'center',
-    width: "100%",//hp(percHeight(450)),
+    width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),//hp(percHeight(450)),
   },
   titleContainer: {
     flexDirection: 'row',
@@ -345,7 +345,7 @@ const orderHistoryStyles = StyleSheet.create({
 
   },
   mainContainer: {
-    width: hp(percWidth(350)),
+    width: "75%",//hp(percWidth(350)),
     margin : hp(percWidth(5)),
 
   },

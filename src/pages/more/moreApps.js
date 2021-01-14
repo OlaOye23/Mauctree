@@ -154,21 +154,21 @@ const moreAppStyles = StyleSheet.create({
   refreshText: {
     color: 'black',
     //fontWeight: 'bold',
-    fontSize: 9,
+    fontSize: hp(percHeight(9)),
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
   neutralCenterText: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
   goodCenterText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
@@ -181,14 +181,14 @@ const moreAppStyles = StyleSheet.create({
   badText: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
     marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
   goodText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
     marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
@@ -198,7 +198,7 @@ const moreAppStyles = StyleSheet.create({
     marginBottom: 10,
     paddingLeft: 0,
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: hp(percHeight(18)),
     color: '#707070',
     borderColor: '#c0c0c0',
     borderWidth: 1,
@@ -217,7 +217,7 @@ const moreAppStyles = StyleSheet.create({
 
   modalText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: hp(percHeight(20)),
     alignSelf: 'center',
     padding: hp(percHeight(5)),
     textAlign: 'center',
@@ -226,7 +226,7 @@ const moreAppStyles = StyleSheet.create({
   addConfirmText: {
     marginTop: hp(percHeight(200)),
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: hp(percHeight(20)),
     alignSelf: 'center',
     padding: hp(percHeight(5)),
     textAlign: 'center',
@@ -262,7 +262,7 @@ const moreAppStyles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   buttonText: {
-    fontSize: 12,
+    fontSize: hp(percHeight(20)),
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
@@ -270,7 +270,7 @@ const moreAppStyles = StyleSheet.create({
   
   allContainer:{
     alignSelf : 'center',
-    width: "100%",
+    width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),
   },
   titleContainer: {
     flexDirection: 'row',
@@ -298,27 +298,27 @@ const moreAppStyles = StyleSheet.create({
   },
   description: {
     margin: hp(percHeight(5)),
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
 
   },
   titleText: {
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
     alignSelf: 'center',
   },
   
   newItemText: {
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
   },
   
   appPic:{
     width: "20%",
-    height: hp(percHeight(80)),//used width to maintain ratio- very slight difference
+    height:  wp("20%") < hp(percHeight(80))? wp("20%") : hp(percHeight(80)),//used width to maintain ratio- very slight difference
     margin: hp(percHeight(5)),
   },
   appTitle:{
-    fontSize: 12,
+    fontSize: hp(percHeight(12)),
     fontWeight: 'bold',
     marginLeft: hp(percHeight(5)),
   },
@@ -327,7 +327,7 @@ const moreAppStyles = StyleSheet.create({
     marginTop: 0,
     marginBottom: hp(percHeight(5)),
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: hp(percHeight(12)),
     color: 'grey',
     borderColor: 'grey',
     borderWidth: 1,

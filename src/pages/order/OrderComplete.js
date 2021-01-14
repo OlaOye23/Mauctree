@@ -136,6 +136,7 @@ const orderCompleteStyles = StyleSheet.create({
       backgroundColor: 'white',
       paddingLeft:  hp(percHeight(60)),
       paddingRight:  hp(percHeight(60)),
+      width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),
       
     },
     header: {
