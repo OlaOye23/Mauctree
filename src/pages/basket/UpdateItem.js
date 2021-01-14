@@ -286,7 +286,7 @@ const UpdateItemStyles = StyleSheet.create({
   
   allContainer:{
     alignSelf : 'center',
-    width: hp(percHeight(450)),
+    width: "100%",//hp(percHeight(450)),
   },
   titleContainer: {
     flexDirection: 'row',

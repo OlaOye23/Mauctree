@@ -73,7 +73,7 @@ export default class AddItem extends React.Component{
 
 
   onChangeQty = (info, name, qty) =>{
-    this.setState({disableAddButton: true})
+    this.setState({disableAddButton: false})
     if (qty <= 0 || isNaN(parseInt(qty)) || qty == "" ){
       qty = 0
     }
@@ -245,7 +245,7 @@ const addItemStyles = StyleSheet.create({
    },
 
   modalPic:{
-    width: hp(percWidth(250)),
+    width: wp(percWidth(250)),
     height: hp(percHeight(250)),
     alignSelf:'center'
   },
@@ -307,7 +307,7 @@ const addItemStyles = StyleSheet.create({
   
   allContainer:{
     alignSelf : 'center',
-    width: hp(percHeight(450)),
+    width: "100%",//hp(percHeight(450)),
   },
   titleContainer: {
     flexDirection: 'row',
@@ -328,7 +328,7 @@ const addItemStyles = StyleSheet.create({
     margin: hp(percHeight(5)),
 
   },
-  mainContainer: {
+  mainContainer: {//not used here
     width: hp(percWidth(350)),
     margin : hp(percHeight(5)),
 

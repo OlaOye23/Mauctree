@@ -270,7 +270,7 @@ const moreAppStyles = StyleSheet.create({
   
   allContainer:{
     alignSelf : 'center',
-    width: hp(percHeight(450)),
+    width: "100%",
   },
   titleContainer: {
     flexDirection: 'row',
@@ -292,7 +292,7 @@ const moreAppStyles = StyleSheet.create({
 
   },
   mainContainer: {
-    width: hp(percHeight(350)),
+    width: "75%",
     margin : hp(percHeight(5)),
 
   },
@@ -313,7 +313,7 @@ const moreAppStyles = StyleSheet.create({
   },
   
   appPic:{
-    width: hp(percHeight(80)),
+    width: "20%",
     height: hp(percHeight(80)),//used width to maintain ratio- very slight difference
     margin: hp(percHeight(5)),
   },

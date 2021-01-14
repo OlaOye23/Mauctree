@@ -187,7 +187,9 @@ export default class BasketList extends React.Component{
 
   onOpenItem =(product) => {
     console.log("Item pressed")
-    //this.setState({current : product})
+    /*let obj = this.state.itemObj
+    obj.qty = 1 */
+    this.setState({itemObj : obj})
     const { navigation } = this.props;
     navigation.navigate(
       'Update Item',
@@ -493,7 +495,7 @@ const basketStyles = StyleSheet.create({
   
   allContainer:{
     alignSelf : 'center',
-    width: hp(percHeight(450)),
+    width: "100%"//hp(percHeight(450)),
   },
   titleContainer: {
     flexDirection: 'row',
@@ -508,7 +510,7 @@ const basketStyles = StyleSheet.create({
 
   },
   mainContainer: {
-    width: hp(percWidth(350)),
+    width: "75%",//hp(percWidth(350)),
     margin : hp(percHeight(5)),
   },
   description: {
@@ -529,7 +531,7 @@ const basketStyles = StyleSheet.create({
   },
   
   productPic:{
-    width: hp(percWidth(80)),
+    width: "20%",
     height: hp(percWidth(80)),//used width to maintain ratio- very slight difference
     margin: hp(percWidth(5)),
   },

@@ -718,7 +718,7 @@ const orderFormStyles = StyleSheet.create({
   },
     regForm: {
       alignSelf : 'center',
-      width: hp(percHeight(450)),
+      width: "80%%",//hp(percHeight(450)),
       
     },
     header: {

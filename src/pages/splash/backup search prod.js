@@ -202,7 +202,7 @@ render(){
               <View style = {SearchProdStyles.mainContainer}>
                   <View style = {SearchProdStyles.titleContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.item.name} </Text>
-                      <Text style = {SearchProdStyles.titleText}> N{product.item.price}</Text>
+                      <Text style = {SearchProdStyles.priceText}> N{product.item.price}</Text>
                   </View>
                   <View style = {SearchProdStyles.sizeContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.item.size} </Text>
@@ -232,7 +232,7 @@ render(){
                 <View style = {SearchProdStyles.mainContainer}>
                     <View style = {SearchProdStyles.titleContainer}>
                         <Text style = {SearchProdStyles.titleText}>{product.name} </Text>
-                        <Text style = {SearchProdStyles.titleText}> N{product.price}</Text>
+                        <Text style = {SearchProdStyles.priceText}> N{product.price}</Text>
                     </View>
                     <View style = {SearchProdStyles.sizeContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.size} </Text>
@@ -424,7 +424,7 @@ const SearchProdStyles = StyleSheet.create({
   
   allContainer:{
     alignSelf : 'center',
-    width: "100%",//hp("67%") < wp("100%")? hp("67%"): wp("100%"),- BS
+    width: "100%",//hp(percHeight(450)),
   },
   titleContainer: {
     flexDirection: 'row',
@@ -447,13 +447,16 @@ const SearchProdStyles = StyleSheet.create({
   },
   superContainer:{
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     margin: hp(percHeight(5)),
 
   },
   mainContainer: {
-    width:"75%",// hp(percHeight(350)),
+    //width: hp(percHeight(350)),
+    
+    //justifyContent: 'space-between',
     margin : hp(percHeight(5)),
+   
 
   },
   description: {
@@ -466,6 +469,11 @@ const SearchProdStyles = StyleSheet.create({
     fontSize: 12,
     alignSelf: 'center',
   },
+  priceText: {
+    fontWeight: 'bold',
+    fontSize: 12,
+    alignSelf: 'flex-end',
+  },
   
   newItemText: {
     fontWeight: 'bold',
@@ -473,8 +481,8 @@ const SearchProdStyles = StyleSheet.create({
   },
   
   productPic:{
-    width: "20%",//hp(percHeight(80)),
-    //height: percHeight(80),//used width to maintain ratio- very slight difference
+    width: hp(percHeight(80)),
+    height: hp(percHeight(80)),//used width to maintain ratio- very slight difference
     margin: hp(percHeight(5)),
   },
   productTitle:{
