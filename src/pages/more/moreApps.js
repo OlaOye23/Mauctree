@@ -20,7 +20,7 @@ export default class MoreApps extends React.Component{
 
           {
               "name": "Continue Shopping",
-              "description": "Shop and pay before or after delivery. Our selection is growing. We deliver within 10 to 30 minutes",
+              "description": "Shop and pay before or after delivery. Our selection is growing. We deliver between 10 minutes and 2 hours",
               "imgAddr": require('../../../assets/icon.png'),
               "nav": "Search Products"
           },
@@ -44,7 +44,7 @@ export default class MoreApps extends React.Component{
 
           {
             "name": "Contact us on Whatsapp",
-            "description": "Chat with our representative on Whatsapp. Send us your questions, reviews, suggestions, requests, and complaints.",
+            "description": "Chat with our representative on Whatsapp. Send us your questions, reviews, suggestions, requests, and complaints. We are very responsive",
             "imgAddr": require('../../../assets/whatsapp.jpg'),
             "nav": "store",
             "link": "http://api.whatsapp.com/send?phone=+2348090653657"
@@ -154,41 +154,41 @@ const moreAppStyles = StyleSheet.create({
   refreshText: {
     color: 'black',
     //fontWeight: 'bold',
-    fontSize: hp(percHeight(9)),
+    fontSize: hp(percHeight(9*1.25)),
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
   neutralCenterText: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
   goodCenterText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
   badCenterText: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: 12*1.25,
     alignSelf: 'center',
   },
   badText: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
   goodText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
@@ -198,7 +198,7 @@ const moreAppStyles = StyleSheet.create({
     marginBottom: 10,
     paddingLeft: 0,
     textAlign: 'center',
-    fontSize: hp(percHeight(18)),
+    fontSize: hp(percHeight(18*1.25)),
     color: '#707070',
     borderColor: '#c0c0c0',
     borderWidth: 1,
@@ -217,7 +217,7 @@ const moreAppStyles = StyleSheet.create({
 
   modalText: {
     fontWeight: 'bold',
-    fontSize: hp(percHeight(20)),
+    fontSize: hp(percHeight(20*1.25)),
     alignSelf: 'center',
     padding: hp(percHeight(5)),
     textAlign: 'center',
@@ -226,7 +226,7 @@ const moreAppStyles = StyleSheet.create({
   addConfirmText: {
     marginTop: hp(percHeight(200)),
     fontWeight: 'bold',
-    fontSize: hp(percHeight(20)),
+    fontSize: hp(percHeight(20*1.25)),
     alignSelf: 'center',
     padding: hp(percHeight(5)),
     textAlign: 'center',
@@ -262,7 +262,7 @@ const moreAppStyles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   buttonText: {
-    fontSize: hp(percHeight(20)),
+    fontSize: hp(percHeight(20*1.25)),
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
@@ -298,18 +298,18 @@ const moreAppStyles = StyleSheet.create({
   },
   description: {
     margin: hp(percHeight(5)),
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
 
   },
   titleText: {
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     alignSelf: 'center',
   },
   
   newItemText: {
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
   },
   
   appPic:{
@@ -318,7 +318,7 @@ const moreAppStyles = StyleSheet.create({
     margin: hp(percHeight(5)),
   },
   appTitle:{
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     fontWeight: 'bold',
     marginLeft: hp(percHeight(5)),
   },
@@ -327,7 +327,7 @@ const moreAppStyles = StyleSheet.create({
     marginTop: 0,
     marginBottom: hp(percHeight(5)),
     textAlign: 'center',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     color: 'grey',
     borderColor: 'grey',
     borderWidth: 1,

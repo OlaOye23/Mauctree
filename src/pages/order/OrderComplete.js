@@ -67,8 +67,8 @@ export default class OrderComplete extends Component{
                         <Text style = {orderCompleteStyles.modalText}>we're on our way!</Text>
                         <Text style = {orderCompleteStyles.modalText}>thank you for shopping with us! </Text>
                           
-                        <Text style = {orderCompleteStyles.modalSmallText}>{"\n"} Expect our call in 1 minute </Text>
-                        <Text style = {orderCompleteStyles.modalSmallText}>Expect delivery in 15 minutes </Text>
+                        <Text style = {orderCompleteStyles.modalSmallText}>{"\n"} expect our call in 1 minute </Text>
+                        <Text style = {orderCompleteStyles.modalSmallText}>expect delivery in between 10 minutes and 2 hours</Text>
                         
                         <Text style = {orderCompleteStyles.modalSmallText}>{"\n"} name: {this.state.name}</Text>
                         <Text style = {orderCompleteStyles.modalSmallText}>amount due: N{this.state.total}</Text>
@@ -109,7 +109,7 @@ const orderCompleteStyles = StyleSheet.create({
   },
   topText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: hp(percHeight(20*1.25)),
     alignSelf: 'center',
     marginTop:  hp(percHeight(100)),
     padding:  hp(percHeight(5)),
@@ -117,14 +117,14 @@ const orderCompleteStyles = StyleSheet.create({
   },
   modalText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: hp(percHeight(20*1.25)),
     alignSelf: 'center',
     padding:  hp(percHeight(5)),
     textAlign: 'center',
   },
   modalSmallText: {
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: hp(percHeight(15*1.25)),
     alignSelf: 'center',
     padding:  hp(percHeight(5)),
     textAlign: 'center',
@@ -140,7 +140,7 @@ const orderCompleteStyles = StyleSheet.create({
       
     },
     header: {
-      fontSize: 24,
+      fontSize: hp(percHeight(24*1.25)),
       color: 'black',
       paddingBottom:  hp(percHeight(10)),
       marginBottom:  hp(percHeight(40)),
@@ -149,7 +149,7 @@ const orderCompleteStyles = StyleSheet.create({
       fontWeight: 'bold',
     },
     subHeader:{
-      fontSize: 14,
+      fontSize: hp(percHeight(14*1.25)),
       color: 'black',
       borderBottomColor: 'white' ,
       borderBottomWidth: 1,
@@ -183,7 +183,7 @@ const orderCompleteStyles = StyleSheet.create({
     backgroundColor: 'black',
   },
   buttonText: {
-    fontSize: 12,
+    fontSize: hp(percHeight(12*1.25)),
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
@@ -196,7 +196,7 @@ const orderCompleteStyles = StyleSheet.create({
 
   modalText: {
     fontWeight: 'bold',
-    fontSize:  20,
+    fontSize:  hp(percHeight(20*1.25)),
     alignSelf: 'center',
     padding: 5,
     textAlign: 'center',
@@ -204,7 +204,7 @@ const orderCompleteStyles = StyleSheet.create({
 
   titleText: {
     fontWeight: 'bold',
-    fontSize:  12,
+    fontSize:  hp(percHeight(12*1.25)),
     alignSelf: 'center',
   },
 

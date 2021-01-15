@@ -166,7 +166,7 @@ export default class BasketList extends React.Component{
               let key = store[i][0];
               let value = store[i][1];
               let prodObj = JSON.parse(value)
-              console.log(prodObj.qty)
+              //console.log(prodObj.qty)
               if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
                 await AsyncStorage.setItem(key, JSON.stringify({"": ""}))
               }
@@ -372,28 +372,28 @@ const basketStyles = StyleSheet.create({
   neutralCenterText: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12*1.25)),
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
   neutralText: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12*1.25)),
     marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
   goodCenterText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12*1.25)),
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
   badCenterText: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12*1.25)),
     alignSelf: 'center',
   },
   
@@ -413,7 +413,7 @@ const basketStyles = StyleSheet.create({
 
   modalText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: hp(percHeight(20*1.25)),
     alignSelf: 'center',
     padding: hp(percHeight(5)),
     textAlign: 'center',
@@ -438,19 +438,9 @@ const basketStyles = StyleSheet.create({
   },
 
 
-  textInput:{
-    alignSelf: 'center',
-    textAlign: 'center',
-    height: hp(percHeight(40)),
-    width: hp(percHeight(60)),
-    marginLeft: hp(percHeight(10)),
-    marginBottom: hp(percHeight(10)),
-    color: 'black',
-    borderBottomColor: 'black' ,
-    borderBottomWidth: 1,
-  },
+  
   buttonText: {
-    fontSize: 12,
+    fontSize: hp(percHeight(12*1.25)),
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
@@ -479,7 +469,7 @@ const basketStyles = StyleSheet.create({
   
   titleText: {
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: hp(percHeight(12*1.25)),
     alignSelf: 'center',
   },
   

@@ -575,7 +575,7 @@ export default class OrderForm extends Component{
                 <View style = {{marginBottom: 300}}>
                 <Text style = {orderFormStyles.header} >delivery details</Text>
 
-                <Text style = {orderFormStyles.subHeader} >your name</Text>
+                <Text style = {orderFormStyles.subHeader} >your name:</Text>
                 <TextInput style = {this.state.invalidName === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
                   placeholderTextColor = {'grey'}
                   placeholder = {"e.g. Ola"}
@@ -634,6 +634,7 @@ export default class OrderForm extends Component{
                     }}/>
 
                 <Text style={orderFormStyles.modalText}>your total is: N {this.state.total} </Text> 
+                <Text style = {orderFormStyles.modalSmallText}>expect delivery in between 10 minutes and 2 hours</Text>
 
                 {/*<Text style={orderFormStyles.titleText}>items: N {this.state.total} </Text> 
                 <Text style={orderFormStyles.titleText}>paayment charges: N {100 + this.state.total * 0.015} </Text> */}
@@ -649,7 +650,7 @@ export default class OrderForm extends Component{
                   <Text style = {orderFormStyles.buttonText}>PAY WITH WHATSAPP</Text>
                 </TouchableOpacity>
 
-                <Text style={orderFormStyles.titleText}>OR DOWNLOAD APP FOR MORE PAYMENT OPTIONS </Text> 
+                <Text style={orderFormStyles.modalSmallText}>OR DOWNLOAD APP FOR MORE PAYMENT OPTIONS </Text> 
                 <TouchableOpacity 
                   style = {orderFormStyles.loadButton} 
                   onPress = {() => {
@@ -696,7 +697,7 @@ const orderFormStyles = StyleSheet.create({
   },
   topText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: hp(percHeight(20*1.25)),
     alignSelf: 'center',
     marginTop:  hp(percHeight(100)),
     padding:  hp(percHeight(5)),
@@ -704,14 +705,14 @@ const orderFormStyles = StyleSheet.create({
   },
   modalText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: hp(percHeight(20*1.25)),
     alignSelf: 'center',
     padding:  hp(percHeight(5)),
     textAlign: 'center',
   },
   modalSmallText: {
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: hp(percHeight(15*1.25)),
     alignSelf: 'center',
     padding:  hp(percHeight(5)),
     textAlign: 'center',
@@ -722,19 +723,19 @@ const orderFormStyles = StyleSheet.create({
       
     },
     header: {
-      fontSize: 24,
+      fontSize: hp(percHeight(24*1.25)),
       color: 'black',
       paddingBottom:  hp(percHeight(10)),
       marginBottom:  hp(percHeight(40)),
-      borderBottomColor: 'white',
-      borderBottomWidth: 1,
+      //borderBottomColor: 'white',
+      //borderBottomWidth: 1,
       fontWeight: 'bold',
     },
     subHeader:{
-      fontSize: 14,
+      fontSize: hp(percHeight(14*1.25)),
       color: 'black',
-      borderBottomColor: 'white' ,
-      borderBottomWidth: 1,
+      //borderBottomColor: 'white' ,
+      //borderBottomWidth: 1,
       fontWeight: 'bold',
       marginBottom:  hp(percHeight(50)),
     },
@@ -765,7 +766,7 @@ const orderFormStyles = StyleSheet.create({
     backgroundColor: 'black',
   },
   buttonText: {
-    fontSize: 12,
+    fontSize: hp(percHeight(12*1.25)),
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
@@ -778,7 +779,7 @@ const orderFormStyles = StyleSheet.create({
 
   modalText: {
     fontWeight: 'bold',
-    fontSize:  20,
+    fontSize:  hp(percHeight(20*1.25)),
     alignSelf: 'center',
     padding: 5,
     textAlign: 'center',
@@ -786,7 +787,7 @@ const orderFormStyles = StyleSheet.create({
 
   titleText: {
     fontWeight: 'bold',
-    fontSize:  12,
+    fontSize:  hp(percHeight(12*1.25)),
     alignSelf: 'center',
   },
 

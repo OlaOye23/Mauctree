@@ -7,6 +7,8 @@ import {percWidth, percHeight} from '../../api/StyleFuncs'
 
 import { TouchableOpacity } from '../../web/react-native-web'; //'react-native' //
 
+import * as Analytics from 'expo-firebase-analytics';
+
 
 
 
@@ -32,9 +34,15 @@ export default class UpdateItem extends React.Component{
     const { route } = this.props;
     const { current } = route.params;
     const { itemObj } = route.params;
-    itemObj.qty = 1
-    this.setState({ current: current, itemObj: itemObj })
-    //this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
+    let item = JSON.parse(await AsyncStorage.getItem(current.name))
+    itemObj.qty = item.qty
+    this.setState({ current: current, itemObj: itemObj}, ()=>{
+      this.onChangeQty(this.state.current,this.state.current.name, itemObj.qty)
+      Analytics.logEvent('editItem', {
+        item: this.state.current,
+      })
+    })
+    this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
   }
 
   static getDerivedStateFromError(error) {
@@ -156,14 +164,14 @@ const UpdateItemStyles = StyleSheet.create({
   goodCenterText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     marginLeft: hp(percWidth(5)),
     alignSelf: 'center',
   },
   badCenterText: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     alignSelf: 'center',
   },
   
@@ -183,7 +191,7 @@ const UpdateItemStyles = StyleSheet.create({
 
   modalText: {
     fontWeight: 'bold',
-    fontSize: hp(percHeight(20)),
+    fontSize: hp(percHeight(20*1.25)),
     alignSelf: 'center',
     padding: hp(percHeight(5)),
     textAlign: 'center',
@@ -213,7 +221,7 @@ const UpdateItemStyles = StyleSheet.create({
 
   
   buttonText: {
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',

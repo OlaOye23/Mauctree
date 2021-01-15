@@ -43,11 +43,13 @@ export default class AddItem extends React.Component{
     const { itemObj } = route.params;
     itemObj.qty = 1
     this.setState({ current: current, itemObj: itemObj}, ()=>{
+      this.onChangeQty(this.state.current,this.state.current.name, 1)
       Analytics.logEvent('openItem', {
         item: this.state.current,
       })
     })
-    //this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
+    //console.log(this.state.itemObj.qty)
+    this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
   }
 
 
@@ -79,6 +81,7 @@ export default class AddItem extends React.Component{
       qty = 0
     }
     let obj = {info : info, name : name, qty : parseInt(qty)}
+    obj.info.qty = 1
     this.setState({itemObj : obj})
     console.log(qty)
     console.log(this.state.itemObj.qty)
@@ -100,7 +103,7 @@ export default class AddItem extends React.Component{
     console.log(this.state.itemObj)
     if (this.state.itemObj.name){
       this.storeLocalData(this.state.itemObj.name, JSON.stringify(this.state.itemObj))
-      let obj = {name: "", qty: ""}
+      let obj = {name: "", qty: "1"}
       this.setState({itemObj: obj})
     }
     this.setState({disableUpdateButton: true})
@@ -115,7 +118,7 @@ export default class AddItem extends React.Component{
 
 
   onCancelAdd = () => {
-    let obj = {name: "", qty: ""}
+    let obj = {name: "", qty: "1"}
     this.setState({itemObj: obj})
     this.setState({disableAddButton: true})
     const { navigation } = this.props;
@@ -193,14 +196,14 @@ const addItemStyles = StyleSheet.create({
   goodCenterText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     marginLeft: hp(percWidth(5)),
     alignSelf: 'center',
   },
   badCenterText: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     alignSelf: 'center',
   },
   
@@ -220,7 +223,7 @@ const addItemStyles = StyleSheet.create({
 
   modalText: {
     fontWeight: 'bold',
-    fontSize: hp(percHeight(20)),
+    fontSize: hp(percHeight(20*1.25)),
     alignSelf: 'center',
     padding: hp(percHeight(5)),
     textAlign: 'center',
@@ -250,7 +253,7 @@ const addItemStyles = StyleSheet.create({
 
   
   buttonText: {
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',

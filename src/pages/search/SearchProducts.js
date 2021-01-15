@@ -275,34 +275,34 @@ const SearchProdStyles = StyleSheet.create({
   alCenterText: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
   goodCenterText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
   badCenterText: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     alignSelf: 'center',
   },
   badText: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
   goodText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
@@ -312,7 +312,7 @@ const SearchProdStyles = StyleSheet.create({
     marginBottom: 10,
     paddingLeft: 0,
     textAlign: 'center',
-    fontSize: hp(percHeight(18)),
+    fontSize: hp(percHeight(18*1.25)),
     color: '#707070',
     borderColor: '#c0c0c0',
     borderWidth: 1,
@@ -343,7 +343,7 @@ const SearchProdStyles = StyleSheet.create({
 
   modalText: {
     fontWeight: 'bold',
-    fontSize: hp(percHeight(20)),
+    fontSize: hp(percHeight(20*1.25)),
     alignSelf: 'center',
     padding: hp(percHeight(5)),
     textAlign: 'center',
@@ -390,7 +390,7 @@ const SearchProdStyles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   buttonText: {
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
@@ -432,12 +432,12 @@ const SearchProdStyles = StyleSheet.create({
   },
   description: {
     margin: hp(percHeight(5)),
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
 
   },
   titleText: {
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12)),
+    fontSize: hp(percHeight(12*1.25)),
     alignSelf: 'center',
   },
   
