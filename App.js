@@ -17,7 +17,8 @@ import MyOrders from './src/pages/history/MyOrders'
 import ViewOrder from './src/pages/history/ViewOrder'
 
 
-import MoreApps from './src/pages/more/moreApps'
+import MoreApps from './src/pages/misc/moreApps'
+import Location from './src/pages/misc/location'
 //import TrackDriver from './src/pages/track/trackDriver'
 //import MapPage from './src/pages/light/mapPage'
 //import RequestPage from './src/pages/light/requestPage'
@@ -126,8 +127,10 @@ function App() {//stack
       <Stack.Navigator initialRouteName="Welcome">
         
         {/*<Stack.Screen name="Welcome" component={LogoPage} />*/}
+
         
         <Stack.Screen name="More Apps" component={MoreApps} options={{ title: 'Welcome' }}/>
+        <Stack.Screen name="Location" component={Location} options={{ title: 'Select Location' }}/>
         <Stack.Screen name="Search Products" component={SearchProducts} options={{ title: 'Browse' }}/>
         <Stack.Screen name="Add Item" component={AddItem} options={{ title: ' ' }}/>
         <Stack.Screen name="Basket" component={BasketList} options={{ title: 'Basket' }}/>

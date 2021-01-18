@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {addOrder, updateProduct, getSelectStore, getSelectProduct} from '../../api/ShopsApi'
-import {StyleSheet, Modal, Image, TextInput, View, ScrollView, Linking, Platform} from 'react-native'
+import {StyleSheet, Modal, Image, TextInput, View, ScrollView, Picker, Linking, Platform} from 'react-native'
 import {Button, Text} from 'react-native-elements'
 import { AsyncStorage } from 'react-native';
 import * as yup from 'yup';
@@ -31,6 +31,7 @@ export default class OrderForm extends Component{
             id: null,
             status: null,
             name: "",
+            location: "VGC",
             address: "",
             house: "",
             phoneNumber: "",
@@ -499,6 +500,14 @@ export default class OrderForm extends Component{
       else{
         this.state.invalidName = false
       }
+      //check location
+      if (this.state.location === null || this.state.location === ""){
+        console.log('invalid location')
+        this.state.invalidLocation = true
+      }
+      else{
+        this.state.invalidLocation = false
+      }
       //check phoneNumber
       if ((this.state.phoneNumber) === null || (this.state.phoneNumber) === "" ){
         console.log('invalid phone')
@@ -575,6 +584,19 @@ export default class OrderForm extends Component{
                 <View style = {{marginBottom: 300}}>
                 <Text style = {orderFormStyles.header} >delivery details</Text>
 
+                <Text style = {orderFormStyles.subHeader} >select location {"\n"}(currently only available in VGC):</Text> 
+                <Picker
+                  selectedValue={this.state.location}
+                  style = {this.state.location !== ""? orderFormStyles.picker: orderFormStyles.pickerBad}
+                  onValueChange={(itemValue, itemIndex) => {
+                    this.setState({ location: itemValue })
+                    setTimeout(()=>this.checkValidity(),500)
+                  }}>
+                  <Picker.Item label="VGC" value="VGC" />
+                </Picker>
+
+                <View style = {{marginBottom: 50}}></View>
+
                 <Text style = {orderFormStyles.subHeader} >your name:</Text>
                 <TextInput style = {this.state.invalidName === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
                   placeholderTextColor = {'grey'}
@@ -585,6 +607,7 @@ export default class OrderForm extends Component{
                     this.setState({ name: text})
                     setTimeout(()=>this.checkValidity(),500)
                     }}/>
+              
              
 
                 <Text style = {orderFormStyles.subHeader} >house number:</Text>  
