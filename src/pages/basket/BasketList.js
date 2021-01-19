@@ -252,15 +252,17 @@ export default class BasketList extends React.Component{
           this.storeLocalData(basketItem.name, JSON.stringify(basketItem.info))
           alert(basketItem.name + "'s price has changed since you added it to your basket.\nPlease review the updated price and checkout agian")
         }
-        if (parseInt(dbItem.stock) >= parseInt(basketItem.qty)){//need to test
-          console.log('product still in stock')
-          //fail = false
-        }
-        else{
-          console.log('product not in stock')
-          fail = true
-          alert(basketItem.name + ' is no longer in stock.\nThe item has been removed from your basket')
-          await AsyncStorage.setItem(basketItem.name, JSON.stringify({"": ""}))
+        if (!dbItem.shop){
+          if (parseInt(dbItem.stock) >= parseInt(basketItem.qty)){//need to test
+            console.log('product still in stock')
+            //fail = false
+          }
+          else{
+            console.log('product not in stock')
+            fail = true
+            alert(basketItem.name + ' is no longer in stock.\nThe item has been removed from your basket')
+            await AsyncStorage.setItem(basketItem.name, JSON.stringify({"": ""}))
+          }
         }
       
       if (fail === false){
@@ -342,7 +344,7 @@ export default class BasketList extends React.Component{
               <View style = {basketStyles.mainContainer}>
                   <View style = {basketStyles.titleContainer}>
                       <Text style = {basketStyles.titleText}>{product.info.name} </Text>
-                      <Text style = {basketStyles.titleText}> N{product.info.price}</Text>
+                      <Text style = {basketStyles.priceText}> N{product.info.price}</Text>
                   </View>
                   <Text style = {basketStyles.neutralText} >
                       {product.qty+ " in basket"}
@@ -469,6 +471,13 @@ const basketStyles = StyleSheet.create({
   },
   
   titleText: {
+    fontWeight: 'bold',
+    fontSize: hp(percHeight(12*1.25)),
+    alignSelf: 'center',
+    width: "75%"
+  },
+
+  priceText: {
     fontWeight: 'bold',
     fontSize: hp(percHeight(12*1.25)),
     alignSelf: 'center',

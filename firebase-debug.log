@@ -1,0 +1,17 @@
+[debug] [2021-01-19T09:31:34.393Z] ----------------------------------------------------------------------
+[debug] [2021-01-19T09:31:34.462Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy --only hosting
+[debug] [2021-01-19T09:31:34.470Z] CLI Version:   8.2.0
+[debug] [2021-01-19T09:31:34.472Z] Platform:      darwin
+[debug] [2021-01-19T09:31:34.473Z] Node Version:  v10.16.3
+[debug] [2021-01-19T09:31:34.492Z] Time:          Tue Jan 19 2021 10:31:34 GMT+0100 (West Africa Standard Time)
+[debug] [2021-01-19T09:31:34.492Z] ----------------------------------------------------------------------
+[debug] [2021-01-19T09:31:34.493Z] 
+[debug] [2021-01-19T09:31:34.782Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-01-19T09:31:34.785Z] > authorizing via signed-in user
+[debug] [2021-01-19T09:31:34.786Z] [iam] checking project mobishopvgc for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-01-19T09:31:34.840Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-01-19T09:31:34.844Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-01-19T09:31:36.081Z] <<< HTTP RESPONSE 200 {"pragma":"no-cache","date":"Tue, 19 Jan 2021 09:31:38 GMT","expires":"Mon, 01 Jan 1990 00:00:00 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-01-19T09:31:36.152Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/mobishopvgc:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}

@@ -394,13 +394,15 @@ export default class OrderForm extends Component{
             fail = true
             alert(basketItem.name + "'s price has changed since you added it to your basket.\nPlease review the updated price and checkout agian")
           }
-          if (parseInt(dbItem.stock) >= parseInt(basketItem.qty)){
-            console.log('product still in stock')
-          }
-          else{
-            console.log('product not in stock')
-            fail = true
-            alert("Not enough " + basketItem.name + ' in stock.\nPlease revise your basket and checkout again')
+          if (!dbItem.shop){
+            if (parseInt(dbItem.stock) >= parseInt(basketItem.qty)){
+              console.log('product still in stock')
+            }
+            else{
+              console.log('product not in stock')
+              fail = true
+              alert("Not enough " + basketItem.name + ' in stock.\nPlease revise your basket and checkout again')
+            }
           }
         
         if (fail === true){

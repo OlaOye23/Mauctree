@@ -127,9 +127,11 @@ export default class UpdateItem extends React.Component{
                 <Image source = {{uri:this.state.current.imgURL}} style = {UpdateItemStyles.modalPic} />
                 <Text style = {UpdateItemStyles.modalText}> N{this.state.current.price}</Text>
                 <Text style = {UpdateItemStyles.modalText} >enter quantity:</Text>  
+                {!this.state.current.shop &&
                 <Text style = {parseInt(this.state.current.stock) > 0? UpdateItemStyles.goodCenterText: UpdateItemStyles.badCenterText} >
                     {this.state.current.stock} units available 
                 </Text>  
+                }
                   <TextInput 
                     keyboardType="numeric"
                     style = {UpdateItemStyles.textInput}

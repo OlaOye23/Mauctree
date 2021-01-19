@@ -147,9 +147,11 @@ export default class AddItem extends React.Component{
                 <Image source = {{uri:this.state.current.imgURL}} style = {addItemStyles.modalPic} />
                 <Text style = {addItemStyles.modalText}> N{this.state.current.price}</Text>
                 <Text style = {addItemStyles.modalText} >enter quantity:</Text>  
+                {!this.state.current.shop &&
                 <Text style = {parseInt(this.state.current.stock) > 0? addItemStyles.goodCenterText: addItemStyles.badCenterText} >
                     {this.state.current.stock} units available 
                 </Text>  
+                }
                   <TextInput 
                     keyboardType="numeric"
                     style = {addItemStyles.textInput}

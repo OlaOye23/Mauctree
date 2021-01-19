@@ -41,7 +41,7 @@ exports.onNewOrder = functions.firestore
           body: JSON.stringify(message),
         });
       }
-    sendPushNotification("ExponentPushToken[CCn2edEVIjaUzfnqhSebut]", data) 
+    sendPushNotification("ExponentPushToken[mb2N8NKVqR_yutp1u6WC0l]", data) 
     console.log('new order alert complete')
 });
 
