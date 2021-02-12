@@ -130,7 +130,7 @@ const orderCompleteStyles = StyleSheet.create({
     textAlign: 'center',
   },
     regForm: {
-      alignSelf : 'stretch',
+      alignSelf : 'center',
       flex: 1,
       paddingTop:  hp(percHeight(50)),
       backgroundColor: 'white',

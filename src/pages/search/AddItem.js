@@ -28,6 +28,7 @@ export default class AddItem extends React.Component{
             stock: "",
           },
           disableAddButton: false,
+          scrollPos: 0,
           
       }
   }
@@ -41,6 +42,9 @@ export default class AddItem extends React.Component{
     const { route } = this.props;
     const { current } = route.params;
     const { itemObj } = route.params;
+    const { scrollPos } = route.params;
+    this.setState({scrollPos : scrollPos})
+    console.log(scrollPos)
     itemObj.qty = 1
     this.setState({ current: current, itemObj: itemObj}, ()=>{
       this.onChangeQty(this.state.current,this.state.current.name, 1)
@@ -109,9 +113,10 @@ export default class AddItem extends React.Component{
     this.setState({disableUpdateButton: true})
     const { navigation } = this.props;
     navigation.navigate(
-        'Search Products',
-        //{state: this.state}
-    )
+      'Search Products',{
+      scrollPos : this.state.scrollPos,
+      }
+  )
     alert("Item Added")
     console.log('onAddItem', this.state.itemObj)
   }
@@ -123,8 +128,9 @@ export default class AddItem extends React.Component{
     this.setState({disableAddButton: true})
     const { navigation } = this.props;
     navigation.navigate(
-        'Search Products',
-        //{state: this.state}
+        'Search Products',{
+        scrollPos : this.state.scrollPos,
+        }
     )
     console.log('onCancelAdd', this.state.obj)
   }

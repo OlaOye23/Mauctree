@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, ScrollView, TextInput, Text, Image, StyleSheet, FlatList} from 'react-native'
+import {View, ScrollView, TextInput, Text, Image, StyleSheet} from 'react-native'
 //import {BaseButton} from 'react-native-gesture-handler'
 import {getProducts}from '../../api/ShopsApi'
 //import Modal from 'react-native-modal';
@@ -16,8 +16,6 @@ import { TouchableOpacity } from '../../web/react-native-web'; //'react-native' 
 //import { TouchableOpacity } from 'react-native' //
 
 import * as Analytics from 'expo-firebase-analytics';
-
-
 
 
 
@@ -45,6 +43,7 @@ export default class SearchProducts extends React.Component{
           itemAdded: false,
           disableAddButton: true,
           loadingPic: true,
+          //scrollPos: 50,
       }
 
       
@@ -53,48 +52,6 @@ export default class SearchProducts extends React.Component{
 
   
 
-  renderProduct = ({product}) =>(
-    product.name && 
-                <TouchableOpacity key ={i} onPress = {()=> this.onOpenItem(product)}>
-                  <View style = {SearchProdStyles.superContainer}>
-                  <Image source = {{uri:product.imgURL}} style = {SearchProdStyles.productPic} />
-                  <View style = {SearchProdStyles.mainContainer}>
-                      <View style = {SearchProdStyles.titleContainer}>
-                          <Text style = {SearchProdStyles.titleText}>{product.name} </Text>
-                          <Text style = {SearchProdStyles.priceText}> N{product.price}</Text>
-                      </View>
-                      <View style = {SearchProdStyles.sizeContainer}>
-                        <Text style = {SearchProdStyles.titleText}>{product.size} </Text>
-                    </View>
-                    {!product.shop &&
-                    <View>
-                    <Text style = {product.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
-                        {product.stock > 0? "available for immediate delivery": "out of Stock"}
-                    </Text>
-                    <Text style = {SearchProdStyles.description}>
-                        {product.stock + " in stock"} 
-                    </Text>
-                    </View>
-                    }
-  
-                    {product.shop &&
-                     <View>
-                    <Text style = {SearchProdStyles.goodText} >
-                        {"available for next day delivery"}
-                    </Text>
-                    <Text style = {SearchProdStyles.description}>
-                        {" in stock"} 
-                    </Text>
-                    </View>
-                    }
-                  </View>
-                </View>
-    
-                <View>
-                
-              </View>
-                </TouchableOpacity>  
-  )
 
 
   componentDidMount = async () =>{
@@ -114,6 +71,12 @@ export default class SearchProducts extends React.Component{
       console.warn(error)
       alert("Timeout: Please check your internet connection and try again ")
     }
+    setTimeout(() => {
+      //let _ScrollView = this.ScrollView
+      //_ScrollView.scrollTo({y: scrollPos})// did not work
+      this.refs._scrollview.scrollTo({y: this.state.scrollPos})
+    }, 100)
+    console.log('initial: ' +  this.state.scrollPos)
   }
 
   static getDerivedStateFromError(error) {
@@ -143,7 +106,8 @@ export default class SearchProducts extends React.Component{
     navigation.navigate(
       'Add Item',
       {current: product,
-      itemObj: this.state.itemObj}
+      itemObj: this.state.itemObj,
+      scrollPos: this.state.scrollPos}
     )
   }
 
@@ -230,6 +194,11 @@ render(){
           
       
       <ScrollView 
+      ref = '_scrollview'
+      onScroll = {(event)=> {
+        console.log(this.state.scrollPos)
+        this.setState({scrollPos: event.nativeEvent.contentOffset.y})
+      }} 
         refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}

@@ -442,7 +442,7 @@ export default class OrderForm extends Component{
       msg += "Address: " + this.state.house + "%20" + this.state.address + "%0A"
       //msg += "Total: " + this.state.total + "%0A"
 
-      let link = `http://api.whatsapp.com/send?text=${msg}&phone=+2348090653657`
+      let link = `http://api.whatsapp.com/send?text=${msg}&phone=+2348110233359`
       Linking.openURL(link)
 
 
@@ -582,7 +582,7 @@ export default class OrderForm extends Component{
 
     render(){
         return(
-            <ScrollView style = {orderFormStyles.regForm}>
+            <View style = {orderFormStyles.regForm}>
                 <View style = {{marginBottom: 300}}>
                 <Text style = {orderFormStyles.header} >delivery details</Text>
 
@@ -672,31 +672,31 @@ export default class OrderForm extends Component{
                     if (!this.state.disableSubmit){
                       this.onClickSubmit() 
                     }} }>
-                  <Text style = {orderFormStyles.buttonText}>PAY WITH WHATSAPP</Text>
+                  <Text style = {orderFormStyles.buttonText}>PAY BY TRANSFER (WHATSAPP)</Text>
                 </TouchableOpacity>
 
                 <Text style={orderFormStyles.modalSmallText}>OR DOWNLOAD APP FOR MORE PAYMENT OPTIONS </Text> 
-                <TouchableOpacity 
+                {/*<TouchableOpacity 
                   style = {orderFormStyles.loadButton} 
                   onPress = {() => {
                     Linking.openURL("https://play.google.com/store/apps/details?id=com.adadevng.shopmob")
                   }}>
                   <Text style = {orderFormStyles.buttonText}>DOWNLOAD ANDROID APP </Text>
-                  </TouchableOpacity>
+                </TouchableOpacity>*/}
 
                   <TouchableOpacity 
                   style = {orderFormStyles.loadButton} 
                   onPress = {() => {
-                    alert("iPhone app coming soon (1 week)...\n Please click PAY WITH WHATSAPP to continue")
+                    alert("MOBILE app coming soon (1 MONTH)...\n Please select PAY WITH WHATSAPP to continue")
                   }}>
-                  <Text style = {orderFormStyles.buttonText}>DOWNLOAD IOS APP </Text>
+                  <Text style = {orderFormStyles.buttonText}>DOWNLOAD APP </Text>
                   </TouchableOpacity>
                 
 
                 </View>
 
                 
-            </ScrollView>
+            </View>
       
         )
     }

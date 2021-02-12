@@ -67,6 +67,8 @@ export async function getProducts(productsRetreived) {
   let productList = [];
   let snapshot = await firebase.firestore()
     .collection('products')
+    //.where('stock', '>', -1)
+    //.orderBy('stock','desc')
     .orderBy('createdAt','desc')
     .get()
   snapshot.forEach((doc) => {

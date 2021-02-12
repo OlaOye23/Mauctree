@@ -135,7 +135,12 @@ const locationStyles = StyleSheet.create({
   },
     regForm: {
       alignSelf : 'center',
-      width: wp("80%") < hp(percHeight(450))? wp("80%") : hp(percHeight(450)),//hp(percHeight(450)),
+      flex: 1,
+      paddingTop:  hp(percHeight(50)),
+      backgroundColor: 'white',
+      paddingLeft:  hp(percHeight(60)),
+      paddingRight:  hp(percHeight(60)),
+      width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),
       
     },
     header: {
