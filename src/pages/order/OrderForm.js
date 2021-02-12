@@ -442,14 +442,7 @@ export default class OrderForm extends Component{
       msg += "Address: " + this.state.house + "%20" + this.state.address + "%0A"
       //msg += "Total: " + this.state.total + "%0A"
 
-      let link = `http://api.whatsapp.com/send?text=${msg}&phone=+2348110233359`
-      Linking.openURL(link)
-
-
-     
-
-      
-
+  
       try{
          await this.checkOutCheck().then( async (fail)=>{
           console.log('fail on submit i.e 2 '+ fail)
@@ -477,6 +470,8 @@ export default class OrderForm extends Component{
       }
       await this.storeHistory()
 
+      
+
        navigation.navigate(
         'More Apps',
         {order: this.state}
@@ -486,6 +481,10 @@ export default class OrderForm extends Component{
         'Order Complete',
         {order: this.state}
       )
+
+      let link = `http://api.whatsapp.com/send?text=${msg}&phone=+2348110233359`
+      Linking.openURL(link)
+
     }
 
  
