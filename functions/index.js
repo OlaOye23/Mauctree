@@ -42,6 +42,7 @@ exports.onNewOrder = functions.firestore
         });
       }
     sendPushNotification("ExponentPushToken[mb2N8NKVqR_yutp1u6WC0l]", data) 
+    sendPushNotification("ExponentPushToken[a5Hf6AAkdBFxR1m_cmhiXT]", data) 
     console.log('new order alert complete')
 });
 

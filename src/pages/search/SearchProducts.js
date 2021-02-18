@@ -207,7 +207,7 @@ render(){
       <View style = {SearchProdStyles.allContainer}>
      <View >
         <TextInput 
-            placeholder= "search for a product"  
+            placeholder= "search by product name"  
             style={SearchProdStyles.searchBox} 
             onChangeText={(text) => this.setState({searchQuery: text})} 
             value={this.state.searchQuery} 
@@ -246,7 +246,8 @@ render(){
               <View style = {SearchProdStyles.mainContainer}>
                   <View style = {SearchProdStyles.titleContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.item.name} </Text>
-                      <Text style = {SearchProdStyles.priceText}> N{product.item.price}</Text>
+                      {!product.item.shop && <Text style = {SearchProdStyles.priceText}> N{product.item.price}</Text>}
+                        {product.item.shop && <Text style = {SearchProdStyles.priceText}> N{parseInt(product.item.price * .012)*100 }</Text>}
                   </View>
                   <View style = {SearchProdStyles.sizeContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.item.size} </Text>
@@ -265,7 +266,7 @@ render(){
                   {product.item.shop &&
                    <View>
                   <Text style = {SearchProdStyles.goodText} >
-                      {"available for next day delivery"}
+                      {"available for same day delivery"}
                   </Text>
                   <Text style = {SearchProdStyles.description}>
                       {" in stock"} 
@@ -291,7 +292,8 @@ render(){
                 <View style = {SearchProdStyles.mainContainer}>
                     <View style = {SearchProdStyles.titleContainer}>
                         <Text style = {SearchProdStyles.titleText}>{product.name} </Text>
-                        <Text style = {SearchProdStyles.priceText}> N{product.price}</Text>
+                        {!product.shop && <Text style = {SearchProdStyles.priceText}> N{product.price}</Text>}
+                        {product.shop && <Text style = {SearchProdStyles.priceText}> N{parseInt(product.price * .012)*100 }</Text>}
                     </View>
                     <View style = {SearchProdStyles.sizeContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.size} </Text>
@@ -310,7 +312,7 @@ render(){
                   {product.shop &&
                    <View>
                   <Text style = {SearchProdStyles.goodText} >
-                      {"available for next day delivery"}
+                      {"available for same day delivery"}
                   </Text>
                   <Text style = {SearchProdStyles.description}>
                       {" in stock"} 

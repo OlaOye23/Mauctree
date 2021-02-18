@@ -137,7 +137,7 @@ export default class AddItem extends React.Component{
 
   onMoreInfo = (item) =>{
     let msg = `More Information Request%0A %0AItem: ${item.name} %0A %0AMessage:`
-    let chat = `http://api.whatsapp.com/send?text=${msg}&phone=+2348090653657`
+    let chat = `http://api.whatsapp.com/send?text=${msg}&phone=+2348110233359`
     Linking.openURL(chat)
   }
 
@@ -186,7 +186,7 @@ export default class AddItem extends React.Component{
                 </TouchableOpacity>
 
                 <TouchableOpacity style = {addItemStyles.modalButton} onPress = {() => this.onMoreInfo(this.state.current) }>
-                  <Text style = {addItemStyles.buttonText}>MORE INFORMATION</Text>
+                  <Text style = {addItemStyles.buttonText}>REQUEST MORE INFORMATION</Text>
                 </TouchableOpacity>
 
 

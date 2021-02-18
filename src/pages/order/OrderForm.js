@@ -440,7 +440,7 @@ export default class OrderForm extends Component{
         })
       msg += "%0AName: " + this.state.name + "%0A"
       msg += "Address: " + this.state.house + "%20" + this.state.address + "%0A"
-      //msg += "Total: " + this.state.total + "%0A"
+      msg += "Total: " + this.state.total + "%0A"
 
   
       try{

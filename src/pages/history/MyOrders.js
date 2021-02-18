@@ -197,6 +197,7 @@ openGps = (lat, lng) => {
                     </View>
                     <Text style = {orderHistoryStyles.neutralText} >{order.address}: {order.house}</Text>
                     <Text style = {orderHistoryStyles.description}>{order.phoneNumber}</Text>
+                    {/*<Text style = {orderStyles.neutralText}>Time: {Date(order.timeOpened.seconds.toLocaleString()).slice(0,25)}</Text>*/}
                 </View>
               </View>
 
