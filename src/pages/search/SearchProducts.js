@@ -16,6 +16,7 @@ import { TouchableOpacity } from '../../web/react-native-web'; //'react-native' 
 //import { TouchableOpacity } from 'react-native' //
 
 import * as Analytics from 'expo-firebase-analytics';
+import { AsyncStorage } from 'react-native';
 
 
 
@@ -43,6 +44,7 @@ export default class SearchProducts extends React.Component{
           refreshing: false,
           searchQuery: "",
           itemAdded: false,
+          
           disableAddButton: true,
           loadingPic: true,
       }
@@ -127,12 +129,64 @@ export default class SearchProducts extends React.Component{
     logErrorToMyService(error, errorInfo);
   }
 
+  getAllLocalData = async () =>{//for basket count --- use redux-like central state mgmt
+    console.log('in async get')
+    this.total = 0
+    try{
+    await AsyncStorage.getAllKeys( async (err, keys) => {
+      await AsyncStorage.multiGet(keys, async (err, stores) => {
+        stores.map( async (result, i, store) => {
+          let key = store[i][0];
+          let value = store[i][1];
+          try{
+            
+              let prodObj = JSON.parse(value)
+           
+            console.log(prodObj.qty)
+            if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
+              this.total += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
+              this.basket.push(prodObj)
+              console.log('hahaha'+this.basket)``
+            }
+          }catch(error){
+            console.warn(error)
+          }
+        });
+      });
+      this.setState({products : this.basket})
+      this.basket = []
+      console.log('1',this.state.products)
+      console.log('done')   
+    });
+    } catch (error) {
+      console.warn(error)
+      alert('Error: please try again or restart')
+    }
+    console.log('out async get')
+  }
+
   
   productsRetrieved = (productList) =>{
     console.log('retrieved')
-    this.prodList = productList
+
+    function dynamicSort(property) {
+      var sortOrder = 1;
+      if(property[0] === "-") {
+          sortOrder = -1;
+          property = property.substr(1);
+      }
+      return function (a,b) {
+          /* next line works with strings and numbers, 
+           * and you may want to customize it to your needs
+           */
+          var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+          return result * sortOrder;
+      }
+  }
+
+    this.prodList = productList.sort(dynamicSort('shop')).reverse()
     console.log(productList)
-    this.setState({products: productList})
+    this.setState({products: this.prodList})
   }
 
 
@@ -179,6 +233,7 @@ _onRefresh= () => {
   this.setState({searchUsed: false});
   this.setState({refreshing: true});
   this.setState({searchQuery: ""})
+  this.setState({loadingPic: true})
   this.componentDidMount().then(() => {
     this.setState({refreshing: false});
   });
@@ -219,7 +274,7 @@ render(){
           </TouchableOpacity>
 
           <TouchableOpacity  onPress= {() => this.onViewBasket() } style = {SearchProdStyles.modalButton}>
-            <Text style = {SearchProdStyles.buttonText}>OPEN BASKET</Text>
+            <Text style = {SearchProdStyles.buttonText}>OPEN BASKET {}</Text>
           </TouchableOpacity>
 
        
@@ -246,8 +301,7 @@ render(){
               <View style = {SearchProdStyles.mainContainer}>
                   <View style = {SearchProdStyles.titleContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.item.name} </Text>
-                      {!product.item.shop && <Text style = {SearchProdStyles.priceText}> N{product.item.price}</Text>}
-                        {product.item.shop && <Text style = {SearchProdStyles.priceText}> N{parseInt(product.item.price * .012)*100 }</Text>}
+                      <Text style = {SearchProdStyles.priceText}> N{product.item.price}</Text>
                   </View>
                   <View style = {SearchProdStyles.sizeContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.item.size} </Text>
@@ -255,7 +309,7 @@ render(){
                   {!product.item.shop &&
                   <View>
                   <Text style = {product.item.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
-                      {product.item.stock > 0? "available for immediate delivery": "out of Stock"}
+                      {product.item.stock > 0? "delivered immediately": "out of Stock"}
                   </Text>
                   <Text style = {SearchProdStyles.description}>
                       {product.item.stock + " in stock"} 
@@ -265,11 +319,11 @@ render(){
 
                   {product.item.shop &&
                    <View>
-                  <Text style = {SearchProdStyles.goodText} >
-                      {"available for same day delivery"}
+                  <Text style = {SearchProdStyles.mediumText} >
+                      {"delivered today"}
                   </Text>
                   <Text style = {SearchProdStyles.description}>
-                      {" in stock"} 
+                      {"in stock"} 
                   </Text>
                   </View>
                   }
@@ -292,8 +346,7 @@ render(){
                 <View style = {SearchProdStyles.mainContainer}>
                     <View style = {SearchProdStyles.titleContainer}>
                         <Text style = {SearchProdStyles.titleText}>{product.name} </Text>
-                        {!product.shop && <Text style = {SearchProdStyles.priceText}> N{product.price}</Text>}
-                        {product.shop && <Text style = {SearchProdStyles.priceText}> N{parseInt(product.price * .012)*100 }</Text>}
+                        <Text style = {SearchProdStyles.priceText}> N{product.price}</Text>
                     </View>
                     <View style = {SearchProdStyles.sizeContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.size} </Text>
@@ -301,7 +354,7 @@ render(){
                   {!product.shop &&
                   <View>
                   <Text style = {product.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
-                      {product.stock > 0? "available for immediate delivery": "out of Stock"}
+                      {product.stock > 0? "delivered immediately": "out of Stock"}
                   </Text>
                   <Text style = {SearchProdStyles.description}>
                       {product.stock + " in stock"} 
@@ -311,8 +364,8 @@ render(){
 
                   {product.shop &&
                    <View>
-                  <Text style = {SearchProdStyles.goodText} >
-                      {"available for same day delivery"}
+                  <Text style = {SearchProdStyles.mediumText} >
+                      {"delivered today"}
                   </Text>
                   <Text style = {SearchProdStyles.description}>
                       {" in stock"} 
@@ -376,6 +429,13 @@ const SearchProdStyles = StyleSheet.create({
     //alignSelf: 'center',
   },
   goodText: {
+    color: 'green',
+    fontWeight: 'bold',
+    fontSize: hp(percHeight(12*1.25)),
+    marginLeft: hp(percHeight(5)),
+    //alignSelf: 'center',
+  },
+  mediumText: {//same as good but up for change
     color: 'green',
     fontWeight: 'bold',
     fontSize: hp(percHeight(12*1.25)),

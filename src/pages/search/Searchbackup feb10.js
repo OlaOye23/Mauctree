@@ -135,6 +135,42 @@ export default class SearchProducts extends React.Component{
     this.setState({products: productList})
   }
 
+  getAllLocalData = async () =>{//for basket count --- use redux-like central state mgmt
+    console.log('in async get')
+    this.total = 0
+    try{
+    await AsyncStorage.getAllKeys( async (err, keys) => {
+      await AsyncStorage.multiGet(keys, async (err, stores) => {
+        stores.map( async (result, i, store) => {
+          let key = store[i][0];
+          let value = store[i][1];
+          try{
+            
+              let prodObj = JSON.parse(value)
+           
+            console.log(prodObj.qty)
+            if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
+              this.total += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
+              this.basket.push(prodObj)
+              console.log('hahaha'+this.basket)``
+            }
+          }catch(error){
+            console.warn(error)
+          }
+        });
+      });
+      this.setState({products : this.basket})
+      this.basket = []
+      console.log('1',this.state.products)
+      console.log('done')   
+    });
+    } catch (error) {
+      console.warn(error)
+      alert('Error: please try again or restart')
+    }
+    console.log('out async get')
+  }
+
 
   onOpenItem =(product) => {
     console.log("Item pressed")

@@ -1,24 +1,14 @@
-
-
-
 const functions = require('firebase-functions');
 const fetch = require("node-fetch");
 var request = require('request');
 var fs = require('fs');
-//const admin = require('firebase-admin');// to access other firebase stuff out of trigger event
-const firebase = require('firebase-admin');// to access other firebase stuff out of trigger event
-firebase.initializeApp({
-  storageBucket: 'mobishopvgc.appspot.com/History/Products',
-});
+const admin = require('firebase-admin');// to access other firebase stuff out of trigger event
+admin.initializeApp()
 const path = require('path');
 const os = require('os');
-const db = firebase.firestore();
+const db = admin.firestore();
 const UUID = require("uuid-v4");
-const json2csv = require('json2csv')
 
-
-
-//admin.initializeApp();
 
 
 
@@ -71,7 +61,7 @@ exports.onNewProduct = functions.firestore
     // Requires "request" to be installed (see https://www.npmjs.com/package/request)
 
     
-    const bucket = firebase.storage().bucket("gs://mobishopvgc.appspot.com");
+    const bucket = admin.storage().bucket("gs://mobishopvgc.appspot.com");
     const tempFilePath = path.join(os.tmpdir(), data.name);
     const thumbFilePath = path.join(path.dirname("`products/images/"), data.name);
     const metadata = {
@@ -144,7 +134,7 @@ exports.onProductUpdate = functions.firestore
     data.oldImgURL = oldImgURL
     // Requires "request" to be installed (see https://www.npmjs.com/package/request)
 
-    const bucket = firebase.storage().bucket("gs://mobishopvgc.appspot.com");
+    const bucket = admin.storage().bucket("gs://mobishopvgc.appspot.com");
     const tempFilePath = path.join(os.tmpdir(), data.name);
     const thumbFilePath = path.join(path.dirname("`products/images/"), data.name);
     const metadata = {
@@ -199,70 +189,3 @@ exports.onProductUpdate = functions.firestore
     console.log('new product alert complete')   
 });
 
-
-
-
-exports.generateApplicationCsv = functions.region('asia-northeast1').pubsub
-  .topic("generate-application-csv")
-  .onPublish(async message => {
-
-    // gets the documents from the firestore collection
-    const applicationsSnapshot = await firebase
-      .firestore()
-      .collection("products")
-      .get();
-
-    const applications = applicationsSnapshot.docs.map(doc => doc.data());
-
-    // csv field headers
-    const fields = [
-      'name',
-      'price',
-      'shop',
-      'createdAt.seconds',
-      'createdAt._seconds',
-      'class',
-      'cprice',
-      'id',
-      'imgURL',
-      'tags',
-      'updatedAt',
-      'stock'
-
-    ];
-
-    // get csv output
-    const output = await json2csv.parseAsync(applications, { fields });
-
-    // generate filename
-    const dateTime = new Date().toISOString().replace(/\W/g, "");
-    const filename = `applications_${dateTime}.csv`;
-
-    const tempLocalFile = path.join(os.tmpdir(), filename);
-
-    return new Promise((resolve, reject) => {
-      //write contents of csv into the temp file
-      fs.writeFile(tempLocalFile, output, error => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        const bucket = firebase.storage().bucket();
-
-        // upload the file into the current firebase project default bucket
-        bucket
-           .upload(tempLocalFile, {
-            // Workaround: firebase console not generating token for files
-            // uploaded via Firebase Admin SDK
-            // https://github.com/firebase/firebase-admin-node/issues/694
-            metadata: {
-              metadata: {
-                firebaseStorageDownloadTokens: UUID(),
-              }
-            },
-          })
-          .then(() => resolve())
-          .catch(errorr => reject(errorr));
-      });
-    });
-  });
