@@ -186,7 +186,7 @@ export default class AddItem extends React.Component{
                 </TouchableOpacity>
 
                 <TouchableOpacity style = {addItemStyles.modalButton} onPress = {() => this.onMoreInfo(this.state.current) }>
-                  <Text style = {addItemStyles.buttonText}>REQUEST MORE INFORMATION</Text>
+                  <Text style = {addItemStyles.buttonText}>CHAT WITH US (WHATSAPP)</Text>
                 </TouchableOpacity>
 
 

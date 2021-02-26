@@ -299,26 +299,19 @@ render(){
               <View style = {SearchProdStyles.superContainer}>
               <Image source = {{uri:product.item.imgURL}} style = {SearchProdStyles.productPic} />
               <View style = {SearchProdStyles.mainContainer}>
+
+              {product.item.shop &&
+              <View>
                   <View style = {SearchProdStyles.titleContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.item.name} </Text>
                       <Text style = {SearchProdStyles.priceText}> N{product.item.price}</Text>
                   </View>
                   <View style = {SearchProdStyles.sizeContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.item.size} </Text>
+ 
                   </View>
-                  {!product.item.shop &&
-                  <View>
-                  <Text style = {product.item.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
-                      {product.item.stock > 0? "delivered immediately": "out of Stock"}
-                  </Text>
-                  <Text style = {SearchProdStyles.description}>
-                      {product.item.stock + " in stock"} 
-                  </Text>
-                  </View>
-                  }
 
-                  {product.item.shop &&
-                   <View>
+                  <View>
                   <Text style = {SearchProdStyles.mediumText} >
                       {"delivered today"}
                   </Text>
@@ -326,13 +319,37 @@ render(){
                       {"in stock"} 
                   </Text>
                   </View>
-                  }
+
+                </View>
+              }
+
+              {!product.item.shop &&
+              <View>
+                  <View style = {SearchProdStyles.titleContainer}>
+                      <Text style = {SearchProdStyles.titleText}>{product.item.name} </Text>
+                      <Text style = {SearchProdStyles.priceTextBad}> N{parseInt(product.item.price*1.10)}</Text>
+                  </View>
+                  <View style = {SearchProdStyles.sizeContainer}>
+                      <Text style = {SearchProdStyles.titleText}>{product.item.size} </Text>
+                      <Text style = {SearchProdStyles.priceText}> N{product.item.price}</Text>
+                  </View>
+
+                  <View>
+                    <Text style = {product.item.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
+                        {product.item.stock > 0? "delivered immediately": "out of Stock"}
+                    </Text>
+                    <Text style = {SearchProdStyles.description}>
+                        {product.item.stock + " in stock"} 
+                    </Text>
+                  </View>
+              </View>
+            }
+
+           
               </View>
             </View>
 
-            <View>
-            
-          </View>
+           
             </TouchableOpacity>
 
           ))}
@@ -344,40 +361,55 @@ render(){
                 <View style = {SearchProdStyles.superContainer}>
                 <Image source = {{uri:product.imgURL}} style = {SearchProdStyles.productPic} />
                 <View style = {SearchProdStyles.mainContainer}>
+
+                  {product.shop &&
+                  <View>
                     <View style = {SearchProdStyles.titleContainer}>
                         <Text style = {SearchProdStyles.titleText}>{product.name} </Text>
-                        <Text style = {SearchProdStyles.priceText}> N{product.price}</Text>
+                        <Text style = {SearchProdStyles.priceText}>N{product.price}</Text>
                     </View>
                     <View style = {SearchProdStyles.sizeContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.size} </Text>
-                  </View>
-                  {!product.shop &&
-                  <View>
-                  <Text style = {product.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
-                      {product.stock > 0? "delivered immediately": "out of Stock"}
-                  </Text>
-                  <Text style = {SearchProdStyles.description}>
-                      {product.stock + " in stock"} 
-                  </Text>
+                    </View>
+
+                    <View>
+                    <Text style = {SearchProdStyles.mediumText} >
+                        {"delivered today"}
+                    </Text>
+                    <Text style = {SearchProdStyles.description}>
+                        {" in stock"} 
+                    </Text>
+                    </View>
+
                   </View>
                   }
 
-                  {product.shop &&
-                   <View>
-                  <Text style = {SearchProdStyles.mediumText} >
-                      {"delivered today"}
-                  </Text>
-                  <Text style = {SearchProdStyles.description}>
-                      {" in stock"} 
-                  </Text>
+                  {!product.shop &&
+                  <View>
+                    <View style = {SearchProdStyles.titleContainer}>
+                        <Text style = {SearchProdStyles.titleText}>{product.name} </Text>
+                        <Text style = {SearchProdStyles.priceTextBad}> N{parseInt(product.price* 1.10)}</Text>
+                    </View>
+                    <View style = {SearchProdStyles.sizeContainer}>
+                      <Text style = {SearchProdStyles.titleText}>{product.size} </Text>
+                      <Text style = {SearchProdStyles.priceText}>N{product.price}</Text>
+                  </View>
+
+                  <View>
+                      <Text style = {product.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
+                          {product.stock > 0? "delivered immediately": "out of Stock"}
+                      </Text>
+                      <Text style = {SearchProdStyles.description}>
+                          {product.stock + " in stock"} 
+                      </Text>
+                    </View>
+
                   </View>
                   }
                 </View>
               </View>
   
-              <View>
-              
-            </View>
+            
               </TouchableOpacity>  
           ))}
 
@@ -445,12 +477,12 @@ const SearchProdStyles = StyleSheet.create({
   searchBox: {
     height: hp(percHeight(50)), 
     marginTop: 5,
-    marginBottom: 10,
+    marginBottom: 5,
     paddingLeft: 0,
     textAlign: 'center',
     fontSize: hp(percHeight(18*1.25)),
-    color: '#707070',
-    borderColor: '#c0c0c0',
+    backgroundColor: 'white',
+    borderColor: 'black',
     borderWidth: 1,
   },
 
@@ -551,10 +583,7 @@ const SearchProdStyles = StyleSheet.create({
   sizeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 0,
-    marginLeft: hp(percHeight(5)),
-    alignContent: 'flex-end',
-    //width: "30%", //doesnt work
+    margin: hp(percHeight(5)),
 
   },
   superContainer:{
@@ -584,6 +613,15 @@ const SearchProdStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: hp(percHeight(12*1.25)),
     alignSelf: 'center',
+    
+  },
+
+  priceTextBad: {
+    fontWeight: 'bold',
+    fontSize: hp(percHeight(12*1.25)),
+    alignSelf: 'center',
+    color: 'red',
+    textDecorationLine: 'line-through',
     
   },
   

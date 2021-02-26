@@ -8,7 +8,7 @@ var fs = require('fs');
 //const admin = require('firebase-admin');// to access other firebase stuff out of trigger event
 const firebase = require('firebase-admin');// to access other firebase stuff out of trigger event
 firebase.initializeApp({
-  storageBucket: 'mobishopvgc.appspot.com/History/Products',
+  storageBucket: 'mobishopvgc.appspot.com',
 });
 const path = require('path');
 const os = require('os');
@@ -237,6 +237,8 @@ exports.generateApplicationCsv = functions.region('asia-northeast1').pubsub
     // generate filename
     const dateTime = new Date().toISOString().replace(/\W/g, "");
     const filename = `applications_${dateTime}.csv`;
+    const newFilePath = path.join(path.dirname("history/products/"), filename);
+    const latestFilePath = path.join(path.dirname("history/products/"), 'LATEST PRODUCTS LIST.csv');
 
     const tempLocalFile = path.join(os.tmpdir(), filename);
 
@@ -255,6 +257,22 @@ exports.generateApplicationCsv = functions.region('asia-northeast1').pubsub
             // Workaround: firebase console not generating token for files
             // uploaded via Firebase Admin SDK
             // https://github.com/firebase/firebase-admin-node/issues/694
+            destination: newFilePath,
+            metadata: {
+              metadata: {
+                firebaseStorageDownloadTokens: UUID(),
+              }
+            },
+          })
+          .then(() => resolve())
+          .catch(errorr => reject(errorr));
+
+          bucket
+           .upload(tempLocalFile, {
+            // Workaround: firebase console not generating token for files
+            // uploaded via Firebase Admin SDK
+            // https://github.com/firebase/firebase-admin-node/issues/694
+            destination: latestFilePath,
             metadata: {
               metadata: {
                 firebaseStorageDownloadTokens: UUID(),

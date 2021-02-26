@@ -683,13 +683,13 @@ export default class OrderForm extends Component{
                   <Text style = {orderFormStyles.buttonText}>DOWNLOAD ANDROID APP </Text>
                 </TouchableOpacity>*/}
 
-                  <TouchableOpacity 
+                 {/* <TouchableOpacity 
                   style = {orderFormStyles.loadButton} 
                   onPress = {() => {
                     alert("MOBILE app coming soon (1 MONTH)...\n Please select PAY WITH WHATSAPP to continue")
                   }}>
                   <Text style = {orderFormStyles.buttonText}>DOWNLOAD APP </Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity>*/}
                 
 
                 </View>

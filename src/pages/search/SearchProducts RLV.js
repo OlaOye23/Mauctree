@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, ScrollView, TextInput, Text, Image, StyleSheet, FlatList} from 'react-native'
+import {View, ScrollView, TextInput, Text, Dimensions, Image, StyleSheet, FlatList} from 'react-native'
 //import {BaseButton} from 'react-native-gesture-handler'
 import {getProducts}from '../../api/ShopsApi'
 //import Modal from 'react-native-modal';
@@ -12,10 +12,17 @@ import * as myEPT from '../../../assets/myEPT.json'
 
 import { FloatingAction } from "react-native-floating-action";
 
-import { TouchableOpacity } from '../../web/react-native-web'; //'react-native' //
+import { TouchableOpacity } from '../../web/react-native-web'; //'react-native' 
 //import { TouchableOpacity } from 'react-native' //
 
 import * as Analytics from 'expo-firebase-analytics';
+import { AsyncStorage } from 'react-native';
+
+import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
+
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+//const SCREEN_WIDTH = Dimensions.get('window').width;
 
 
 
@@ -24,7 +31,24 @@ import * as Analytics from 'expo-firebase-analytics';
 export default class SearchProducts extends React.Component{
   constructor(props){
       super(props)
-      this.prodList = []
+      this.prodList = []//[{name: 'coca'}]
+
+      this.layoutProvider = new LayoutProvider((i) => {
+      return 'NORMAL';
+        }, (type, dim) => {
+          switch (type) {
+            case 'NORMAL': 
+              dim.width = SCREEN_WIDTH;
+              dim.height = 150;
+              break;
+            default: 
+              dim.width = SCREEN_WIDTH;
+              dim.height = 150;
+              break;
+          };
+        })
+      
+
       this.state = {
           products: [],
           modalVisible : false,
@@ -43,19 +67,22 @@ export default class SearchProducts extends React.Component{
           refreshing: false,
           searchQuery: "",
           itemAdded: false,
+          
           disableAddButton: true,
           loadingPic: true,
+
+          list: new DataProvider((r1, r2) => r1 !== r2).cloneWithRows(this.prodList)
       }
 
       
       
   }
 
-  
-
-  renderProduct = ({product}) =>(
-    product.name && 
-                <TouchableOpacity key ={i} onPress = {()=> this.onOpenItem(product)}>
+  rowRenderer = (type, product) => {
+    
+    return (
+      product.name && 
+                <TouchableOpacity  onPress = {()=> this.onOpenItem(product)} style = {{flex: 1}}>
                   <View style = {SearchProdStyles.superContainer}>
                   <Image source = {{uri:product.imgURL}} style = {SearchProdStyles.productPic} />
                   <View style = {SearchProdStyles.mainContainer}>
@@ -94,7 +121,56 @@ export default class SearchProducts extends React.Component{
                 
               </View>
                 </TouchableOpacity>  
-  )
+    )
+  }
+
+  rowRendererSearch = (type, product) => {
+    
+    return (
+      product.item.name && 
+            <TouchableOpacity  onPress = {()=> this.onOpenItem(product.item)}>
+              <View style = {SearchProdStyles.superContainer}>
+              <Image source = {{uri:product.item.imgURL}} style = {SearchProdStyles.productPic} />
+              <View style = {SearchProdStyles.mainContainer}>
+                  <View style = {SearchProdStyles.titleContainer}>
+                      <Text style = {SearchProdStyles.titleText}>{product.item.name} </Text>
+                      <Text style = {SearchProdStyles.priceText}> N{product.item.price}</Text>
+                  </View>
+                  <View style = {SearchProdStyles.sizeContainer}>
+                      <Text style = {SearchProdStyles.titleText}>{product.item.size} </Text>
+                  </View>
+                  {!product.item.shop &&
+                  <View>
+                  <Text style = {product.item.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
+                      {product.item.stock > 0? "delivered immediately": "out of Stock"}
+                  </Text>
+                  <Text style = {SearchProdStyles.description}>
+                      {product.item.stock + " in stock"} 
+                  </Text>
+                  </View>
+                  }
+
+                  {product.item.shop &&
+                   <View>
+                  <Text style = {SearchProdStyles.mediumText} >
+                      {"delivered today"}
+                  </Text>
+                  <Text style = {SearchProdStyles.description}>
+                      {"in stock"} 
+                  </Text>
+                  </View>
+                  }
+              </View>
+            </View>
+
+            <View>
+            
+          </View>
+            </TouchableOpacity>
+    )
+  }
+
+  
 
 
   componentDidMount = async () =>{
@@ -108,12 +184,14 @@ export default class SearchProducts extends React.Component{
       await getProducts(this.productsRetrieved)//, ()=>{
       this.setState({loadingPic: false})
       console.log('loading pic: '+ this.state.loadingPic)
+      
       //})
     }
     catch (error){
       console.warn(error)
       alert("Timeout: Please check your internet connection and try again ")
     }
+    
   }
 
   static getDerivedStateFromError(error) {
@@ -125,14 +203,6 @@ export default class SearchProducts extends React.Component{
   componentDidCatch(error, errorInfo) {
     // You can also log the error to an error reporting service
     logErrorToMyService(error, errorInfo);
-  }
-
-  
-  productsRetrieved = (productList) =>{
-    console.log('retrieved')
-    this.prodList = productList
-    console.log(productList)
-    this.setState({products: productList})
   }
 
   getAllLocalData = async () =>{//for basket count --- use redux-like central state mgmt
@@ -171,6 +241,32 @@ export default class SearchProducts extends React.Component{
     console.log('out async get')
   }
 
+  
+  productsRetrieved = (productList) =>{
+    console.log('retrieved')
+
+    //LOAD IN_STORE ITEMS FIRST
+    function dynamicSort(property) {
+      var sortOrder = 1;
+      if(property[0] === "-") {
+          sortOrder = -1;
+          property = property.substr(1);
+      }
+      return function (a,b) {
+          /* next line works with strings and numbers, 
+           * and you may want to customize it to your needs
+           */
+          var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+          return result * sortOrder;
+      }
+  }
+
+    this.prodList = productList.sort(dynamicSort('shop')).reverse()
+    console.log(productList)
+    this.setState({products: this.prodList})
+    this.setState({list: new DataProvider((r1, r2) => r1 !== r2).cloneWithRows(this.state.products)})
+  }
+
 
   onOpenItem =(product) => {
     console.log("Item pressed")
@@ -200,9 +296,10 @@ export default class SearchProducts extends React.Component{
     this.setState({searchUsed: true})
     const result = fuse.search(this.state.searchQuery)
     console.log(result)
-    this.setState({products :[]})
-    this.setState({products :result})
-    console.log(this.state.products)
+    //this.setState({products :[]})
+    this.setState({list: new DataProvider((r1, r2) => r1 !== r2).cloneWithRows(result)})
+    console.log(this.state.list)
+    
   }
   else{
     this.setState({searchUsed: false})
@@ -215,6 +312,7 @@ _onRefresh= () => {
   this.setState({searchUsed: false});
   this.setState({refreshing: true});
   this.setState({searchQuery: ""})
+  this.setState({loadingPic: true})
   this.componentDidMount().then(() => {
     this.setState({refreshing: false});
   });
@@ -243,7 +341,7 @@ render(){
       <View style = {SearchProdStyles.allContainer}>
      <View >
         <TextInput 
-            placeholder= "search for a product"  
+            placeholder= "search by product name"  
             style={SearchProdStyles.searchBox} 
             onChangeText={(text) => this.setState({searchQuery: text})} 
             value={this.state.searchQuery} 
@@ -255,7 +353,7 @@ render(){
           </TouchableOpacity>
 
           <TouchableOpacity  onPress= {() => this.onViewBasket() } style = {SearchProdStyles.modalButton}>
-            <Text style = {SearchProdStyles.buttonText}>OPEN BASKET</Text>
+            <Text style = {SearchProdStyles.buttonText}>OPEN BASKET {}</Text>
           </TouchableOpacity>
 
        
@@ -265,113 +363,39 @@ render(){
             <Image source = {{uri: require("../../../assets/loading.gif")}} style = {this.state.loadingPic == true? SearchProdStyles.loadingPic: SearchProdStyles.loadingPicHide} />
           
       
-      <ScrollView 
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={()=>this._onRefresh.bind(this)}/>}
-          >
+      
             
-      <View>
+     
           {this.state.searchUsed == true &&
-            this.state.products.map((product,i) =>(
-            product.item.name && 
-            <TouchableOpacity key ={i} onPress = {()=> this.onOpenItem(product.item)}>
-              <View style = {SearchProdStyles.superContainer}>
-              <Image source = {{uri:product.item.imgURL}} style = {SearchProdStyles.productPic} />
-              <View style = {SearchProdStyles.mainContainer}>
-                  <View style = {SearchProdStyles.titleContainer}>
-                      <Text style = {SearchProdStyles.titleText}>{product.item.name} </Text>
-                      <Text style = {SearchProdStyles.priceText}> N{product.item.price}</Text>
-                  </View>
-                  <View style = {SearchProdStyles.sizeContainer}>
-                      <Text style = {SearchProdStyles.titleText}>{product.item.size} </Text>
-                  </View>
-                  {!product.item.shop &&
-                  <View>
-                  <Text style = {product.item.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
-                      {product.item.stock > 0? "available for immediate delivery": "out of Stock"}
-                  </Text>
-                  <Text style = {SearchProdStyles.description}>
-                      {product.item.stock + " in stock"} 
-                  </Text>
-                  </View>
-                  }
-
-                  {product.item.shop &&
-                   <View>
-                  <Text style = {SearchProdStyles.goodText} >
-                      {"available for next day delivery"}
-                  </Text>
-                  <Text style = {SearchProdStyles.description}>
-                      {" in stock"} 
-                  </Text>
-                  </View>
-                  }
-              </View>
-            </View>
-
-            <View>
-            
+            <View style={{minHeight: 1, minWidth: 1}}>
+            <RecyclerListView
+            style={{flex: 1}}
+            rowRenderer={this.rowRendererSearch}
+            dataProvider={this.state.list}
+            layoutProvider={this.layoutProvider}
+          />
           </View>
-            </TouchableOpacity>
-
-          ))}
+          }
 
           {this.state.searchUsed == false &&
-            this.state.products.map((product,i) =>(
-              product.name && 
-              <TouchableOpacity key ={i} onPress = {()=> this.onOpenItem(product)}>
-                <View style = {SearchProdStyles.superContainer}>
-                <Image source = {{uri:product.imgURL}} style = {SearchProdStyles.productPic} />
-                <View style = {SearchProdStyles.mainContainer}>
-                    <View style = {SearchProdStyles.titleContainer}>
-                        <Text style = {SearchProdStyles.titleText}>{product.name} </Text>
-                        <Text style = {SearchProdStyles.priceText}> N{product.price}</Text>
-                    </View>
-                    <View style = {SearchProdStyles.sizeContainer}>
-                      <Text style = {SearchProdStyles.titleText}>{product.size} </Text>
-                  </View>
-                  {!product.shop &&
-                  <View>
-                  <Text style = {product.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
-                      {product.stock > 0? "available for immediate delivery": "out of Stock"}
-                  </Text>
-                  <Text style = {SearchProdStyles.description}>
-                      {product.stock + " in stock"} 
-                  </Text>
-                  </View>
-                  }
-
-                  {product.shop &&
-                   <View>
-                  <Text style = {SearchProdStyles.goodText} >
-                      {"available for next day delivery"}
-                  </Text>
-                  <Text style = {SearchProdStyles.description}>
-                      {" in stock"} 
-                  </Text>
-                  </View>
-                  }
-                </View>
-              </View>
-  
-              <View>
-              
-            </View>
-              </TouchableOpacity>  
-          ))}
-
-          
-
-          <View style = {SearchProdStyles.superContainer}>
-            <Image source = {{uri:"../../../assets/white.png"}} style = {SearchProdStyles.modalPic} />
+          <View style={{minHeight: 1, minWidth: 1}}>
+            <RecyclerListView
+            style={{flex: 1}}
+            rowRenderer={this.rowRenderer}
+            dataProvider={this.state.list}
+            layoutProvider={this.layoutProvider}
+          />
           </View>
+          }
 
-          </View>
+          
+
+          
+
+         
           
           
-        </ScrollView>
+        
 
         
         </View>
@@ -416,6 +440,13 @@ const SearchProdStyles = StyleSheet.create({
     marginLeft: hp(percHeight(5)),
     //alignSelf: 'center',
   },
+  mediumText: {//same as good but up for change
+    color: 'green',
+    fontWeight: 'bold',
+    fontSize: hp(percHeight(12*1.25)),
+    marginLeft: hp(percHeight(5)),
+    //alignSelf: 'center',
+  },
   searchBox: {
     height: hp(percHeight(50)), 
     marginTop: 5,
@@ -423,9 +454,10 @@ const SearchProdStyles = StyleSheet.create({
     paddingLeft: 0,
     textAlign: 'center',
     fontSize: hp(percHeight(18*1.25)),
-    color: '#707070',
+    backgroundColor: 'white',
     borderColor: '#c0c0c0',
     borderWidth: 1,
+    
   },
 
   modal: { 
@@ -507,7 +539,7 @@ const SearchProdStyles = StyleSheet.create({
   },
   
   allContainer:{
-    alignSelf : 'center',
+    //alignSelf : 'center',
     width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),//hp("67%") < wp("100%")? hp("67%"): wp("100%"),- BS
   },
   titleContainer: {
