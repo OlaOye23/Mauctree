@@ -313,7 +313,7 @@ render(){
 
                   <View>
                   <Text style = {SearchProdStyles.mediumText} >
-                      {"delivered today"}
+                      {"delivered today (order by noon)"}
                   </Text>
                   <Text style = {SearchProdStyles.description}>
                       {"in stock"} 
@@ -327,7 +327,7 @@ render(){
               <View>
                   <View style = {SearchProdStyles.titleContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.item.name} </Text>
-                      <Text style = {SearchProdStyles.priceTextBad}> N{parseInt(product.item.price*1.10)}</Text>
+                      <Text style = {SearchProdStyles.priceTextBad}> N{parseInt(parseInt(product.item.price*1.1)/10)*10}</Text>
                   </View>
                   <View style = {SearchProdStyles.sizeContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.item.size} </Text>
@@ -374,7 +374,7 @@ render(){
 
                     <View>
                     <Text style = {SearchProdStyles.mediumText} >
-                        {"delivered today"}
+                        {"delivered today (order by noon)"}
                     </Text>
                     <Text style = {SearchProdStyles.description}>
                         {" in stock"} 

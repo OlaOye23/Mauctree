@@ -68,7 +68,7 @@ export default class OrderComplete extends Component{
                         <Text style = {orderCompleteStyles.modalText}>thank you for shopping with us! </Text>
                           
                         <Text style = {orderCompleteStyles.modalSmallText}>{"\n"} expect our call in 1 minute </Text>
-                        <Text style = {orderCompleteStyles.modalSmallText}>expect delivery in between 10 minutes and 2 hours</Text>
+                        <Text style = {orderCompleteStyles.modalSmallText}>expect delivery in between 30 minutes and 2 hours</Text>
                         
                         <Text style = {orderCompleteStyles.modalSmallText}>{"\n"} name: {this.state.name}</Text>
                         <Text style = {orderCompleteStyles.modalSmallText}>amount due: N{this.state.total}</Text>
