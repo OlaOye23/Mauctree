@@ -216,11 +216,13 @@ export default class SearchProducts extends React.Component{
   const fuse = new Fuse(this.prodList, options)
   if (this.state.searchQuery !== ""){
     this.setState({searchUsed: true})
+    //this.setState({loadingPic: true}) //too quick to display thus useless
     const result = fuse.search(this.state.searchQuery)
     console.log(result)
     this.setState({products :[]})
     this.setState({products :result})
     console.log(this.state.products)
+    //this.setState({loadingPic: false})
   }
   else{
     this.setState({searchUsed: false})
@@ -388,7 +390,7 @@ render(){
                   <View>
                     <View style = {SearchProdStyles.titleContainer}>
                         <Text style = {SearchProdStyles.titleText}>{product.name} </Text>
-                        <Text style = {SearchProdStyles.priceTextBad}> N{parseInt(product.price* 1.10)}</Text>
+                        <Text style = {SearchProdStyles.priceTextBad}> N{parseInt(parseInt(product.price*1.1)/10)*10}</Text>
                     </View>
                     <View style = {SearchProdStyles.sizeContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.size} </Text>
