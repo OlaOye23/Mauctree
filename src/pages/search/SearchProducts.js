@@ -315,7 +315,7 @@ render(){
 
                   <View>
                   <Text style = {SearchProdStyles.mediumText} >
-                      {"delivered today (order by noon)"}
+                      {"delivered today (order by 2pm)"}
                   </Text>
                   <Text style = {SearchProdStyles.description}>
                       {"in stock"} 
@@ -376,7 +376,7 @@ render(){
 
                     <View>
                     <Text style = {SearchProdStyles.mediumText} >
-                        {"delivered today (order by noon)"}
+                        {"delivered today (order by 2pm)"}
                     </Text>
                     <Text style = {SearchProdStyles.description}>
                         {" in stock"} 
