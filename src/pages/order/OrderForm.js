@@ -674,8 +674,8 @@ export default class OrderForm extends Component{
                   <Text style = {orderFormStyles.buttonText}>PAY BY TRANSFER (WHATSAPP)</Text>
                 </TouchableOpacity>
 
-                <Text style={orderFormStyles.modalSmallText}>OR DOWNLOAD APP FOR MORE PAYMENT OPTIONS </Text> 
-                {/*<TouchableOpacity 
+                {/*<Text style={orderFormStyles.modalSmallText}>OR DOWNLOAD APP FOR MORE PAYMENT OPTIONS </Text> 
+                <TouchableOpacity 
                   style = {orderFormStyles.loadButton} 
                   onPress = {() => {
                     Linking.openURL("https://play.google.com/store/apps/details?id=com.adadevng.shopmob")
