@@ -62,15 +62,15 @@ export default class OrderForm extends Component{
                 <Image source = {logo} style = {locationStyles.modalPic} />
                 <Text style = {locationStyles.header} >select your location</Text>
 
-                <Text style = {locationStyles.subHeader} >(currently only available in VGC):</Text> 
+                {/*<Text style = {orderFormStyles.subHeader} >select location {"\n"}(currently only available in VGC):</Text> */}
                 <Picker
                   selectedValue={this.state.location}
                   style = {this.state.location !== ""? locationStyles.textInput: locationStyles.textInputBad}
                   onValueChange={(itemValue, itemIndex) => {
                     this.setState({ location: itemValue })
-                    setTimeout(()=>this.checkValidity(),500)
                   }}>
                   <Picker.Item label="VGC" value="VGC" />
+                  <Picker.Item label="Chevron Drive" value="Chevron Drive" />
                 </Picker>
 
 

@@ -585,7 +585,7 @@ export default class OrderForm extends Component{
                 <View style = {{marginBottom: 300}}>
                 <Text style = {orderFormStyles.header} >delivery details</Text>
 
-                <Text style = {orderFormStyles.subHeader} >select location {"\n"}(currently only available in VGC):</Text> 
+                {/*<Text style = {orderFormStyles.subHeader} >select location {"\n"}(currently only available in VGC):</Text> */}
                 <Picker
                   selectedValue={this.state.location}
                   style = {this.state.location !== ""? orderFormStyles.picker: orderFormStyles.pickerBad}
@@ -594,6 +594,7 @@ export default class OrderForm extends Component{
                     setTimeout(()=>this.checkValidity(),500)
                   }}>
                   <Picker.Item label="VGC" value="VGC" />
+                  <Picker.Item label="Chevron Drive" value="Chevron Drive" />
                 </Picker>
 
                 <View style = {{marginBottom: 50}}></View>

@@ -338,7 +338,7 @@ render(){
 
                   <View>
                     <Text style = {product.item.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
-                        {product.item.stock > 0? "delivered immediately": "out of Stock"}
+                        {product.item.stock > 0? "delivered immediately (4pm to 9pm)": "out of Stock"}
                     </Text>
                     <Text style = {SearchProdStyles.description}>
                         {product.item.stock + " in stock"} 
@@ -399,7 +399,7 @@ render(){
 
                   <View>
                       <Text style = {product.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
-                          {product.stock > 0? "delivered immediately": "out of Stock"}
+                          {product.stock > 0? "delivered immediately (4pm to 9pm)": "out of Stock"}
                       </Text>
                       <Text style = {SearchProdStyles.description}>
                           {product.stock + " in stock"} 
