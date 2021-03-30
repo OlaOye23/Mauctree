@@ -22,7 +22,7 @@ export default class MoreApps extends React.Component{
               "name": "Continue Shopping",
               "description": "Shop and pay before or after delivery. Our selection is growing. We deliver between 10 minutes and 2 hours",
               "imgAddr": require('../../../assets/icon.png'),
-              "nav": "Location"
+              "nav": "Search Products"
           },
 
           

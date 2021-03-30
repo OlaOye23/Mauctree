@@ -28,11 +28,20 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, Button, Platform } from 'react-native';
+import { Text, View, Button, Platform, Image } from 'react-native';
 
 import * as myEPT from './assets/myEPT.json'
 
 import * as Analytics from 'expo-firebase-analytics';
+
+import basketPic from './assets/basketIcon.png'
+import logoPic from './assets/logoPic.png' 
+import logoName from './assets/logoName.png' 
+
+import { TouchableOpacity } from './src/web/react-native-web'; //'react-native' //
+
+import { widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import {percWidth, percHeight} from './src/api/StyleFuncs'
 
 
 const Tab = createBottomTabNavigator();
@@ -104,6 +113,12 @@ async function registerForPushNotificationsAsync() {
   return token;
 }
 
+function LogoTitle() {
+  return (
+    <Image style={{ width: 50, height: 50 }} source = {logo} />
+  );
+}
+
 function App() {//stack
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
@@ -128,10 +143,19 @@ function App() {//stack
         
         {/*<Stack.Screen name="Welcome" component={LogoPage} />*/}
 
-        
-        <Stack.Screen name="More Apps" component={MoreApps} options={{ title: 'Welcome' }}/>
+
+        <Stack.Screen name="Loc" component={Location} options={{ title: 'Select Location' }}/>
+        <Stack.Screen name="More Apps" component={MoreApps} options={{ title: 'Menu' }}/>
         <Stack.Screen name="Location" component={Location} options={{ title: 'Select Location' }}/>
-        <Stack.Screen name="Search Products" component={SearchProducts} options={{ title: 'Browse' }}/>
+        <Stack.Screen name="Search Products" component={SearchProducts} options={{
+          title: 'Browse',
+          headerTitle: 
+          <View style = {{flex: 1, flexDirection: 'row', marginLeft: wp(percWidth(5)), justifyContent: 'left', alignItems: 'left'}}>
+              {/*<Image style={{ width: 40, height: 40, marginRight: 20, marginTop: 10, }} source = {logoPic} /> */}
+              <Image style={{ width: hp(percHeight(150)), height: hp(percHeight(30)), marginLeft: wp(percWidth(10)),marginRight: wp(percWidth(20)), marginTop: hp(percHeight(10)), marginBottom: hp(percHeight(15))}} source = {logoName} /> 
+            </View>,
+          headerRight: () => {}
+        }}/>
         <Stack.Screen name="Add Item" component={AddItem} options={{ title: ' ' }}/>
         <Stack.Screen name="Basket" component={BasketList} options={{ title: 'Basket' }}/>
         <Stack.Screen name="Update Item" component={UpdateItem} options={{ title: ' ' }}/>

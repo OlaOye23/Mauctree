@@ -96,7 +96,7 @@ export default class OrderForm extends Component{
 
 const locationStyles = StyleSheet.create({
   modalPic:{
-    marginTop: hp(percWidth(25)),
+    marginTop: hp(percWidth(5)),
     width: hp(percHeight(250)),
     height: hp(percHeight(250)),
     alignSelf:'center',

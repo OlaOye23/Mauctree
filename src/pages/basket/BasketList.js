@@ -41,7 +41,7 @@ export default class BasketList extends React.Component{
           store:{
             id: "bvUlmrcHZsUi6SpECE8y",//VGC STORE HARD CODE
             name: "VGC",
-            open: ""
+            open: "yes"
           }
       }
   }
@@ -54,7 +54,7 @@ export default class BasketList extends React.Component{
       try{
         await this.getAllLocalData()
         let store = await getSelectStore(this.state.store)
-        this.setState({store: store})  
+        //this.setState({store: store})  
       } catch (error) {
         console.warn(error)
         alert('Error: please try again or restart')
@@ -219,7 +219,7 @@ export default class BasketList extends React.Component{
       return
     }
 
-    if (this.total < 0){//MINIMUM ORDER CHECK
+    if (this.total < 2000){//MINIMUM ORDER CHECK
       alert("You need to spend a minimum of N2000 for our delivery service")
       fail = true
       const { navigation } = this.props;

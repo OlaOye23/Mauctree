@@ -60,15 +60,14 @@ export default class OrderForm extends Component{
             },
             token: "",
             email: "",
-            /*cardNumber: "",
+            cardNumber: "",
             cvc: "",
             expiry: {
               month: "",
               year: "",
-            },*/
+            },
             type: "Evening",
             discount: 0,
-            location: "VGC",
             
         }
     }
@@ -84,7 +83,8 @@ export default class OrderForm extends Component{
   componentDidMount = async () =>{
     //get location
     //get order items from async storage
-
+    console.log(this.state.expiry.month)
+    console.log(this.state.expiry.year)
     const { route } = this.props;
     const { total } = route.params;
     this.setState({total : total })
@@ -431,31 +431,24 @@ export default class OrderForm extends Component{
       await this.storeLocalData("checkoutAddr", this.state.address)
       await this.storeLocalData("checkoutHouse", this.state.house)
       await this.storeLocalData("checkoutPhone", this.state.phoneNumber)
-      alert("Your order has been submitted \nOur representative will contact you shortly")
+      //alert("your order is being submitted \n please wait...")
       const { navigation } = this.props;
-      
-      let submit_error = false
 
       let items = this.basket
       let msg = "Order Items:%0A"
       let i = 1
       await this.asyncForEach(items, async (basketItem) => { 
         console.warn(basketItem)
-        if (basketItem.info.price){//if basket item is a valid product
-          basketItem.customer = this.state.name
-          basketItem.location = this.state.location
-          basketItem.type = this.state.type
-          basketItem.DateText = this.timeConverter(Date.now())
-          addSale(basketItem, this.saleComplete )
+        if (basketItem.info.price){
+          addSale(basketItem)
         }
         msg += "%20" + i + ")" + basketItem.name + " x " + basketItem.qty + "%0A"
         i += 1
         })
       msg += "%0AName: " + this.state.name + "%0A"
       msg += "Address: " + this.state.house + "%20" + this.state.address + "%0A"
-      msg += "Location: " + this.state.location + "%0A"
       msg += "Type: " + this.state.type + "%0A"
-      msg += "Total: N" + (this.state.total + this.state.discount) + "%0A"
+      msg += "Total: N" + this.state.total + "%0A"
 
   
       try{
@@ -464,8 +457,7 @@ export default class OrderForm extends Component{
           if (fail === false){
 
             //setTimeout(async ()=> {await this.sendAlert(this.state)}, 1000) //comment only in test
-            this.state.DateText = this.timeConverter(Date.now())
-            await addOrder(this.state, this.onOrderUploaded)
+             addOrder(this.state, this.onOrderUploaded)
             await this.clearAllLocalData()
             let prods =  this.basket
             await this.asyncForEach(prods,async (prod)=>{//change to asyncforech
@@ -478,18 +470,16 @@ export default class OrderForm extends Component{
           else if (fail === true){
             console.log('checkout failed')
             alert('please revise your basket')
-            submit_error = true
           }
         })
       } catch (error) {
         console.warn(error)
         alert('Error: please try again or restart')
-        submit_error = true
       }
       await this.storeHistory()
 
       
-      if (submit_error == false){
+
        navigation.navigate(
         'More Apps',
         {order: this.state}
@@ -499,16 +489,14 @@ export default class OrderForm extends Component{
         'Order Complete',
         {order: this.state}
       )
-      }
+
       let link = `http://api.whatsapp.com/send?text=${msg}&phone=+2348110233359`
       Linking.openURL(link)
-      
+
     }
 
  
-    saleCOmplete = () =>{
-      console.log('sale added')
-    }
+    
 
 
     checkValidity = async () => {
@@ -596,22 +584,6 @@ export default class OrderForm extends Component{
       this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
 
     }
-
-    timeConverter= (UNIX_timestamp)=>{
-      var a = new Date(UNIX_timestamp);
-      //alert(a)
-      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      var year = a.getFullYear();
-      var month = months[a.getMonth()];
-      var date = a.getDate();
-      var hour = a.getHours();
-      var min = a.getMinutes();
-      var sec = a.getSeconds();
-      var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
-      //alert(time)
-      return time;
-    }
-
     
 
 
@@ -701,7 +673,6 @@ export default class OrderForm extends Component{
                   selectedValue={this.state.type}
                   style = {this.state.type !== ""? orderFormStyles.picker: orderFormStyles.pickerBad}
                   onValueChange={(itemValue, itemIndex) => {
-                    this.setState({type: itemValue})
                     if (itemValue == "Immediate" ){
                       this.state.discount = 500
                     }
@@ -717,6 +688,7 @@ export default class OrderForm extends Component{
                     if (itemValue == "Subscribe" ){
                       this.state.discount = -1*(this.state.total) * .1
                     }
+                    this.setState({ location: itemValue })
                     setTimeout(()=>this.checkValidity(),500)
                   }}>
                   <Picker.Item label="Evening --- FREE delivery" value="Evening" />

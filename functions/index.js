@@ -37,7 +37,7 @@ exports.onNewOrder = functions.firestore
           body:  data.name + " " + data.house + " " + data.address + "\n " + data.total+  '\nOpen app to see details',
           data: { name: data.name,
                   address: data.address + data.house,
-                  total: data.total,  
+                  total: "N"+ data.total,  
                 },
         };
       
@@ -239,6 +239,247 @@ exports.generateApplicationCsv = functions.region('asia-northeast1').pubsub
     const filename = `applications_${dateTime}.csv`;
     const newFilePath = path.join(path.dirname("history/products/"), filename);
     const latestFilePath = path.join(path.dirname("history/products/"), 'LATEST PRODUCTS LIST.csv');
+
+    const tempLocalFile = path.join(os.tmpdir(), filename);
+
+    return new Promise((resolve, reject) => {
+      //write contents of csv into the temp file
+      fs.writeFile(tempLocalFile, output, error => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        const bucket = firebase.storage().bucket();
+
+        // upload the file into the current firebase project default bucket
+        bucket
+           .upload(tempLocalFile, {
+            // Workaround: firebase console not generating token for files
+            // uploaded via Firebase Admin SDK
+            // https://github.com/firebase/firebase-admin-node/issues/694
+            destination: newFilePath,
+            metadata: {
+              metadata: {
+                firebaseStorageDownloadTokens: UUID(),
+              }
+            },
+          })
+          .then(() => resolve())
+          .catch(errorr => reject(errorr));
+
+          bucket
+           .upload(tempLocalFile, {
+            // Workaround: firebase console not generating token for files
+            // uploaded via Firebase Admin SDK
+            // https://github.com/firebase/firebase-admin-node/issues/694
+            destination: latestFilePath,
+            metadata: {
+              metadata: {
+                firebaseStorageDownloadTokens: UUID(),
+              }
+            },
+          })
+          .then(() => resolve())
+          .catch(errorr => reject(errorr));
+      });
+    });
+  });
+
+//PRODUCTS EXPORT
+  exports.generateApplicationCsv = functions.region('asia-northeast1').pubsub
+  .topic("generate-application-csv")
+  .onPublish(async message => {
+
+    // gets the documents from the firestore collection
+    const applicationsSnapshot = await firebase
+      .firestore()
+      .collection("products")
+      .get();
+
+    const applications = applicationsSnapshot.docs.map(doc => doc.data());
+
+    // csv field headers
+    const fields = [
+      'id',
+      'name',
+      'size',
+      'stock',
+      'price', 
+      'shop',
+      'category',
+      'subcat',
+      'tags'
+    ];
+
+    // get csv output
+    const output = await json2csv.parseAsync(applications, { fields });
+
+    // generate filename
+    const dateTime = new Date().toISOString().replace(/\W/g, "");
+    const filename = `applications_${dateTime}.csv`;
+    const newFilePath = path.join(path.dirname("history/products/"), filename);
+    const latestFilePath = path.join(path.dirname("history/products/"), 'LATEST PRODUCTS LIST.csv');
+
+    const tempLocalFile = path.join(os.tmpdir(), filename);
+
+    return new Promise((resolve, reject) => {
+      //write contents of csv into the temp file
+      fs.writeFile(tempLocalFile, output, error => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        const bucket = firebase.storage().bucket();
+
+        // upload the file into the current firebase project default bucket
+        bucket
+           .upload(tempLocalFile, {
+            // Workaround: firebase console not generating token for files
+            // uploaded via Firebase Admin SDK
+            // https://github.com/firebase/firebase-admin-node/issues/694
+            destination: newFilePath,
+            metadata: {
+              metadata: {
+                firebaseStorageDownloadTokens: UUID(),
+              }
+            },
+          })
+          .then(() => resolve())
+          .catch(errorr => reject(errorr));
+
+          bucket
+           .upload(tempLocalFile, {
+            // Workaround: firebase console not generating token for files
+            // uploaded via Firebase Admin SDK
+            // https://github.com/firebase/firebase-admin-node/issues/694
+            destination: latestFilePath,
+            metadata: {
+              metadata: {
+                firebaseStorageDownloadTokens: UUID(),
+              }
+            },
+          })
+          .then(() => resolve())
+          .catch(errorr => reject(errorr));
+      });
+    });
+  });
+
+
+  exports.generateApplicationSalesCsv = functions.region('asia-northeast1').pubsub
+  .topic("generate-application-sales-csv")
+  .onPublish(async message => {
+
+    // gets the documents from the firestore collection
+    const applicationsSnapshot = await firebase
+      .firestore()
+      .collection("sales")
+      .get();
+
+    const applications = applicationsSnapshot.docs.map(doc => doc.data());
+
+    // csv field headers
+    const fields = [
+      'name',
+      'id',
+      'DateText',
+      'timeOpened._seconds',
+      'qty',
+      'info.price',
+      'info.size',
+      'info.stock',
+      'info.category',
+      'info.subcat',
+      'info.tags',
+    ];
+
+    // get csv output
+    const output = await json2csv.parseAsync(applications, { fields });
+
+    // generate filename
+    const dateTime = new Date().toISOString().replace(/\W/g, "");
+    const filename = `applications_${dateTime}.csv`;
+    const newFilePath = path.join(path.dirname("history/sales/"), filename);
+    const latestFilePath = path.join(path.dirname("history/sales/"), 'LATEST SALES LIST.csv');
+
+    const tempLocalFile = path.join(os.tmpdir(), filename);
+
+    return new Promise((resolve, reject) => {
+      //write contents of csv into the temp file
+      fs.writeFile(tempLocalFile, output, error => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        const bucket = firebase.storage().bucket();
+
+        // upload the file into the current firebase project default bucket
+        bucket
+           .upload(tempLocalFile, {
+            // Workaround: firebase console not generating token for files
+            // uploaded via Firebase Admin SDK
+            // https://github.com/firebase/firebase-admin-node/issues/694
+            destination: newFilePath,
+            metadata: {
+              metadata: {
+                firebaseStorageDownloadTokens: UUID(),
+              }
+            },
+          })
+          .then(() => resolve())
+          .catch(errorr => reject(errorr));
+
+          bucket
+           .upload(tempLocalFile, {
+            // Workaround: firebase console not generating token for files
+            // uploaded via Firebase Admin SDK
+            // https://github.com/firebase/firebase-admin-node/issues/694
+            destination: latestFilePath,
+            metadata: {
+              metadata: {
+                firebaseStorageDownloadTokens: UUID(),
+              }
+            },
+          })
+          .then(() => resolve())
+          .catch(errorr => reject(errorr));
+      });
+    });
+  });
+
+
+
+  exports.generateApplicationOrdersCsv = functions.region('asia-northeast1').pubsub
+  .topic("generate-application-orders-csv")
+  .onPublish(async message => {
+
+    // gets the documents from the firestore collection
+    const applicationsSnapshot = await firebase
+      .firestore()
+      .collection("orders")
+      .get();
+
+    const applications = applicationsSnapshot.docs.map(doc => doc.data());
+
+    // csv field headers
+    const fields = [
+      'name',
+      'address',
+      'phoneNumber',
+      'total',
+      'DateText',
+      'timeOpened._seconds',
+      //'basket',//comes as json
+    ];
+
+    // get csv output
+    const output = await json2csv.parseAsync(applications, { fields });
+
+    // generate filename
+    const dateTime = new Date().toISOString().replace(/\W/g, "");
+    const filename = `applications_${dateTime}.csv`;
+    const newFilePath = path.join(path.dirname("history/orders/"), filename);
+    const latestFilePath = path.join(path.dirname("history/orders/"), 'LATEST ORDERS LIST.csv');
 
     const tempLocalFile = path.join(os.tmpdir(), filename);
 

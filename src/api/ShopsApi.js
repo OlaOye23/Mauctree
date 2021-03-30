@@ -69,7 +69,7 @@ export async function getProducts(productsRetreived) {
     .collection('products')
     //.where('stock', '>', -1)
     //.orderBy('stock','desc')
-    .orderBy('createdAt','desc')
+    .orderBy('createdAt','asc')
     .get()
   snapshot.forEach((doc) => {
     const productItem = doc.data();
@@ -84,6 +84,7 @@ export async function addOrder(order, addComplete) {
   console.log('in addOrder')
   firebase.auth().signInAnonymously()
   order.timeOpened = firebase.firestore.FieldValue.serverTimestamp();
+  //order.DateText = order.timeOpened.toDate().toString().slice(0,25)//didnt work
   await firebase.firestore()
     .collection('orders')
     .add(order)
@@ -93,6 +94,24 @@ export async function addOrder(order, addComplete) {
     }).then(() => addComplete(order))
     .catch((error) => console.log(error));
     console.log('out addOrder')
+}
+
+export async function addSale(sale, addComplete) {
+  console.log('in addSale')
+  firebase.auth().signInAnonymously()
+  /*sale.timeOpened = firebase.firestore.FieldValue.serverTimestamp();
+  console.log(sale.timeOpened)
+  sale.DateText = sale.timeOpened.toString
+  console.log(sale.DateText)*/ //didnt work
+  await firebase.firestore()
+    .collection('sales')
+    .add(sale)
+    .then((snapshot) => {
+      sale.id = snapshot.id;
+      snapshot.set(sale);
+    }).then(() => addComplete(sale))
+    .catch((error) => console.log(error));
+    console.log('out addSale')
 }
 
 export async function getSelectProduct(selectedProduct, retrievedSelectedProduct){
