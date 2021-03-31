@@ -69,6 +69,7 @@ export default class OrderForm extends Component{
             type: "Evening",
             discount: 0,
             location: "VGC",
+            loadingPic: false,
             
         }
     }
@@ -427,11 +428,12 @@ export default class OrderForm extends Component{
     }
 
     onClickSubmit = async () => {
+      this.setState({loadingPic: true})
       await this.storeLocalData("checkoutName",  this.state.name)
       await this.storeLocalData("checkoutAddr", this.state.address)
       await this.storeLocalData("checkoutHouse", this.state.house)
       await this.storeLocalData("checkoutPhone", this.state.phoneNumber)
-      alert("Your order has been submitted \nOur representative will contact you shortly")
+      
       const { navigation } = this.props;
       
       let submit_error = false
@@ -487,7 +489,8 @@ export default class OrderForm extends Component{
         submit_error = true
       }
       await this.storeHistory()
-
+      alert("Your order has been submitted \nOur representative will contact you shortly")
+      this.setState({loadingPic: false})
       
       if (submit_error == false){
        navigation.navigate(
@@ -743,6 +746,8 @@ export default class OrderForm extends Component{
                   <Text style = {orderFormStyles.buttonText}>PAY BY TRANSFER (WHATSAPP)</Text>
                 </TouchableOpacity>
 
+                <Image source = {{uri: require("../../../assets/loading.gif")}} style = {this.state.loadingPic == true? orderFormStyles.loadingPic: orderFormStyles.loadingPicHide} />
+
                 {/*<Text style={orderFormStyles.modalSmallText}>OR DOWNLOAD APP FOR MORE PAYMENT OPTIONS </Text> 
                 <TouchableOpacity 
                   style = {orderFormStyles.loadButton} 
@@ -885,7 +890,19 @@ const orderFormStyles = StyleSheet.create({
   },
   picker:{
     marginBottom: 30,
-  }
+  },
+  loadingPic:{
+    width: hp(percHeight(50)),
+    height: hp(percHeight(50)),
+    alignSelf:'center',
+    alignContent: 'center',
+  },
+  loadingPicHide:{
+    width: hp(percHeight(1)),
+    height: hp(percHeight(1)),
+    alignSelf:'center',
+    alignContent: 'center',
+  },
 
   
 })

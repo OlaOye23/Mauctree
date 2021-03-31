@@ -51,9 +51,9 @@ export default class BasketList extends React.Component{
     const { navigation } = this.props;
     this._unsubscribe = navigation.addListener('focus', async () => {
       this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
-      try{
+      try{//STORE OPEN/CLOSE STATUS
         await this.getAllLocalData()
-        let store = await getSelectStore(this.state.store)
+        //let store = await getSelectStore(this.state.store)
         //this.setState({store: store})  
       } catch (error) {
         console.warn(error)
