@@ -19,6 +19,10 @@ import * as Analytics from 'expo-firebase-analytics';
 import { AsyncStorage } from 'react-native';
 
 import basketPic from '../../../assets/basketActive.png'
+import whatsappPic from '../../../assets/whatsapp.png'
+import hamburgerPic from '../../../assets/hamburger.png'
+import locationPic from '../../../assets/location.png'
+
 
 
 
@@ -52,8 +56,51 @@ export default class SearchProducts extends React.Component{
       }
       const {navigation} = this.props
       navigation.setOptions({
+        headerLeft: () => (
+          <View style = {{flex: 1, flexDirection: 'row'}}>
+          <TouchableOpacity
+            onPress={() => {
+              const { navigation } = props;
+              navigation.navigate('More Apps')}
+            }
+          >
+          <Image 
+          style={{ width: hp(percHeight(40)), height: hp(percHeight(40)), marginTop: hp(percHeight(15)),  marginLeft: wp(percWidth(0)),}} 
+          alt = "Open Menu" 
+          source = {hamburgerPic}
+            />
+          </TouchableOpacity>
+
+          
+           </View>
+        ),
         headerRight: () => (
           <View style = {{flex: 1, flexDirection: 'row'}}>
+
+              <TouchableOpacity
+                onPress={() => {
+                  const { navigation } = props;
+                  navigation.navigate('Location')}
+                }
+              >
+              <Image 
+              style={{ width: hp(percHeight(40)), height: hp(percHeight(40)), marginLeft: wp(percWidth(10)), marginTop: hp(percHeight(15)) }} 
+              alt = "Change Location" 
+              source = {locationPic}
+               />
+              </TouchableOpacity>
+
+            <TouchableOpacity
+                onPress = {() => this.onMoreInfo() }
+              >
+              <Image 
+              style={{ width: hp(percHeight(40)), height: hp(percHeight(40)), marginLeft: wp(percWidth(15)), marginRight: wp(percWidth(10)), marginTop: hp(percHeight(15)) }} 
+              alt = "Whatsapp" 
+              source = {whatsappPic}
+               />
+              </TouchableOpacity>
+
+
               <TouchableOpacity
                 onPress={() => {
                   const { navigation } = props;
@@ -61,15 +108,13 @@ export default class SearchProducts extends React.Component{
                 }
               >
               <Image 
-              style={{ width: 40, height: 40, marginRight: 20, marginTop: 10 }} 
+              style={{ width: hp(percHeight(40)), height: hp(percHeight(40)), marginRight: wp(percWidth(20)), marginTop: hp(percHeight(15)) }} 
               alt = "Go to basket" 
               source = {basketPic}
                />
               </TouchableOpacity>
 
-              {/*<TouchableOpacity
-                onPress={() => alert('This is a button!')}
-              ><Image style={{ width: 50, height: 50 }} source = {whatsappPic} /></TouchableOpacity>*/}
+              
             </View>
         ),
       });
@@ -308,9 +353,7 @@ render(){
             <Text style = {SearchProdStyles.buttonText}>CLEAR SEARCH</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity  onPress = {() => this.onMoreInfo() } style = {SearchProdStyles.modalButton}>
-            <Text style = {SearchProdStyles.buttonText}>ASK US (WHATSAPP)</Text>
-          </TouchableOpacity>
+          
           
 
        

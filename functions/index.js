@@ -218,6 +218,8 @@ exports.generateApplicationCsv = functions.region('asia-northeast1').pubsub
     const fields = [
       'name',
       'price',
+      'cprice',
+      'class',
       'shop',
       'createdAt.seconds',
       'createdAt._seconds',

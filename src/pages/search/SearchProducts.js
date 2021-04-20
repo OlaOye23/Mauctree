@@ -22,6 +22,7 @@ import basketPic from '../../../assets/basketActive.png'
 import whatsappPic from '../../../assets/whatsapp.png'
 import hamburgerPic from '../../../assets/hamburger.png'
 import locationPic from '../../../assets/location.png'
+import noImgPic from '../../../assets/noImgPic.png'
 
 
 
@@ -342,7 +343,7 @@ render(){
       <View style = {SearchProdStyles.allContainer}>
      <View >
         <TextInput 
-            placeholder= "search by product name"  
+            placeholder= "search over 3000 groceries"  
             style={SearchProdStyles.searchBox} 
             onChangeText={(text) => this.setState({searchQuery: text})} 
             value={this.state.searchQuery} 
@@ -376,7 +377,12 @@ render(){
             product.item.name && 
             <TouchableOpacity key ={i} onPress = {()=> this.onOpenItem(product.item)}>
               <View style = {SearchProdStyles.superContainer}>
+                { product.item.imgURL &&
               <Image source = {{uri:product.item.imgURL}} style = {SearchProdStyles.productPic} />
+                }
+                {!product.item.imgURL &&
+              <Image source = {noImgPic} style = {SearchProdStyles.productPic} />
+                }
               <View style = {SearchProdStyles.mainContainer}>
 
               {product.item.shop &&
@@ -422,7 +428,7 @@ render(){
                     </Text>
                   </View>
               </View>
-            }
+              }
 
            
               </View>
@@ -438,7 +444,12 @@ render(){
               product.name && 
               <TouchableOpacity key ={i} onPress = {()=> this.onOpenItem(product)}>
                 <View style = {SearchProdStyles.superContainer}>
-                <Image source = {{uri:product.imgURL}} style = {SearchProdStyles.productPic} />
+                { product.imgURL &&
+              <Image source = {{uri:product.imgURL}} style = {SearchProdStyles.productPic} />
+                }
+                {!product.imgURL &&
+              <Image source = {noImgPic} style = {SearchProdStyles.productPic} />
+                }
                 <View style = {SearchProdStyles.mainContainer}>
 
                   {product.shop &&
@@ -490,7 +501,7 @@ render(){
   
             
               </TouchableOpacity>  
-          ))}
+                ))}
 
           
 
