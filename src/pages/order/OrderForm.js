@@ -27,6 +27,9 @@ export default class OrderForm extends Component{
     constructor(props){
         super(props)
         this.basket = []
+        this.total = 0 
+        this.otherTotal = 0
+        this.immediateTotal = 0
         this.state = {
             id: null,
             status: null,
@@ -46,6 +49,8 @@ export default class OrderForm extends Component{
             timeOpened: null,
             timeClosed: null,
             total: 0,
+            otherTotal: 0,
+            immediateTotal: 0,
             modalVisible: false,
             disableSubmit: true,
             invalidName: true,
@@ -150,6 +155,52 @@ export default class OrderForm extends Component{
     await this.storeLocalData("history", JSON.stringify(hist))
   }
 
+  getAllLocalData = async () =>{
+    console.log('in async get')
+    this.total = 0
+    this.otherTotal = 0
+    this.immediateTotal = 0
+    try{
+    await AsyncStorage.getAllKeys( async (err, keys) => {
+      await AsyncStorage.multiGet(keys, async (err, stores) => {
+        stores.map( async (result, i, store) => {
+          let key = store[i][0];
+          let value = store[i][1];
+          try{
+            let prodObj = JSON.parse(value)
+            console.log(prodObj.qty)
+            if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
+              this.total += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
+              if (!prodObj.info.shop ){
+                this.immediateTotal += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
+                this.basket.push(prodObj)
+                //console.log('hahaha'+this.basket)
+              }
+              else{
+                this.otherTotal += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
+                this.basket.push(prodObj)
+                //alert(prodObj.info.price)
+                //console.log('hahaha'+this.basket)
+              }
+            }
+          }catch(error){
+            console.warn(error)
+          }
+        });
+      });
+      this.setState({products : this.basket})
+      this.basket = []
+      console.log('1',this.state.products)
+      console.log('done')   
+    });
+    } catch (error) {
+      console.warn(error)
+      alert('Error: please try again or restart')
+    }
+    console.log('out async get')
+  }
+
+
 
 
 
@@ -194,7 +245,7 @@ export default class OrderForm extends Component{
     }
   }
 
-    getAllLocalData = async () =>{
+    /*getAllLocalData = async () =>{//old version without total
       console.log('in async get')
       try{
         await AsyncStorage.getAllKeys( async (err, keys) => {
@@ -221,7 +272,7 @@ export default class OrderForm extends Component{
         alert('Error: please try again or restart')
       }
       console.log('out async get')
-    }
+    }*/
 
     clearAllLocalData = async () =>{
       console.log('in async get')
@@ -288,7 +339,7 @@ export default class OrderForm extends Component{
           body: 'Open app to see details',
           data: { name: orderObj.name,
                   address: orderObj.address,
-                  total: orderObj.total,  
+                  total: this.state.total + this.state.discount ,  
                 },
         };
       
@@ -312,7 +363,7 @@ export default class OrderForm extends Component{
     console.log('new order alert complete')
     }
     
-    sendAlertSDK = async (orderObj) =>{
+    /*sendAlertSDK = async (orderObj) =>{//NO LONGER USED- replaced
       let expo = new Expo();
       let messages = []
       const message = {
@@ -322,7 +373,7 @@ export default class OrderForm extends Component{
         body: 'Open app to see details',
         data: { name: orderObj.name,
                 address: orderObj.address,
-                total: orderObj.total,  
+                total: orderObj.immediateTotal + orderObj.otherTotal,  
               },
       }
       messages.push(message)
@@ -342,7 +393,7 @@ export default class OrderForm extends Component{
           }
         }
       })();
-    }
+    }*/
 
 
     onRetrieved = () =>{
@@ -706,27 +757,27 @@ export default class OrderForm extends Component{
                   onValueChange={(itemValue, itemIndex) => {
                     this.setState({type: itemValue})
                     if (itemValue == "Immediate" ){
-                      this.state.discount = 500
+                      this.state.discount = 200
                     }
                     if (itemValue == "Evening" ){
                       this.state.discount = 0
                     }
                     if (itemValue == "Next Day" ){
-                      this.state.discount = -1*(this.state.total) * .1
+                      this.state.discount = -1*(this.otherTotal) * .15
                     }
                     if (itemValue == "Scheduled" ){
-                      this.state.discount = -1*(this.state.total) * .1
+                      this.state.discount = -1*(this.otherTotal) * .15
                     }
                     if (itemValue == "Subscribe" ){
-                      this.state.discount = -1*(this.state.total) * .1
+                      this.state.discount = -1*(this.otherTotal) * .15
                     }
                     setTimeout(()=>this.checkValidity(),500)
                   }}>
                   <Picker.Item label="Evening --- FREE delivery" value="Evening" />
-                  <Picker.Item label="Immediate -- N500 delivery" value="Immediate" />
-                  <Picker.Item label="Next Day -- 10% off total" value="Next Day" />
-                  <Picker.Item label="Scheduled -- 10% off total" value="Scheduled" />
-                  <Picker.Item label="Subscribe -- 10% - 15% off total" value="Subscribe" />
+                  <Picker.Item label="Immediate -- N200 delivery" value="Immediate" />
+                  <Picker.Item label="Next Day -- 15% off select items" value="Next Day" />
+                  <Picker.Item label="Scheduled -- 15% off select items" value="Scheduled" />
+                  <Picker.Item label="Subscribe -- 15% off select items" value="Subscribe" />
                 </Picker>
 
                 <Text style={orderFormStyles.modalText}>your total is: N {this.state.total + this.state.discount} </Text> 

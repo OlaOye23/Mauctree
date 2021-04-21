@@ -6,8 +6,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "predeploy": "expo build:web",
-    "deploy-hosting": "npm run predeploy && firebase deploy --only hosting"
+    "predeploy": "expo build:web --no-pwa",
+    "deploy": "npm run predeploy && firebase deploy --only hosting"
   },
   "dependencies": {
     "@appbaseio/reactivesearch-native": "^0.12.0",

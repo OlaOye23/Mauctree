@@ -61,6 +61,27 @@ export async function getSelectStore(selectedStore){
 
 
 //get list of products
+export async function getStockProducts(productsRetreived) {
+  console.log('in getProducts')
+  firebase.auth().signInAnonymously()
+  let productList = [];
+  let snapshot = await firebase.firestore()
+    .collection('products')
+    //.where('stock', '>', -1)
+    //.orderBy('stock','desc')
+    .where('stock', '>', 0)
+    .orderBy('stock','desc')
+    .get()
+  snapshot.forEach((doc) => {
+    const productItem = doc.data();
+    productItem.id = doc.id;
+    productList.push(productItem);
+  });
+  productsRetreived(productList);
+  console.log('out getProducts')
+}
+
+//get list of products
 export async function getProducts(productsRetreived) {
   console.log('in getProducts')
   firebase.auth().signInAnonymously()

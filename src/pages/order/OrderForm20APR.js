@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import {addOrder, updateProduct, getSelectStore, getSelectProduct} from '../../api/ShopsApi'
-import {StyleSheet, Modal, Image, TextInput, View, ScrollView} from 'react-native'
+import {addOrder, updateProduct, getSelectStore, getSelectProduct, addSale} from '../../api/ShopsApi'
+import {StyleSheet, Modal, Image, TextInput, View, ScrollView, Picker, Linking, Platform} from 'react-native'
 import {Button, Text} from 'react-native-elements'
 import { AsyncStorage } from 'react-native';
 import * as yup from 'yup';
@@ -31,6 +31,7 @@ export default class OrderForm extends Component{
             id: null,
             status: null,
             name: "",
+            location: "VGC",
             address: "",
             house: "",
             phoneNumber: "",
@@ -59,12 +60,17 @@ export default class OrderForm extends Component{
             },
             token: "",
             email: "",
-            cardNumber: "",
+            /*cardNumber: "",
             cvc: "",
             expiry: {
               month: "",
               year: "",
-            }
+            },*/
+            type: "Evening",
+            discount: 0,
+            location: "VGC",
+            loadingPic: false,
+            
         }
     }
 
@@ -79,8 +85,7 @@ export default class OrderForm extends Component{
   componentDidMount = async () =>{
     //get location
     //get order items from async storage
-    console.log(this.state.expiry.month)
-    console.log(this.state.expiry.year)
+
     const { route } = this.props;
     const { total } = route.params;
     this.setState({total : total })
@@ -355,7 +360,7 @@ export default class OrderForm extends Component{
       let items = this.basket
       let fail = false
 
-      if (this.total < 2000){
+      if (this.total < 0){//MINIMUM ORDER CHECK
         alert("You need to spend a minimum of N2000 for our delivery service")
         fail = true
         const { navigation } = this.props;
@@ -393,13 +398,15 @@ export default class OrderForm extends Component{
             fail = true
             alert(basketItem.name + "'s price has changed since you added it to your basket.\nPlease review the updated price and checkout agian")
           }
-          if (parseInt(dbItem.stock) >= parseInt(basketItem.qty)){
-            console.log('product still in stock')
-          }
-          else{
-            console.log('product not in stock')
-            fail = true
-            alert("Not enough " + basketItem.name + ' in stock.\nPlease revise your basket and checkout again')
+          if (!dbItem.shop){
+            if (parseInt(dbItem.stock) >= parseInt(basketItem.qty)){
+              console.log('product still in stock')
+            }
+            else{
+              console.log('product not in stock')
+              fail = true
+              alert("Not enough " + basketItem.name + ' in stock.\nPlease revise your basket and checkout again')
+            }
           }
         
         if (fail === true){
@@ -421,23 +428,45 @@ export default class OrderForm extends Component{
     }
 
     onClickSubmit = async () => {
+      this.setState({loadingPic: true})
       await this.storeLocalData("checkoutName",  this.state.name)
       await this.storeLocalData("checkoutAddr", this.state.address)
       await this.storeLocalData("checkoutHouse", this.state.house)
       await this.storeLocalData("checkoutPhone", this.state.phoneNumber)
-      alert("your order is being submitted \n please wait...")
+      
       const { navigation } = this.props;
-      navigation.navigate(
-        'Payment',
-        {order: this.state}
-      )
-/*
+      
+      let submit_error = false
+
+      let items = this.basket
+      let msg = "Order Items:%0A"
+      let i = 1
+      await this.asyncForEach(items, async (basketItem) => { 
+        console.warn(basketItem)
+        if (basketItem.info.price){//if basket item is a valid product
+          basketItem.customer = this.state.name
+          basketItem.location = this.state.location
+          basketItem.type = this.state.type
+          basketItem.DateText = this.timeConverter(Date.now())
+          addSale(basketItem, this.saleComplete )
+        }
+        msg += "%20" + i + ")" + basketItem.name + " x " + basketItem.qty + "%0A"
+        i += 1
+        })
+      msg += "%0AName: " + this.state.name + "%0A"
+      msg += "Address: " + this.state.house + "%20" + this.state.address + "%0A"
+      msg += "Location: " + this.state.location + "%0A"
+      msg += "Type: " + this.state.type + "%0A"
+      msg += "Total: N" + (this.state.total + this.state.discount) + "%0A"
+
+  
       try{
          await this.checkOutCheck().then( async (fail)=>{
           console.log('fail on submit i.e 2 '+ fail)
           if (fail === false){
 
             //setTimeout(async ()=> {await this.sendAlert(this.state)}, 1000) //comment only in test
+            this.state.DateText = this.timeConverter(Date.now())
             await addOrder(this.state, this.onOrderUploaded)
             await this.clearAllLocalData()
             let prods =  this.basket
@@ -451,23 +480,38 @@ export default class OrderForm extends Component{
           else if (fail === true){
             console.log('checkout failed')
             alert('please revise your basket')
+            submit_error = true
           }
         })
       } catch (error) {
         console.warn(error)
         alert('Error: please try again or restart')
+        submit_error = true
       }
       await this.storeHistory()
+      alert("Your order has been submitted \nOur representative will contact you shortly")
+      this.setState({loadingPic: false})
+      
+      if (submit_error == false){
+       navigation.navigate(
+        'More Apps',
+        {order: this.state}
+      )
 
       navigation.navigate(
         'Order Complete',
-        {total: this.state.total}
+        {order: this.state}
       )
-  */
+      }
+      let link = `http://api.whatsapp.com/send?text=${msg}&phone=+2348110233359`
+      Linking.openURL(link)
+      
     }
 
  
-    
+    saleCOmplete = () =>{
+      console.log('sale added')
+    }
 
 
     checkValidity = async () => {
@@ -479,6 +523,14 @@ export default class OrderForm extends Component{
       }
       else{
         this.state.invalidName = false
+      }
+      //check location
+      if (this.state.location === null || this.state.location === ""){
+        console.log('invalid location')
+        this.state.invalidLocation = true
+      }
+      else{
+        this.state.invalidLocation = false
       }
       //check phoneNumber
       if ((this.state.phoneNumber) === null || (this.state.phoneNumber) === "" ){
@@ -547,16 +599,35 @@ export default class OrderForm extends Component{
       this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
 
     }
+
+    timeConverter= (UNIX_timestamp)=>{
+      var a = new Date(UNIX_timestamp);
+      //alert(a)
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var year = a.getFullYear();
+      var month = months[a.getMonth()];
+      var date = a.getDate();
+      var hour = a.getHours();
+      var min = a.getMinutes();
+      var sec = a.getSeconds();
+      var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+      //alert(time)
+      return time;
+    }
+
     
 
 
     render(){
         return(
-            <ScrollView style = {orderFormStyles.regForm}>
+            <View style = {orderFormStyles.regForm}>
                 <View style = {{marginBottom: 300}}>
                 <Text style = {orderFormStyles.header} >delivery details</Text>
+                
 
-                <Text style = {orderFormStyles.subHeader} >your name</Text>
+                <View style = {{marginBottom: 50}}></View>
+
+                <Text style = {orderFormStyles.subHeader} >your name:</Text>
                 <TextInput style = {this.state.invalidName === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
                   placeholderTextColor = {'grey'}
                   placeholder = {"e.g. Ola"}
@@ -566,8 +637,22 @@ export default class OrderForm extends Component{
                     this.setState({ name: text})
                     setTimeout(()=>this.checkValidity(),500)
                     }}/>
-             
 
+
+                <Text style = {orderFormStyles.subHeader} >select your location</Text>  
+                <Picker
+                  selectedValue={this.state.location}
+                  style = {this.state.location !== ""? orderFormStyles.picker: orderFormStyles.pickerBad}
+                  onValueChange={(itemValue, itemIndex) => {
+                    this.setState({ location: itemValue })
+                    setTimeout(()=>this.checkValidity(),500)
+                  }}>
+                  <Picker.Item label="VGC" value="VGC" />
+                  <Picker.Item label="Chevron Drive" value="Chevron Drive" />
+                </Picker>
+              
+             
+                
                 <Text style = {orderFormStyles.subHeader} >house number:</Text>  
                 <TextInput style = {this.state.invalidHouse === false? orderFormStyles.textInput: orderFormStyles.textInputBad }
                   placeholderTextColor = {'grey'}
@@ -579,7 +664,7 @@ export default class OrderForm extends Component{
                      setTimeout(()=>this.checkValidity(),500)
                      }}/>
 
-                <Text style = {orderFormStyles.subHeader} >street number/name: </Text>  
+                <Text style = {orderFormStyles.subHeader} >street address: </Text>  
                 <TextInput style = {this.state.invalidAddress === false? orderFormStyles.textInput: orderFormStyles.textInputBad }
                   placeholderTextColor = {'grey'}
                   placeholder = {"e.g. road 3"}
@@ -614,85 +699,77 @@ export default class OrderForm extends Component{
                     setTimeout(()=>this.checkValidity(),500)
                     }}/>
 
-              
-
-
-
-              <View style = {{marginBottom: 300}}>
-                <Text style = {orderFormStyles.header} >payment details</Text>
-
-               
-
-                <Text style = {orderFormStyles.subHeader} >email address</Text>
-                <TextInput style = {this.state.invalidName === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
-                  placeholderTextColor = {'grey'}
-                  placeholder = {"e.g. Ola"}
-                  underlineColorAndroid= {'transparent'}
-                  value={this.state.email}
-                  onChangeText={(text) =>{
-                    this.setState({ email: text})
+                <Text style = {orderFormStyles.subHeader} >when should we deliver?</Text> 
+                <Picker
+                  selectedValue={this.state.type}
+                  style = {this.state.type !== ""? orderFormStyles.picker: orderFormStyles.pickerBad}
+                  onValueChange={(itemValue, itemIndex) => {
+                    this.setState({type: itemValue})
+                    if (itemValue == "Immediate" ){
+                      this.state.discount = 500
+                    }
+                    if (itemValue == "Evening" ){
+                      this.state.discount = 0
+                    }
+                    if (itemValue == "Next Day" ){
+                      this.state.discount = -1*(this.state.total) * .1
+                    }
+                    if (itemValue == "Scheduled" ){
+                      this.state.discount = -1*(this.state.total) * .1
+                    }
+                    if (itemValue == "Subscribe" ){
+                      this.state.discount = -1*(this.state.total) * .1
+                    }
                     setTimeout(()=>this.checkValidity(),500)
-                    }}/>
+                  }}>
+                  <Picker.Item label="Evening --- FREE delivery" value="Evening" />
+                  <Picker.Item label="Immediate -- N500 delivery" value="Immediate" />
+                  <Picker.Item label="Next Day -- 10% off total" value="Next Day" />
+                  <Picker.Item label="Scheduled -- 10% off total" value="Scheduled" />
+                  <Picker.Item label="Subscribe -- 10% - 15% off total" value="Subscribe" />
+                </Picker>
 
-                <Text style = {orderFormStyles.subHeader} >Card number</Text>  
-                <TextInput style = {this.state.invalidPhone === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
-                  keyboardType="numeric"
-                  placeholderTextColor = {'grey'}
-                  placeholder = {"e.g 1234 5678 9876 5432"}
-                  underlineColorAndroid= {'transparent'}
-                  value={this.state.cardNumber}
-                  onChangeText={(text) =>{
-                    this.setState({ cardNumber: text})
-                    setTimeout(()=>this.checkValidity(),500)
-                    }}/>
+                <Text style={orderFormStyles.modalText}>your total is: N {this.state.total + this.state.discount} </Text> 
+                
 
-                <Text style = {orderFormStyles.subHeader} >CVC 3-digit number</Text>  
-                <TextInput style = {this.state.invalidPhone === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
-                  keyboardType="numeric"
-                  placeholderTextColor = {'grey'}
-                  placeholder = {"e.g 234"}
-                  underlineColorAndroid= {'transparent'}
-                  value={this.state.cvc}
-                  onChangeText={(text) =>{
-                    this.setState({ cvc: text})
-                    setTimeout(()=>this.checkValidity(),500)
-                    }}/>
+                {/*<Text style={orderFormStyles.titleText}>items: N {this.state.total} </Text> 
+                <Text style={orderFormStyles.titleText}>paayment charges: N {100 + this.state.total * 0.015} </Text> */}
 
-                <Text style = {orderFormStyles.subHeader} >Expirty date</Text>  
-                <TextInput style = {this.state.invalidPhone === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
-                  keyboardType="numeric"
-                  placeholderTextColor = {'grey'}
-                  placeholder = {"MMYY"}
-                  underlineColorAndroid= {'transparent'}
-                  value={this.state.expiry.month + this.state.expiry.year}
-                  onChangeText={(text) =>{
-                    if (text.length == 4){
-                    let vExpiry = this.state.expiry
-                    vExpiry.month = text[0]+text[1] 
-                    vExpiry.year = text[2] + text[3]
-                    this.setState({ expiry: vExpiry})
-                    setTimeout(()=>this.checkValidity(),500)
-                    }}}/>
-                    
-             
-                    </View>
 
                 <TouchableOpacity 
                   disabled = {this.state.disableSubmit}
                   style = {this.state.disableSubmit === false? orderFormStyles.loadButton: orderFormStyles.modalDisabledButton} 
-                  onPress = {() => this.onClickSubmit()}>
-                  <Text style = {orderFormStyles.buttonText}>SUBMIT</Text>
+                  onPress = {() => {
+                    if (!this.state.disableSubmit){
+                      this.onClickSubmit() 
+                    }} }>
+                  <Text style = {orderFormStyles.buttonText}>PAY BY TRANSFER (WHATSAPP)</Text>
                 </TouchableOpacity>
 
-                <Text style={orderFormStyles.modalText}>your total is: N {this.state.total + 100 + this.state.total * 0.015} </Text> 
+                <Image source = {{uri: require("../../../assets/loading.gif")}} style = {this.state.loadingPic == true? orderFormStyles.loadingPic: orderFormStyles.loadingPicHide} />
 
-                <Text style={orderFormStyles.titleText}>items: N {this.state.total} </Text> 
-                <Text style={orderFormStyles.titleText}>paayment charges: N {100 + this.state.total * 0.015} </Text> 
+                {/*<Text style={orderFormStyles.modalSmallText}>OR DOWNLOAD APP FOR MORE PAYMENT OPTIONS </Text> 
+                <TouchableOpacity 
+                  style = {orderFormStyles.loadButton} 
+                  onPress = {() => {
+                    Linking.openURL("https://play.google.com/store/apps/details?id=com.adadevng.shopmob")
+                  }}>
+                  <Text style = {orderFormStyles.buttonText}>DOWNLOAD ANDROID APP </Text>
+                </TouchableOpacity>*/}
+
+                 {/* <TouchableOpacity 
+                  style = {orderFormStyles.loadButton} 
+                  onPress = {() => {
+                    alert("MOBILE app coming soon (1 MONTH)...\n Please select PAY WITH WHATSAPP to continue")
+                  }}>
+                  <Text style = {orderFormStyles.buttonText}>DOWNLOAD APP </Text>
+                  </TouchableOpacity>*/}
+                
 
                 </View>
 
                 
-            </ScrollView>
+            </View>
       
         )
     }
@@ -718,7 +795,7 @@ const orderFormStyles = StyleSheet.create({
   },
   topText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: hp(percHeight(20*1.25)),
     alignSelf: 'center',
     marginTop:  hp(percHeight(100)),
     padding:  hp(percHeight(5)),
@@ -726,37 +803,37 @@ const orderFormStyles = StyleSheet.create({
   },
   modalText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: hp(percHeight(20*1.25)),
     alignSelf: 'center',
     padding:  hp(percHeight(5)),
     textAlign: 'center',
   },
   modalSmallText: {
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: hp(percHeight(15*1.25)),
     alignSelf: 'center',
     padding:  hp(percHeight(5)),
     textAlign: 'center',
   },
     regForm: {
       alignSelf : 'center',
-      width: hp(percHeight(450)),
+      width: wp("80%") < hp(percHeight(450))? wp("80%") : hp(percHeight(450)),//hp(percHeight(450)),
       
     },
     header: {
-      fontSize: 24,
+      fontSize: hp(percHeight(24*1.25)),
       color: 'black',
       paddingBottom:  hp(percHeight(10)),
       marginBottom:  hp(percHeight(40)),
-      borderBottomColor: 'white',
-      borderBottomWidth: 1,
+      //borderBottomColor: 'white',
+      //borderBottomWidth: 1,
       fontWeight: 'bold',
     },
     subHeader:{
-      fontSize: 14,
+      fontSize: hp(percHeight(14*1.25)),
       color: 'black',
-      borderBottomColor: 'white' ,
-      borderBottomWidth: 1,
+      //borderBottomColor: 'white' ,
+      //borderBottomWidth: 1,
       fontWeight: 'bold',
       marginBottom:  hp(percHeight(50)),
     },
@@ -787,7 +864,7 @@ const orderFormStyles = StyleSheet.create({
     backgroundColor: 'black',
   },
   buttonText: {
-    fontSize: 12,
+    fontSize: hp(percHeight(12*1.25)),
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
@@ -800,7 +877,7 @@ const orderFormStyles = StyleSheet.create({
 
   modalText: {
     fontWeight: 'bold',
-    fontSize:  20,
+    fontSize:  hp(percHeight(20*1.25)),
     alignSelf: 'center',
     padding: 5,
     textAlign: 'center',
@@ -808,8 +885,23 @@ const orderFormStyles = StyleSheet.create({
 
   titleText: {
     fontWeight: 'bold',
-    fontSize:  12,
+    fontSize:  hp(percHeight(12*1.25)),
     alignSelf: 'center',
+  },
+  picker:{
+    marginBottom: 30,
+  },
+  loadingPic:{
+    width: hp(percHeight(50)),
+    height: hp(percHeight(50)),
+    alignSelf:'center',
+    alignContent: 'center',
+  },
+  loadingPicHide:{
+    width: hp(percHeight(1)),
+    height: hp(percHeight(1)),
+    alignSelf:'center',
+    alignContent: 'center',
   },
 
   
