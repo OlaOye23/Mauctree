@@ -1,5 +1,6 @@
 import React from 'react'
 import {View, ScrollView, TextInput, Text, Image, StyleSheet, FlatList, Linking} from 'react-native'
+import {SearchBar} from 'react-native-elements'
 //import {BaseButton} from 'react-native-gesture-handler'
 import {getProducts, getStockProducts}from '../../api/ShopsApi'
 //import Modal from 'react-native-modal';
@@ -62,7 +63,7 @@ export default class SearchProducts extends React.Component{
       const {navigation} = this.props
       navigation.setOptions({
         headerLeft: () => (
-          <View style = {{flex: 1, flexDirection: 'row'}}>
+          <View style = {{flex: 1, flexDirection: 'row', marginLeft: 15,}}>
           <TouchableOpacity
             onPress={() => {
               const { navigation } = props;
@@ -70,7 +71,7 @@ export default class SearchProducts extends React.Component{
             }
           >
           <Image 
-          style={{ width: hp(percHeight(40)), height: hp(percHeight(40)), marginTop: hp(percHeight(15)),  marginLeft: wp(percWidth(0)),}} 
+          style={{ width: 40, height: 40, marginTop: 14,  marginLeft: 0, }} 
           alt = "Open Menu" 
           source = {hamburgerPic}
             />
@@ -89,7 +90,7 @@ export default class SearchProducts extends React.Component{
                 }
               >
               <Image 
-              style={{ width: hp(percHeight(40)), height: hp(percHeight(40)), marginLeft: wp(percWidth(10)), marginTop: hp(percHeight(15)) }} 
+              style={{ width: 40, height: 40, marginLeft: 10, marginTop: 15 }} 
               alt = "Change Location" 
               source = {locationPic}
                />
@@ -99,7 +100,7 @@ export default class SearchProducts extends React.Component{
                 onPress = {() => this.onMoreInfo() }
               >
               <Image 
-              style={{ width: hp(percHeight(40)), height: hp(percHeight(40)), marginLeft: wp(percWidth(15)), marginRight: wp(percWidth(10)), marginTop: hp(percHeight(15)) }} 
+              style={{ width: 40, height: 40, marginLeft: 15, marginRight: 10, marginTop: 15 }} 
               alt = "Whatsapp" 
               source = {whatsappPic}
                />
@@ -113,7 +114,7 @@ export default class SearchProducts extends React.Component{
                 }
               >
               <Image 
-              style={{ width: hp(percHeight(40)), height: hp(percHeight(40)), marginRight: wp(percWidth(20)), marginTop: hp(percHeight(15)) }} 
+              style={{ width: 40, height: 40, marginRight: 20, marginTop: 15 }} 
               alt = "Go to basket" 
               source = {basketPic}
                />
@@ -315,7 +316,9 @@ export default class SearchProducts extends React.Component{
     const options = {
       includeScore: true,
       keys: [
-        {name: 'name', weight: 0.9},
+        {name: 'name', weight: 0.7},
+        {name: 'category', weight: 0.1},
+        {name: 'subcat', weight: 0.1},
         {name: 'tags', weight: 0.1},
       ]
     }
@@ -368,58 +371,63 @@ onClearSearch  = () =>{//used for clearing search and loading only immediate
 }
 
 onMoreInfo = () =>{
-  let msg = `Hello, Im searching for these items: %0A %0A.`
+  let msg = `Hello, I want these items: %0A %0A`
   let chat = `http://api.whatsapp.com/send?text=${msg}&phone=+2348110233359`
   Linking.openURL(chat)
 }
 
 onSelectCat = async (category )=>{
-  console.log(category)
-  this.setState({loadingPic: true})
-  this.setState({category: category})
-  if (category == "Immediate"){
-    this.onClearSearch()
-  }
-
-  else{
-    
-    if (this.state.count == 0){
-      await getProducts(this.productsRetrieved)
-      this.setState({count: 1})
-    }
-
-    Analytics.logEvent('searchItem', {
-      query: category,
-    })
-
-    const options = {
-      includeScore: true,
-      keys: [
-        {name: 'category', weight: 1.0},
-      ]
-    }
-  
-    const fuse = new Fuse(this.prodList, options)
-    this.setState({searchUsed: true})
-    const result = fuse.search(category)
-    this.setState({products :[]})
-    this.setState({products :result})
+  //setTimeout(async()=>{
+    console.log(category)
     this.setState({loadingPic: true})
+    this.setState({searchUsed: false, searchQuery: '', category: category})
+    if (category == "Immediate"){
+      this.onClearSearch()
+    }
+
+    else{
+      
+      if (this.state.count == 0){
+        await getProducts(this.productsRetrieved)
+        this.setState({count: 1})
+      }
+
+      Analytics.logEvent('searchItem', {
+        query: category,
+      })
+
+      const options = {
+        includeScore: true,
+        keys: [
+          {name: 'category', weight: 1.0},
+        ]
+      }
     
-  }
-  this.setState({loadingPic: false})
+      const fuse = new Fuse(this.prodList, options)
+      this.setState({searchUsed: true})
+      const result = fuse.search(category)
+      this.setState({products :[]})
+      this.setState({products :result})
+      //console.log(this.state.products.length)
+      
+      
+    }
+    this.setState({loadingPic: false})
+  //},1000)
 }
 
 render(){
  
     
- 
   return (
       <View style = {SearchProdStyles.allContainer}>
-     <View >
-        <TextInput 
-            placeholder= "search over 3000 groceries by name"  
-            style={SearchProdStyles.searchBox} 
+     <View style = {{backgroundColor: 'white', borderColor:'#c0c0c0', borderWidth: .5,}}>
+        <SearchBar 
+            placeholder= "search over 3000 groceries"  
+            inputStyle={SearchProdStyles.searchBox} 
+            containerStyle={SearchProdStyles.searchBox} 
+            inputContainerStyle={SearchProdStyles.searchBox} 
+            lightTheme="true"
             onChangeText={(text) => {
               this.setState({searchUsed: false, category: ''})
               this.setState({searchQuery: text})
@@ -428,34 +436,46 @@ render(){
             onSubmitEditing = {() => this.onSearchProducts(this.state.searchQuery)}
         /> 
 
-        <TouchableOpacity style = {SearchProdStyles.modalButton} onPress = {() => this.onClearSearch() }>
-            <Text style = {SearchProdStyles.buttonText}>FAST AND CHEAP ONLY</Text>
-  </TouchableOpacity>
+        {/*<TouchableOpacity style = {SearchProdStyles.modalButton} onPress = {() => this.onClearSearch() }>
+            <Text style = {SearchProdStyles.buttonText}>CLEAR SEARCH</Text>
+          </TouchableOpacity>*/}
 
-  <ScrollView horizontal = {true} style = {{margin: hp(percHeight(10)), height: '30%'}}>
+  <ScrollView horizontal = {true} style = {{marginTop: hp(percHeight(10)), marginBottom: hp(percHeight(10)), height: '30%', backgroundColor: 'white',}}>
   <TouchableOpacity onPress = {() => this.onSelectCat('Immediate') }>
             <Text style = {this.state.category == "Immediate"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Immediate Delivery</Text>
   </TouchableOpacity>
-  <TouchableOpacity onPress = {() => this.onSelectCat('Food Cupboard') }>
-            <Text style = {this.state.category == "Food Cupboard"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Food Cupboard</Text>
+  
+  <TouchableOpacity onPress = {() => this.onSelectCat('Breakfast') }>
+            <Text style = {this.state.category == "Breakfast"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Breakfast</Text>
+  </TouchableOpacity>
+  <TouchableOpacity onPress = {() => this.onSelectCat('Snacks') }>
+            <Text style = {this.state.category == "Snacks"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Snacks</Text>
+  </TouchableOpacity>
+  <TouchableOpacity onPress = {() => this.onSelectCat('Cooking') }>
+            <Text style = {this.state.category == "Cooking"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Cooking</Text>
+  </TouchableOpacity>
+  <TouchableOpacity onPress = {() => this.onSelectCat('Baking') }>
+            <Text style = {this.state.category == "Baking"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Baking</Text>
   </TouchableOpacity>
   <TouchableOpacity onPress = {() => this.onSelectCat('Drinks') }>
             <Text style = {this.state.category == "Drinks"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Drinks</Text>
   </TouchableOpacity>
-  <TouchableOpacity onPress = {() => this.onSelectCat('Breakfast') }>
-            <Text style = {this.state.category == "Breakfast"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Breakfast</Text>
-  </TouchableOpacity>
-  <TouchableOpacity onPress = {() => this.onSelectCat('Household') }>
-            <Text style = {this.state.category == "Household"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Household</Text>
-  </TouchableOpacity>
-  <TouchableOpacity onPress = {() => this.onSelectCat('Snacks') }>
-            <Text style = {this.state.category == "Snacks"?SearchProdStyles.selectecCatText: SearchProdStyles.catText}>Snacks</Text>
+  <TouchableOpacity onPress = {() => this.onSelectCat('Alcohol') }>
+            <Text style = {this.state.category == "Alcohol"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Alcohol</Text>
   </TouchableOpacity>
   <TouchableOpacity onPress = {() => this.onSelectCat('Baby') }>
             <Text style = {this.state.category == "Baby"?SearchProdStyles.selectecCatText: SearchProdStyles.catText}>Baby</Text>
   </TouchableOpacity>
+  <TouchableOpacity onPress = {() => this.onSelectCat('Household') }>
+            <Text style = {this.state.category == "Household"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Household</Text>
+  </TouchableOpacity>
   <TouchableOpacity onPress = {() => this.onSelectCat('Toiletries') }>
             <Text  style = {this.state.category == "Toiletries"?SearchProdStyles.selectecCatText: SearchProdStyles.catText}>Toiletries</Text>
+  </TouchableOpacity>
+ 
+ 
+  <TouchableOpacity onPress = {() => this.onMoreInfo() }>
+            <Text  style = {SearchProdStyles.catTextGood}>Submit your own list</Text>
   </TouchableOpacity>
 
     
@@ -467,18 +487,19 @@ render(){
        
       </View>
 
-      
+      <View style = {{backgroundColor: 'white',}}>
             <Image source = {{uri: require("../../../assets/loading.gif")}} style = {this.state.loadingPic == true? SearchProdStyles.loadingPic: SearchProdStyles.loadingPicHide} />
-          
+            </View>
       
       <ScrollView 
+      
         refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
             onRefresh={()=>this._onRefresh.bind(this)}/>}
           >
             
-      <View>
+      <View style = {{backgroundColor: 'white',}}>
           {this.state.searchUsed == true &&
             this.state.products.map((product,i) =>(
             product.item.name && 
@@ -499,7 +520,7 @@ render(){
                       <Text style = {SearchProdStyles.priceText}>N{product.item.price}</Text>
                   </View>
                   <View style = {SearchProdStyles.titleContainer}>
-                      <Text style = {SearchProdStyles.titleText}>{"delivered today\norder by 2pm"} </Text>
+                      <Text style = {SearchProdStyles.description}>{"delivered today\norder by 2pm"} </Text>
                       
                   </View>
                   <View style = {SearchProdStyles.sizeContainer}>
@@ -574,7 +595,7 @@ render(){
                        <Text style = {SearchProdStyles.priceText}>N{product.price}</Text>
                    </View>
                    <View style = {SearchProdStyles.titleContainer}>
-                       <Text style = {SearchProdStyles.titleText}>{"delivered today\norder by 2pm"} </Text>
+                       <Text style = {SearchProdStyles.description}>{"delivered today\norder by 2pm"} </Text>
                        
                    </View>
                    <View style = {SearchProdStyles.sizeContainer}>
@@ -687,12 +708,28 @@ const SearchProdStyles = StyleSheet.create({
     //alignSelf: 'center',
   },
   searchBox: {
+    //height: hp(percHeight(50)), 
+    width: '100%',
+    //marginTop: 5,
+    //marginBottom: 5,
+    paddingLeft: 0,
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontSize: hp(percHeight(15*1.25)),
+    backgroundColor: 'white',
+    //borderColor: 'black',
+    //borderWidth: 1,
+  },
+
+  searchBoxOld: {
     height: hp(percHeight(50)), 
+    width: '98%',
     marginTop: 5,
     marginBottom: 5,
     paddingLeft: 0,
+    alignSelf: 'center',
     textAlign: 'center',
-    fontSize: hp(percHeight(18*1.25)),
+    fontSize: hp(percHeight(15*1.25)),
     backgroundColor: 'white',
     borderColor: 'black',
     borderWidth: 1,
@@ -827,6 +864,15 @@ const SearchProdStyles = StyleSheet.create({
     margin: hp(percHeight(5)),
     //borderColor: 'black',
     //borderWidth: 1,
+  },
+
+  catTextGood: {
+    //fontWeight: 'bold',
+    fontSize: hp(percHeight(12*1.25)),
+    alignSelf: 'center',
+    //width: "75%",
+    margin: hp(percHeight(5)),
+    color: 'green',
   },
 
   catText: {

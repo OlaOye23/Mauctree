@@ -125,6 +125,17 @@ export default class UpdateItem extends React.Component{
                 <View style={UpdateItemStyles.modal}>
                 <Text style = {UpdateItemStyles.modalText}>{this.state.current.name} </Text>
                 <Image source = {{uri:this.state.current.imgURL}} style = {UpdateItemStyles.modalPic} />
+
+                {this.state.current.shop?
+                <View><Text style = {addItemStyles.modalText}> N{this.state.current.price}</Text> 
+                <Text style = {addItemStyles.goodCenterTextBig}>(N{parseInt(parseInt(this.state.current.price*.85)/10)*10})</Text>
+                <Text style = {addItemStyles.goodCenterText}>select next day at checkout for 15% off</Text></View>
+                :
+                <View><Text style = {addItemStyles.modalText}> N{this.state.current.price}</Text>
+                <Text style = {addItemStyles.goodCenterText}>select immediate at checkout for 19m delivery</Text>
+                </View>
+                }
+                
                 <Text style = {UpdateItemStyles.modalText}> N{this.state.current.price}</Text>
                 <Text style = {UpdateItemStyles.modalText} >enter quantity:</Text>  
                 {!this.state.current.shop &&
@@ -230,6 +241,7 @@ const UpdateItemStyles = StyleSheet.create({
   },
   
   allContainer:{
+    backgroundColor: 'white',
     alignSelf : 'center',
     width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),//hp(percHeight(450)),
   },  

@@ -168,7 +168,7 @@ const orderHistoryStyles = StyleSheet.create({
   
 
   modalTextFirst: {
-    marginTop: hp(percWidth(50)),
+    marginTop: hp(percWidth(0)),
     fontWeight: 'bold',
     fontSize: hp(percHeight(20*1.25)),
     alignSelf: 'center',

@@ -151,7 +151,16 @@ export default class AddItem extends React.Component{
                 <Text style = {addItemStyles.modalText}>{this.state.current.name} </Text>
                 <Text style = {addItemStyles.modalText}>{this.state.current.size} </Text>
                 <Image source = {{uri:this.state.current.imgURL}} style = {addItemStyles.modalPic} />
-                <Text style = {addItemStyles.modalText}> N{this.state.current.price}</Text>
+                
+                {this.state.current.shop?
+                <View><Text style = {addItemStyles.modalText}> N{this.state.current.price}</Text> 
+                <Text style = {addItemStyles.goodCenterTextBig}>(N{parseInt(parseInt(this.state.current.price*.85)/10)*10})</Text>
+                <Text style = {addItemStyles.goodCenterText}>select next day at checkout for 15% off</Text></View>
+                :
+                <View><Text style = {addItemStyles.modalText}> N{this.state.current.price}</Text>
+                <Text style = {addItemStyles.goodCenterText}>select immediate at checkout for 19m delivery</Text>
+                </View>
+                }
                 <Text style = {addItemStyles.modalText} >enter quantity:</Text>  
                 {!this.state.current.shop &&
                 <Text style = {parseInt(this.state.current.stock) > 0? addItemStyles.goodCenterText: addItemStyles.badCenterText} >
@@ -208,6 +217,16 @@ const addItemStyles = StyleSheet.create({
     marginLeft: hp(percWidth(5)),
     alignSelf: 'center',
   },
+
+  goodCenterTextBig: {
+    color: 'green',
+    fontWeight: 'bold',
+    fontSize: hp(percHeight(20*1.25)),
+    marginLeft: hp(percWidth(5)),
+    alignSelf: 'center',
+  },
+
+
   badCenterText: {
     color: 'red',
     fontWeight: 'bold',
@@ -268,6 +287,7 @@ const addItemStyles = StyleSheet.create({
   },
   
   allContainer:{
+    backgroundColor: 'white',
     alignSelf : 'center',
     width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),//hp(percHeight(450)),
   },   

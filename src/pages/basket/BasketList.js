@@ -24,6 +24,8 @@ export default class BasketList extends React.Component{
       super(props)
       this.basket = []
       this.total = 0
+      this.otherTotal = 0
+      this.immediateTotal = 0
       this.state = {
           products: [],
           modalVisible : false,
@@ -96,6 +98,8 @@ export default class BasketList extends React.Component{
   getAllLocalData = async () =>{
     console.log('in async get')
     this.total = 0
+    this.otherTotal = 0
+    this.immediateTotal = 0
     try{
     await AsyncStorage.getAllKeys( async (err, keys) => {
       await AsyncStorage.multiGet(keys, async (err, stores) => {
@@ -103,15 +107,23 @@ export default class BasketList extends React.Component{
           let key = store[i][0];
           let value = store[i][1];
           try{
-            
-              let prodObj = JSON.parse(value)
-           
+            let prodObj = JSON.parse(value)
             console.log(prodObj.qty)
             if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
               this.total += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
-              this.basket.push(prodObj)
-              console.log('hahaha'+this.basket)
+              if (!prodObj.info.shop ){
+                this.immediateTotal += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
+                this.basket.push(prodObj)
+                //console.log('hahaha'+this.basket)
+              }
+              else{
+                this.otherTotal += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
+                this.basket.push(prodObj)
+                //alert(prodObj.info.price)
+                //console.log('hahaha'+this.basket)
+              }
             }
+            
           }catch(error){
             console.warn(error)
           }
@@ -307,6 +319,7 @@ export default class BasketList extends React.Component{
       <View style = {basketStyles.allContainer} >
       <View  >
       <Text style={basketStyles.modalText}>Total : N {this.total} </Text> 
+      <Text style={basketStyles.goodCenterTextBig}>(N {this.total - (this.otherTotal*.15)})</Text> 
           {this.state.store.open == "yes" ?
              <Text style = {basketStyles.goodCenterText}>next day discounts available on checkout</Text> : 
              this.state.store.open == "no" ? <Text style = {basketStyles.badCenterText}>store is closed! opens at 3pm</Text>:
@@ -350,8 +363,10 @@ export default class BasketList extends React.Component{
                       {product.qty+ " in basket"}
                   </Text>
                   <Text style = {basketStyles.neutralText}>
-                      {"Total: N"+ product.qty* product.info.price } 
+                      {"Total: N"+ product.qty* product.info.price} 
                   </Text>
+                  {product.info.shop &&
+                  <Text style = {basketStyles.goodLeftText}>{'eligible for discounts \nat checkout (15% off)'}</Text> }
               </View>
             </View>
             </TouchableOpacity>
@@ -370,7 +385,13 @@ export default class BasketList extends React.Component{
 const basketStyles = StyleSheet.create({
   
 
-  
+  goodLeftText: {
+    color: 'green',
+    fontWeight: 'bold',
+    fontSize: hp(percHeight(12*1.25)),
+    marginLeft: hp(percHeight(5)),
+    alignSelf: 'flex-start',
+  },
 
   neutralCenterText: {
     color: 'black',
@@ -393,6 +414,15 @@ const basketStyles = StyleSheet.create({
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },
+
+  goodCenterTextBig: {
+    color: 'green',
+    fontWeight: 'bold',
+    fontSize: hp(percHeight(20*1.25)),
+    marginLeft: hp(percHeight(5)),
+    alignSelf: 'center',
+  },
+
   badCenterText: {
     color: 'red',
     fontWeight: 'bold',
@@ -450,6 +480,7 @@ const basketStyles = StyleSheet.create({
   },
   
   allContainer:{
+    backgroundColor: 'white',
     alignSelf : 'center',
     width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),//hp(percHeight(450)),
   },

@@ -29,7 +29,7 @@ export default class MoreApps extends React.Component{
 
           {
               "name": "Order History",
-              "description": "See your past orders and their status",
+              "description": "See your past orders",
               "imgAddr": require('../../../assets/history.jpg'),
               "nav": "My Orders"
           },

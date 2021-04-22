@@ -150,9 +150,9 @@ function App() {//stack
         <Stack.Screen name="Search Products" component={SearchProducts} options={{
           title: 'Browse',
           headerTitle: 
-          <View style = {{flex: 1, flexDirection: 'row', marginLeft: wp(percWidth(5)), justifyContent: 'left', alignItems: 'left'}}>
+          <View style = {{flex: 1, flexDirection: 'row', marginLeft: 0, justifyContent: 'flex-start', alignItems: 'flex-start'}}>
               {/*<Image style={{ width: 40, height: 40, marginRight: 20, marginTop: 10, }} source = {logoPic} /> */}
-              <Image style={{ width: hp(percHeight(150)), height: hp(percHeight(30)), marginLeft: wp(percWidth(10)),marginRight: wp(percWidth(20)), marginTop: hp(percHeight(10)), marginBottom: hp(percHeight(15))}} source = {logoName} /> 
+              <Image style={{ width: 120, height:20, marginLeft: 0,marginRight: 20, marginTop: 20, marginBottom: 15}} source = {logoName} /> 
             </View>,
           headerRight: () => {}
         }}/>

@@ -49,8 +49,6 @@ export default class OrderForm extends Component{
             timeOpened: null,
             timeClosed: null,
             total: 0,
-            otherTotal: 0,
-            immediateTotal: 0,
             modalVisible: false,
             disableSubmit: true,
             invalidName: true,
@@ -188,9 +186,7 @@ export default class OrderForm extends Component{
           }
         });
       });
-      this.setState({products : this.basket})
-      this.basket = []
-      console.log('1',this.state.products)
+      this.setState({basket : this.basket})
       console.log('done')   
     });
     } catch (error) {
@@ -243,6 +239,17 @@ export default class OrderForm extends Component{
       this.setState({lat2dp: parseFloat(lat).toFixed(2), long2dp: parseFloat(long).toFixed(2)})//not actually used here
       console.log(this.state)
     }
+  }
+
+  getCoordinates() {
+    return new Promise(function(resolve, reject) {
+      let options = {
+        enableHighAccuracy: false,
+        timeout: 5000,
+        //maximumAge: 0
+      };
+      navigator.geolocation.getCurrentPosition(resolve, reject, options);
+    });
   }
 
     /*getAllLocalData = async () =>{//old version without total
@@ -671,6 +678,7 @@ export default class OrderForm extends Component{
 
     render(){
         return(
+          <View style = {{backgroundColor: 'white'}}>
             <View style = {orderFormStyles.regForm}>
                 <View style = {{marginBottom: 300}}>
                 <Text style = {orderFormStyles.header} >delivery details</Text>
@@ -775,9 +783,9 @@ export default class OrderForm extends Component{
                   }}>
                   <Picker.Item label="Evening --- FREE delivery" value="Evening" />
                   <Picker.Item label="Immediate -- N200 delivery" value="Immediate" />
-                  <Picker.Item label="Next Day -- 15% off select items" value="Next Day" />
-                  <Picker.Item label="Scheduled -- 15% off select items" value="Scheduled" />
-                  <Picker.Item label="Subscribe -- 15% off select items" value="Subscribe" />
+                  <Picker.Item label="Next Day -- 15% off eligible items" value="Next Day" />
+                  <Picker.Item label="Scheduled -- 15% off eligible items" value="Scheduled" />
+                  <Picker.Item label="Subscribe -- 15% off eligible items" value="Subscribe" />
                 </Picker>
 
                 <Text style={orderFormStyles.modalText}>your total is: N {this.state.total + this.state.discount} </Text> 
@@ -820,6 +828,7 @@ export default class OrderForm extends Component{
                 </View>
 
                 
+            </View>
             </View>
       
         )
@@ -867,6 +876,7 @@ const orderFormStyles = StyleSheet.create({
     textAlign: 'center',
   },
     regForm: {
+      backgroundColor: 'white',
       alignSelf : 'center',
       width: wp("80%") < hp(percHeight(450))? wp("80%") : hp(percHeight(450)),//hp(percHeight(450)),
       
