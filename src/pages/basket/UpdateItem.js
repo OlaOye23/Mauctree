@@ -120,29 +120,31 @@ export default class UpdateItem extends React.Component{
 
   render(){
     return (
+      <View style = {{backgroundColor: 'white', height: '110%'}}>
           <View style={UpdateItemStyles.allContainer}>
             <ScrollView>
                 <View style={UpdateItemStyles.modal}>
                 <Text style = {UpdateItemStyles.modalText}>{this.state.current.name} </Text>
                 <Image source = {{uri:this.state.current.imgURL}} style = {UpdateItemStyles.modalPic} />
-
+                <Text style = {UpdateItemStyles.modalText}> N{this.state.current.price}</Text>
                 {this.state.current.shop?
-                <View><Text style = {addItemStyles.modalText}> N{this.state.current.price}</Text> 
-                <Text style = {addItemStyles.goodCenterTextBig}>(N{parseInt(parseInt(this.state.current.price*.85)/10)*10})</Text>
-                <Text style = {addItemStyles.goodCenterText}>select next day at checkout for 15% off</Text></View>
+                <View>
+                <Text style = {UpdateItemStyles.goodCenterTextBig}>(N{parseInt(parseInt(this.state.current.price*.90)/10)*10})</Text>
+                <Text style = {UpdateItemStyles.goodCenterText}>select next day at checkout for 10% off</Text>
+                </View>
                 :
-                <View><Text style = {addItemStyles.modalText}> N{this.state.current.price}</Text>
-                <Text style = {addItemStyles.goodCenterText}>select immediate at checkout for 19m delivery</Text>
+                <View>
+                <Text style = {UpdateItemStyles.goodCenterText}>select immediate at checkout for 19m delivery</Text>
                 </View>
                 }
+
                 
-                <Text style = {UpdateItemStyles.modalText}> N{this.state.current.price}</Text>
                 <Text style = {UpdateItemStyles.modalText} >enter quantity:</Text>  
-                {!this.state.current.shop &&
+                {/*!this.state.current.shop &&
                 <Text style = {parseInt(this.state.current.stock) > 0? UpdateItemStyles.goodCenterText: UpdateItemStyles.badCenterText} >
                     {this.state.current.stock} units available 
                 </Text>  
-                }
+                */}
                   <TextInput 
                     keyboardType="numeric"
                     style = {UpdateItemStyles.textInput}
@@ -168,26 +170,49 @@ export default class UpdateItem extends React.Component{
                 </View>
               </ScrollView>
             </View>
+            </View>
   );
 }
 }
 
 
 const UpdateItemStyles = StyleSheet.create({
-  goodCenterText: {
+
+  goodLeftText: {
     color: 'green',
     fontWeight: 'bold',
     fontSize: hp(percHeight(12*1.25)),
+    marginLeft: hp(percHeight(5)),
+    alignSelf: 'flex-start',
+  },
+
+  goodCenterText: {
+    color: 'green',
+    fontWeight: 'bold',
+    fontSize: wp("100%") < hp(percHeight(450))? wp(percWidth(12*1.25)) : hp(percHeight(12*1.25)),
     marginLeft: hp(percWidth(5)),
     alignSelf: 'center',
   },
+
+
+  goodCenterTextBig: {
+    color: 'green',
+    fontWeight: 'bold',
+    fontSize: wp("100%") < hp(percHeight(450))? wp(percWidth(20*1.25)) : hp(percHeight(20*1.25)),
+    marginLeft: hp(percWidth(5)),
+    alignSelf: 'center',
+  },
+
+
+
   badCenterText: {
     color: 'red',
     fontWeight: 'bold',
     fontSize: hp(percHeight(12*1.25)),
     alignSelf: 'center',
   },
-  
+
+ 
   
   
 

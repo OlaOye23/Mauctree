@@ -14,7 +14,7 @@ import * as Permissions from 'expo-permissions';
 
 import config from '../../../config'
 
-import uuid4 from "uuid4"
+//import uuid4 from "uuid4"
 import { TouchableOpacity } from '../../web/react-native-web';//'react-native' //
 import logo from '../../../assets/logo.png'
 
@@ -30,7 +30,7 @@ export default class OrderForm extends Component{
         this.basket = []
         this.state = {
             
-            location: "VGC",
+            location: "Ikota Complex",
             
         }
     }
@@ -57,6 +57,7 @@ export default class OrderForm extends Component{
 
     render(){
         return(
+          <View style = {{backgroundColor: 'white', height: '110%'}}>
             <ScrollView style = {locationStyles.regForm}>
                 <View style = {{marginBottom: 300}}>
                 <Image source = {logo} style = {locationStyles.modalPic} />
@@ -69,9 +70,27 @@ export default class OrderForm extends Component{
                   onValueChange={(itemValue, itemIndex) => {
                     this.setState({ location: itemValue })
                   }}>
-                  <Picker.Item label="VGC" value="VGC" />
-                  <Picker.Item label="Chevron Drive" value="Chevron Drive" />
+                  <Picker.Item label="Ikota Complex" value="Ikota Complex" />
+                  <Picker.Item label="VGC and nearby" value="VGC" />
+                  <Picker.Item label="Chevron and nearby" value="Chevron" />
+                  <Picker.Item label="Abraham Ades. and nearby" value="Abraham Ades" />
+                  <Picker.Item label="Ikota Villa and nearby" value="Ikota Villa" />
+                  <Picker.Item label="Eleganza and nearby" value="Eleganza" />
+                  <Picker.Item label="Other" value="Other" />
                 </Picker>
+
+
+                <Text style = {locationStyles.header} >enter your phone number: </Text>
+                <TextInput style = {this.state.invalidPhone2 === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
+                  keyboardType="numeric"
+                  placeholderTextColor = {'grey'}
+                  placeholder = {"e.g 0809 790 8824"}
+                  underlineColorAndroid= {'transparent'}
+                  value={this.state.phoneNumber2}
+                  onChangeText={(text) =>{
+                    this.setState({ phoneNumber2: text})
+                    setTimeout(()=>this.checkValidity(),500)
+                    }}/>
 
 
                 <TouchableOpacity 
@@ -87,6 +106,7 @@ export default class OrderForm extends Component{
                 </View>
                 
             </ScrollView>
+            </View>
       
         )
     }

@@ -20,7 +20,7 @@ export default class MoreApps extends React.Component{
 
           {
               "name": "Continue Shopping",
-              "description": "Shop and pay before or after delivery. Our selection is growing. We deliver between 10 minutes and 2 hours",
+              "description": "Shop over 3000 groceries with flexible delivery options.",
               "imgAddr": require('../../../assets/icon.png'),
               "nav": "Search Products"
           },
@@ -29,7 +29,7 @@ export default class MoreApps extends React.Component{
 
           {
               "name": "Order History",
-              "description": "See your past orders",
+              "description": "See your past orders.",
               "imgAddr": require('../../../assets/history.jpg'),
               "nav": "My Orders"
           },
@@ -38,10 +38,10 @@ export default class MoreApps extends React.Component{
 
           {
             "name": "Contact us on Whatsapp",
-            "description": "Chat with our representative on Whatsapp. Send us your questions, reviews, suggestions, requests, and complaints. We are very responsive",
+            "description": "Chat with our representative on Whatsapp. We are very responsive.",
             "imgAddr": require('../../../assets/whatsapp.jpg'),
             "nav": "store",
-            "link": "http://api.whatsapp.com/send?phone=+2348110233359"
+            "link": "http://api.whatsapp.com/send?phone=+2348097908824"
           },
       ]
       
@@ -123,7 +123,7 @@ render(){
   return (
       
      
-      
+    <View style = {{backgroundColor: 'white', height: '600%'}}>
         <ScrollView style = {moreAppStyles.allContainer} >
             { this.state.apps.map((app,i) =>(
                 app.name && 
@@ -146,6 +146,7 @@ render(){
                 </TouchableOpacity>  
             ))}
         </ScrollView>
+        </View>
  
   );
 }
@@ -271,6 +272,7 @@ const moreAppStyles = StyleSheet.create({
   },
   
   allContainer:{
+    backgroundColor: 'white',
     alignSelf : 'center',
     width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),
   },

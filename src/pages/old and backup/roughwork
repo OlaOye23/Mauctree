@@ -134,7 +134,7 @@ checkOutCheck = async () =>{// different from similar func in basketpage
         {order: this.state}
       )
 
-      let link = `http://api.whatsapp.com/send?text=${msg}&phone=+2348110233359`
+      let link = `http://api.whatsapp.com/send?text=${msg}&phone=+2348097908824`
       Linking.openURL(link)
 
     }

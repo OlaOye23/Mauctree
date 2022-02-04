@@ -1,6 +1,7 @@
 {
   "hosting": {
     "public": "web-build",
+    "site": "shopmob",
     "ignore": [
       "firebase.json",
       "**/.*",

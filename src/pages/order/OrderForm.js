@@ -14,7 +14,7 @@ import * as Permissions from 'expo-permissions';
 
 import config from '../../../config'
 
-import uuid4 from "uuid4"
+//import uuid4 from "uuid4"
 import { TouchableOpacity } from '../../web/react-native-web';//'react-native' //
 
 //import { Expo } from 'expo-server-sdk';
@@ -30,6 +30,7 @@ export default class OrderForm extends Component{
         this.total = 0 
         this.otherTotal = 0
         this.immediateTotal = 0
+        this.extTotal = 0
         this.state = {
             id: null,
             status: null,
@@ -69,9 +70,9 @@ export default class OrderForm extends Component{
               month: "",
               year: "",
             },*/
-            type: "Evening",
+            type: "Other",
             discount: 0,
-            location: "VGC",
+            location: "n/a",
             loadingPic: false,
             
         }
@@ -158,6 +159,7 @@ export default class OrderForm extends Component{
     this.total = 0
     this.otherTotal = 0
     this.immediateTotal = 0
+    let ext_delivery = false
     try{
     await AsyncStorage.getAllKeys( async (err, keys) => {
       await AsyncStorage.multiGet(keys, async (err, stores) => {
@@ -175,10 +177,18 @@ export default class OrderForm extends Component{
                 //console.log('hahaha'+this.basket)
               }
               else{
-                this.otherTotal += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
+                if (prodObj.info.shop != 'MoW' ){
+                  this.otherTotal += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
+                }
+                if (prodObj.info.shop == 'MoW' ){
+                  this.immediateTotal += parseInt(prodObj.qty) * parseInt(prodObj.info.price)// immediate total because it is not used i.e this feature is useless atm
+                  if (ext_delivery == false){
+                    alert('You are using an external vendor for our fresh items\n this incurs delivery charges\n(N1000)')
+                    ext_delivery = true
+                    this.extTotal += 1000
+                  }
+                }
                 this.basket.push(prodObj)
-                //alert(prodObj.info.price)
-                //console.log('hahaha'+this.basket)
               }
             }
           }catch(error){
@@ -447,16 +457,16 @@ export default class OrderForm extends Component{
           return fail
         }
         await this.asyncForEach(items, async (basketItem) => { 
-          let dbItem = await getSelectProduct(basketItem.info, this.onRetrieved)   
-          if (parseInt(dbItem.price) == parseInt(basketItem.info.price)){
+          /*let dbItem = await getSelectProduct(basketItem.info, this.onRetrieved)   
+          if (parseInt(dbItem.price) == parseInt(basketItem.info.price)){//CHECK FOR DB PRICE MATCH
             console.log('price equal')
           }
           else{
             console.log('price not equal')
             fail = true
             alert(basketItem.name + "'s price has changed since you added it to your basket.\nPlease review the updated price and checkout agian")
-          }
-          if (!dbItem.shop){
+          }*/
+          {/*if (!dbItem.shop){
             if (parseInt(dbItem.stock) >= parseInt(basketItem.qty)){
               console.log('product still in stock')
             }
@@ -465,7 +475,7 @@ export default class OrderForm extends Component{
               fail = true
               alert("Not enough " + basketItem.name + ' in stock.\nPlease revise your basket and checkout again')
             }
-          }
+          }*/}
         
         if (fail === true){
           const { navigation } = this.props;
@@ -511,11 +521,12 @@ export default class OrderForm extends Component{
         msg += "%20" + i + ")" + basketItem.name + " x " + basketItem.qty + "%0A"
         i += 1
         })
+      msg += "%20" + i + ")" + "Service Charge (5%)" + " x 1" + "%0A"
       msg += "%0AName: " + this.state.name + "%0A"
-      msg += "Address: " + this.state.house + "%20" + this.state.address + "%0A"
-      msg += "Location: " + this.state.location + "%0A"
+      msg += "Address: " /*+ this.state.house + "%20"*/ + this.state.address + "%0A"
+      //msg += "Location: " + this.state.location + "%0A"
       msg += "Type: " + this.state.type + "%0A"
-      msg += "Total: N" + (this.state.total + this.state.discount) + "%0A"
+      msg += "Total: N" + (this.state.total + this.state.discount)*1 + "%0A"
 
   
       try{
@@ -523,17 +534,18 @@ export default class OrderForm extends Component{
           console.log('fail on submit i.e 2 '+ fail)
           if (fail === false){
 
-            //setTimeout(async ()=> {await this.sendAlert(this.state)}, 1000) //comment only in test
+            setTimeout(async ()=> {await this.sendAlert(this.state)}, 1000) //comment only in test
             this.state.DateText = this.timeConverter(Date.now())
             await addOrder(this.state, this.onOrderUploaded)
             await this.clearAllLocalData()
-            let prods =  this.basket
+            //UPDATE STOCK COUNT
+            /*let prods =  this.basket
             await this.asyncForEach(prods,async (prod)=>{//change to asyncforech
               let dbItem = await getSelectProduct(prod.info)
               prod.info.amt = prod.qty//TBC for cloud security rules i.e allow update if data.new == data.old - prod.info.amt
               prod.info.stock = Math.max(dbItem.stock - prod.qty,0)
               await updateProduct(prod.info, this.onProductUploaded)
-            })
+            })*/
           }
           else if (fail === true){
             console.log('checkout failed')
@@ -561,13 +573,13 @@ export default class OrderForm extends Component{
         {order: this.state}
       )
       }
-      let link = `http://api.whatsapp.com/send?text=${msg}&phone=+2348110233359`
+      let link = `http://api.whatsapp.com/send?text=${msg}&phone=+2348097908824`
       Linking.openURL(link)
       
     }
 
  
-    saleCOmplete = () =>{
+    saleComplete = () =>{
       console.log('sale added')
     }
 
@@ -599,7 +611,7 @@ export default class OrderForm extends Component{
         this.state.invalidPhone = false
       }
       //check phoneNumber2
-      if (this.state.phoneNumber2 !== this.state.phoneNumber){
+      if ((this.state.phoneNumber2 !== this.state.phoneNumber) || (this.state.phoneNumber2) === "" ){
         console.log('invalid phone')
         this.state.invalidPhone2 = true
       }
@@ -678,6 +690,7 @@ export default class OrderForm extends Component{
 
     render(){
         return(
+          <View style = {{backgroundColor: 'white', height: '110%'}}>
           <View style = {{backgroundColor: 'white'}}>
             <View style = {orderFormStyles.regForm}>
                 <View style = {{marginBottom: 300}}>
@@ -698,7 +711,7 @@ export default class OrderForm extends Component{
                     }}/>
 
 
-                <Text style = {orderFormStyles.subHeader} >select your location</Text>  
+                {/*<Text style = {orderFormStyles.subHeader} >select your location</Text>  
                 <Picker
                   selectedValue={this.state.location}
                   style = {this.state.location !== ""? orderFormStyles.picker: orderFormStyles.pickerBad}
@@ -706,13 +719,18 @@ export default class OrderForm extends Component{
                     this.setState({ location: itemValue })
                     setTimeout(()=>this.checkValidity(),500)
                   }}>
-                  <Picker.Item label="VGC" value="VGC" />
-                  <Picker.Item label="Chevron Drive" value="Chevron Drive" />
-                </Picker>
+                  <Picker.Item label="Ikota Complex" value="Ikota Complex" />
+                  <Picker.Item label="VGC and nearby" value="VGC" />
+                  <Picker.Item label="Chevron and nearby" value="Chevron" />
+                  <Picker.Item label="Abraham Ades. and nearby" value="Abraham Ades" />
+                  <Picker.Item label="Ikota Villa and nearby" value="Ikota Villa" />
+                  <Picker.Item label="Eleganza and nearby" value="Eleganza" />
+                  <Picker.Item label="Other" value="Other" />
+                </Picker>*/}
               
              
                 
-                <Text style = {orderFormStyles.subHeader} >house number:</Text>  
+                {/*<Text style = {orderFormStyles.subHeader} >house number:</Text>  
                 <TextInput style = {this.state.invalidHouse === false? orderFormStyles.textInput: orderFormStyles.textInputBad }
                   placeholderTextColor = {'grey'}
                   placeholder = {"e.g A123"}
@@ -721,12 +739,13 @@ export default class OrderForm extends Component{
                   onChangeText={(text) =>{
                      this.setState({ house: text})
                      setTimeout(()=>this.checkValidity(),500)
-                     }}/>
+                     }}/>*/}
+                    
 
                 <Text style = {orderFormStyles.subHeader} >street address: </Text>  
                 <TextInput style = {this.state.invalidAddress === false? orderFormStyles.textInput: orderFormStyles.textInputBad }
                   placeholderTextColor = {'grey'}
-                  placeholder = {"e.g. road 3"}
+                  placeholder = {"e.g. Plot 8b, Tolani road, Victory Estate, Ajah"}
                   underlineColorAndroid= {'transparent'}
                   value={this.state.address}
                   onChangeText={(text) =>{
@@ -738,7 +757,7 @@ export default class OrderForm extends Component{
                 <TextInput style = {this.state.invalidPhone === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
                   keyboardType="numeric"
                   placeholderTextColor = {'grey'}
-                  placeholder = {"e.g 0801 234 5678"}
+                  placeholder = {"e.g 0809 790 8824"}
                   underlineColorAndroid= {'transparent'}
                   value={this.state.phoneNumber}
                   onChangeText={(text) =>{
@@ -750,7 +769,7 @@ export default class OrderForm extends Component{
                 <TextInput style = {this.state.invalidPhone2 === false? orderFormStyles.textInput: orderFormStyles.textInputBad}
                   keyboardType="numeric"
                   placeholderTextColor = {'grey'}
-                  placeholder = {"e.g 0801 234 5678"}
+                  placeholder = {"e.g 0809 790 8824"}
                   underlineColorAndroid= {'transparent'}
                   value={this.state.phoneNumber2}
                   onChangeText={(text) =>{
@@ -765,30 +784,34 @@ export default class OrderForm extends Component{
                   onValueChange={(itemValue, itemIndex) => {
                     this.setState({type: itemValue})
                     if (itemValue == "Immediate" ){
-                      this.state.discount = 200
+                      this.state.discount = 200//500
                     }
                     if (itemValue == "Evening" ){
-                      this.state.discount = 0
+                      this.state.discount = 0//200
                     }
                     if (itemValue == "Next Day" ){
-                      this.state.discount = -1*(this.otherTotal) * .15
+                      this.state.discount = -1*(this.total) * .05
                     }
                     if (itemValue == "Scheduled" ){
-                      this.state.discount = -1*(this.otherTotal) * .15
+                      this.state.discount = -1*(this.total) * .05
                     }
                     if (itemValue == "Subscribe" ){
-                      this.state.discount = -1*(this.otherTotal) * .15
+                      this.state.discount = -1*(this.total) * .05
                     }
                     setTimeout(()=>this.checkValidity(),500)
                   }}>
-                  <Picker.Item label="Evening --- FREE delivery" value="Evening" />
-                  <Picker.Item label="Immediate -- N200 delivery" value="Immediate" />
-                  <Picker.Item label="Next Day -- 15% off eligible items" value="Next Day" />
-                  <Picker.Item label="Scheduled -- 15% off eligible items" value="Scheduled" />
-                  <Picker.Item label="Subscribe -- 15% off eligible items" value="Subscribe" />
+
+                  <Picker.Item label="Evening" value="Evening" />
+                  <Picker.Item label="Pick Up" value="Pick Up" />
+                  <Picker.Item label="Priority -- N200 fee" value="Immediate" />
+                  <Picker.Item label="Next Day -- 5% off eligible items" value="Next Day" />
+                  <Picker.Item label="Scheduled -- 5% off eligible items" value="Scheduled" />
+                  {/*<Picker.Item label="Subscribe -- 10% off eligible items" value="Subscribe" />*/}
                 </Picker>
 
-                <Text style={orderFormStyles.modalText}>your total is: N {this.state.total + this.state.discount} </Text> 
+                  <Text style={orderFormStyles.modalText}>your total is: N {(this.state.total + this.state.discount + this.extTotal)}</Text> 
+                  {/*<Text style={orderFormStyles.modalSmallText}>service charge of 5% is included</Text>*/}
+               {/*<Text style={orderFormStyles.modalSmallText}>your total is: N {this.state.total + this.state.discount + this.extTotal}</Text> */}
                 
 
                 {/*<Text style={orderFormStyles.titleText}>items: N {this.state.total} </Text> 
@@ -802,7 +825,7 @@ export default class OrderForm extends Component{
                     if (!this.state.disableSubmit){
                       this.onClickSubmit() 
                     }} }>
-                  <Text style = {orderFormStyles.buttonText}>PAY BY TRANSFER (WHATSAPP)</Text>
+                  <Text style = {orderFormStyles.buttonText}>SUBMIT (OPEN WHATSAPP)</Text>
                 </TouchableOpacity>
 
                 <Image source = {{uri: require("../../../assets/loading.gif")}} style = {this.state.loadingPic == true? orderFormStyles.loadingPic: orderFormStyles.loadingPicHide} />
@@ -828,6 +851,7 @@ export default class OrderForm extends Component{
                 </View>
 
                 
+            </View>
             </View>
             </View>
       

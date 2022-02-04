@@ -16,7 +16,7 @@ import {percWidth, percHeight} from '../../api/StyleFuncs'
 
 import config from '../../../config'
 
-import uuid4 from "uuid4"
+//import uuid4 from "uuid4"
 import { AsyncStorage } from 'react-native';
 
 import { TouchableOpacity } from '../../web/react-native-web'; //'react-native' //
@@ -174,7 +174,7 @@ openGps = (lat, lng) => {
   
   render(){
   return (
-      
+    <View style = {{backgroundColor: 'white', height: '110%'}}>
       <View style = {orderHistoryStyles.allContainer}>
 
       <ScrollView 
@@ -212,6 +212,7 @@ openGps = (lat, lng) => {
 
         </ScrollView>
         </View>
+       </View>
   );
 }
 }
@@ -233,6 +234,7 @@ const orderHistoryStyles = StyleSheet.create({
 
   
   allContainer:{
+    backgroundColor: 'white',
     alignSelf : 'center',
     width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),//hp(percHeight(450)),
   },

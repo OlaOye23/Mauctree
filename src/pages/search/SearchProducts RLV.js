@@ -259,7 +259,7 @@ export default class SearchProducts extends React.Component{
           var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
           return result * sortOrder;
       }
-  }
+    }
 
     this.prodList = productList.sort(dynamicSort('shop')).reverse()
     console.log(productList)

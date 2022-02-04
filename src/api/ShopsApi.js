@@ -69,7 +69,7 @@ export async function getStockProducts(productsRetreived) {
     .collection('products')
     //.where('stock', '>', -1)
     //.orderBy('stock','desc')
-    .where('stock', '>', 0)
+    .where('stock', '>', "0")
     .orderBy('stock','desc')
     .get()
   snapshot.forEach((doc) => {

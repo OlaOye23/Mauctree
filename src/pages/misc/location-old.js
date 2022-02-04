@@ -14,7 +14,7 @@ import * as Permissions from 'expo-permissions';
 
 import config from '../../../config'
 
-import uuid4 from "uuid4"
+//import uuid4 from "uuid4"
 import { TouchableOpacity } from '../../web/react-native-web';//'react-native' //
 import logo from '../../../assets/logo.png'
 

@@ -16,7 +16,7 @@ import {percWidth, percHeight} from '../../api/StyleFuncs'
 
 import config from '../../../config'
 
-import uuid4 from "uuid4"
+//import uuid4 from "uuid4"
 import { AsyncStorage } from 'react-native';
 
 import { TouchableOpacity } from '../../web/react-native-web'; //'react-native' //
@@ -99,15 +99,17 @@ openGps = (lat, lng) => {
     //this.componentDidMount()
     
   return (
-      
+    <View style = {{backgroundColor: 'white', height: '110%'}}>
       <View style = {orderHistoryStyles.allContainer}>
 
 
           {(this.state.current !== undefined) &&
             <View>
               <Text style = {orderHistoryStyles.modalTextFirst}>{this.state.current.name}</Text>
-              <Text style = {orderHistoryStyles.modalText}>{this.state.current.address} {this.state.current.house}</Text>
+              <Text style = {orderHistoryStyles.modalText}>{this.state.current.house} {this.state.current.address}</Text>
               <Text style = {orderHistoryStyles.modalText}>{'Total: N' + this.state.current.total}</Text>
+              <Text style = {orderHistoryStyles.modalTextGood}>({this.state.current.total * .85})</Text>
+              <Text style = {orderHistoryStyles.goodCenterText}>with discounts applied</Text>
               
               
               <TouchableOpacity 
@@ -147,6 +149,7 @@ openGps = (lat, lng) => {
               </ScrollView>
 
         </View>
+        </View>
   );
 }
 }
@@ -177,6 +180,15 @@ const orderHistoryStyles = StyleSheet.create({
   },
 
   modalText: {
+    fontWeight: 'bold',
+    fontSize: hp(percHeight(20*1.25)),
+    alignSelf: 'center',
+    padding: hp(percWidth(5)),
+    textAlign: 'center',
+  },
+
+  modalTextGood: {
+    color:'green',
     fontWeight: 'bold',
     fontSize: hp(percHeight(20*1.25)),
     alignSelf: 'center',
@@ -252,6 +264,7 @@ const orderHistoryStyles = StyleSheet.create({
   },
   
   allContainer:{
+    backgroundColor: 'white',
     alignSelf : 'center',
     width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),//hp(percHeight(450)),
   },

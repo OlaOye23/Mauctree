@@ -1,0 +1,142 @@
+[debug] [2021-07-01T05:34:30.432Z] ----------------------------------------------------------------------
+[debug] [2021-07-01T05:34:30.434Z] Command:       /usr/local/bin/firebase /Users/OMI/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy
+[debug] [2021-07-01T05:34:30.434Z] CLI Version:   9.14.0
+[debug] [2021-07-01T05:34:30.434Z] Platform:      darwin
+[debug] [2021-07-01T05:34:30.434Z] Node Version:  v12.18.1
+[debug] [2021-07-01T05:34:30.441Z] Time:          Thu Jul 01 2021 06:34:30 GMT+0100 (West Africa Standard Time)
+[debug] [2021-07-01T05:34:30.441Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-07-01T05:34:30.451Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-07-01T05:34:30.451Z] > authorizing via signed-in user (oyemadeit@gmail.com)
+[debug] [2021-07-01T05:34:30.451Z] [iam] checking project mobishopvgc for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-07-01T05:34:30.454Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/mobishopvgc:testIamPermissions  
+ {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2021-07-01T05:34:31.969Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 01 Jul 2021 05:34:31 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=1105","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:34:31.971Z] >>> HTTP REQUEST POST https://iam.googleapis.com/v1/projects/mobishopvgc/serviceAccounts/mobishopvgc@appspot.gserviceaccount.com:testIamPermissions  
+ {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2021-07-01T05:34:33.600Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 01 Jul 2021 05:34:33 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:34:33.602Z] > refreshing access token with scopes: []
+[debug] [2021-07-01T05:34:33.602Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-07-01T05:34:33.912Z] <<< HTTP RESPONSE 200 {"cache-control":"no-cache, no-store, max-age=0, must-revalidate","expires":"Mon, 01 Jan 1990 00:00:00 GMT","pragma":"no-cache","date":"Thu, 01 Jul 2021 05:34:34 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:34:33.952Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/mobishopvgc [none]
+[debug] [2021-07-01T05:34:34.429Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/mobishopvgc 200
+[debug] [2021-07-01T05:34:34.429Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/mobishopvgc {"projectId":"mobishopvgc","projectNumber":"578653668100","displayName":"shopmobVGC","name":"projects/mobishopvgc","resources":{"hostingSite":"mobishopvgc","realtimeDatabaseInstance":"mobishopvgc","storageBucket":"mobishopvgc.appspot.com","locationId":"europe-west"},"state":"ACTIVE"}
+[info] 
+[info] === Deploying to 'mobishopvgc'...
+[info] 
+[info] i  deploying functions, hosting 
+[debug] [2021-07-01T05:34:34.434Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions.
+Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2021-07-01T05:34:36.970Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "hosting": {
+    "site": "shopmob",
+    "public": "public"
+  },
+  "engines": {
+    "node": "10"
+  },
+  "dependencies": {
+    "firebase-admin": "^8.10.0",
+    "firebase-functions": "^3.6.1",
+    "fs": "^0.0.1-security",
+    "json2csv": "^5.0.6",
+    "os": "^0.1.1",
+    "path": "^0.12.7",
+    "request": "^2.88.2",
+    "requests": "^0.3.0",
+    "uuid-v4": "^0.1.0"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^0.2.0"
+  },
+  "private": true
+}
+[debug] [2021-07-01T05:34:36.970Z] Building nodejs source
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2021-07-01T05:34:36.972Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-07-01T05:34:36.972Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-07-01T05:34:36.973Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-07-01T05:34:36.973Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2021-07-01T05:34:36.974Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-07-01T05:34:36.974Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-07-01T05:34:37.528Z] <<< HTTP RESPONSE 200 {"cache-control":"no-cache, no-store, max-age=0, must-revalidate","pragma":"no-cache","expires":"Mon, 01 Jan 1990 00:00:00 GMT","date":"Thu, 01 Jul 2021 05:34:37 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:34:37.555Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/mobishopvgc/services/runtimeconfig.googleapis.com  
+ 
+[debug] [2021-07-01T05:34:37.558Z] <<< HTTP RESPONSE 200 {"expires":"Mon, 01 Jan 1990 00:00:00 GMT","date":"Thu, 01 Jul 2021 05:34:37 GMT","pragma":"no-cache","cache-control":"no-cache, no-store, max-age=0, must-revalidate","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:34:37.597Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/mobishopvgc/services/cloudbuild.googleapis.com  
+ 
+[debug] [2021-07-01T05:34:37.598Z] <<< HTTP RESPONSE 200 {"cache-control":"no-cache, no-store, max-age=0, must-revalidate","pragma":"no-cache","date":"Thu, 01 Jul 2021 05:34:37 GMT","expires":"Mon, 01 Jan 1990 00:00:00 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:34:37.635Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/mobishopvgc/services/cloudfunctions.googleapis.com  
+ 
+[debug] [2021-07-01T05:34:39.237Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 01 Jul 2021 05:34:39 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:34:39.288Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 01 Jul 2021 05:34:39 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] ✔  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2021-07-01T05:34:39.314Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 01 Jul 2021 05:34:39 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] ✔  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2021-07-01T05:34:39.315Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/mobishopvgc/adminSdkConfig  
+ 
+[debug] [2021-07-01T05:34:39.847Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 01 Jul 2021 05:34:39 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:34:39.848Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/mobishopvgc/configs  
+ 
+[debug] [2021-07-01T05:34:40.462Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 01 Jul 2021 05:34:40 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:34:40.463Z] Analyzing nodejs backend spec
+[info] i  functions: preparing functions directory for uploading... 
+[info] i  functions: packaged functions (139.41 KB) for uploading 
+[debug] [2021-07-01T05:34:41.474Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/mobishopvgc/locations/-/functions  
+ 
+[debug] [2021-07-01T05:34:43.023Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 01 Jul 2021 05:34:42 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:34:43.036Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/shopmob/versions  
+ {"config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2021-07-01T05:34:45.171Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 01 Jul 2021 05:34:45 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:34:45.173Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/mobishopvgc/locations/us-central1/functions:generateUploadUrl  
+ 
+[debug] [2021-07-01T05:34:46.423Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 01 Jul 2021 05:34:46 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:34:46.434Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-37a823b0-3420-4a79-94bb-1b828f6e92dd/b156ca14-609f-4e3f-9018-8a1ed85d5669.zip?GoogleAccessId=service-578653668100@gcf-admin-robot.iam.gserviceaccount.com&Expires=1625119486&Signature=nKHdVIGseAwJelfm9YhZrTuk8XtzZNhRKokk%2FuqxzUuU2U2jnnFGd6NpqO9vUo31adwzcPkQ3Yusbk8JpHybVNFEj76P%2BP15e5fZfbyW56CE080%2FdziTvQf5vQNR%2BSwGrXh0gbm47OXkgf2HBff%2BGYnerfbiNHVbm%2F0NxG0tCoHdoL7Ir%2FrvdXiWCaWp9eN3oaxWsUPqjmlFXBQmOXoc%2FNKryX9Cbs1i7qETnrXrjVb9FtJ%2BTnhkJReobkZwnuCLziExPkVtrXr6TjaDYZTa%2FXK1yLJMFc8ayi9zjX3sroIoJd5qM%2FTvir0Dp0g3Feijz%2FVLS%2BLZ8d5dyReS3yc0bg%3D%3D  
+ <request body omitted>
+[debug] [2021-07-01T05:34:47.619Z] <<< HTTP RESPONSE 200 {"x-guploader-uploadid":"ADPycdt05JviyEOIkdteVxmvNbWL57lqAPd3un5jBAiwDPNur0_9tKn7zGNrxP47RVOx2DAhu5w8IPCp8hJQIsIlgLtRtgGPEw","etag":"\"8df1429a9497a1264ca589ce81dce992\"","x-goog-generation":"1625117687639593","x-goog-metageneration":"1","x-goog-hash":"crc32c=7QLINA==, md5=jfFCmpSXoSZMpYnOgdzpkg==","x-goog-stored-content-length":"142755","x-goog-stored-content-encoding":"identity","vary":"Origin","content-length":"0","date":"Thu, 01 Jul 2021 05:34:47 GMT","server":"UploadServer","content-type":"text/html; charset=UTF-8","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\""}
+[info] ✔  functions: functions folder uploaded successfully 
+[info] i  hosting[shopmob]: beginning deploy... 
+[info] i  hosting[shopmob]: found 42 files in web-build 
+[debug] [2021-07-01T05:34:48.836Z] > refreshing access token with scopes: []
+[debug] [2021-07-01T05:34:48.836Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-07-01T05:34:48.839Z] [hosting] hash cache [d2ViLWJ1aWxk] stored for 42 files
+[debug] [2021-07-01T05:34:48.839Z] [hosting][hash queue][FINAL] {"max":1184,"min":83,"avg":145.38095238095238,"active":0,"complete":42,"success":42,"errored":0,"retried":0,"total":42,"elapsed":1196}
+[debug] [2021-07-01T05:34:49.557Z] <<< HTTP RESPONSE 200 {"cache-control":"no-cache, no-store, max-age=0, must-revalidate","date":"Thu, 01 Jul 2021 05:34:49 GMT","pragma":"no-cache","expires":"Mon, 01 Jan 1990 00:00:00 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:34:49.600Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/sites/shopmob/versions/81e47d5eccf04e7e:populateFiles [none]
+[debug] [2021-07-01T05:34:49.601Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/sites/shopmob/versions/81e47d5eccf04e7e:populateFiles {"files":{"/asset-manifest.json":"ce0ede97643e9ff943b1d750bc0911648ebfc2aa9978bacf11920632b293cddf","/expo-service-worker.js":"4582edb47dfe32e03f47649a04d1f7859f8cfb333909bfc1722a0dc5ab5288f4","/favicon-16.png":"54cd0051cbb3e45c752a48a37c70068e2e42172f2565b7ccf0c3890ebe83e0ed","/register-service-worker.js":"2058a730a4ea81e030deffb4332c972d110cecca6abce11e12541aedc121d093","/favicon-32.png":"a85e566476721b5a44762300ab9c1c3f3d126fd58c65355485f8acd4bf6334fa","/serve.json":"5f17e3709da0de44250c5c2c67c8ee66f6b6ced62969332fc12b5d95a8ad803c","/service-worker.js":"d43bd0f451363c4125971d4803b2dd66f115478157779366291596e3bdec6665","/precache-manifest.5fee155180b461bed45e318c337a0b05.js":"aa6de0f31681f2209af5cbc540a069dd40f88bbcb46366521cd3da6ebaaa6405","/favicon.ico":"0cd4cab2ced8af0bee03de70f2ef58953293bb660257f8b953d25c384bac5334","/index.html":"4124f8264ddf5f0ac43600452a76945c0243c143db7a24b9b2a866178933d4f2","/static/js/runtime~app.b3244af7.js":"6a178bc8d26d648cea7a6d30ceb9ee51aef0c42761b20a4a8f0e9ec17a8906b8","/static/js/runtime~app.b3244af7.js.map":"972733aa3796babe00485e148d9f4a64a2e0db5c606a3e6d640f9991976ae80e","/static/media/basketIcon.766d029d.png":"b23f22f336dde78e86ea64cd61fb63fd8b2fdd8691cccc2113bae1b64ba3c640","/static/media/hamburger.aac5147d.png":"eb580dbd6ba1f4b8fc54f2092bb55283c7110f4698f46c90b36a5bad4c1dabf2","/static/media/heart.2327736b.png":"f9ad6fa4cb49cdb9bc5d4dbc8015004493632cd7591cdeaae92649e7795f9cae","/static/media/history.2f134a9e.jpg":"09555f82d7632e6a110eace9128adb73789362566285375d4023cea36f83775e","/static/media/bell.a7b9dc9d.png":"58ad0cac2c08a602c18bd6f9ed4923e3225001b874711fe09bab8c5f5851c297","/static/media/logoName.e8a82c35.png":"29c5090743e0be82f29b705c1b9e8fe26f92781db72b106e867401e1218d7d21","/static/media/star.004c2bbb.png":"b5ed7f5d7eed0b602d8576083e9df84ccf267d0386817e2454863bffeabcb29d","/static/media/rocket.51671417.png":"91fd149552fc2197a4884ed9a244c1da7f9ff4e002e713a78c74a29d4374cf0f","/static/media/whatsapp.32285627.png":"15abd1105bd6781af7ae014d216101585f2aeadaab28b7bbd2297af27745f167","/static/media/logoPic.097cd026.png":"50b89efb46bfc3ef7b0b5167e20897e235272d3015576e9f77097166df00ec50","/static/media/noImgPic.e39d9562.png":"28c0f7af5de9ef2277c51ab6d6e592e9286582d77c9081850d0485ff9229489c","/fonts/Feather.ttf":"385ed7566f4efc0a254c1f698ba503cef339d5eb6c410b3a77ea8fb46a31e12b","/static/media/basketActive.09e130d8.png":"6b4c64ca0be0ff1746ecd4e3f7138a4aaf9a89e6c9ff805bd045df6db15e3f6c","/static/js/app.5b101cd4.chunk.js":"997ee75a2c0a56d801b7b7f5c73325a55438d24f0c803aa707fd959c97bb1fda","/static/media/location.635d40af.png":"3b3baad5606e86696c86260331b066ce253dcd7a4eb597d4913084a4dfcf5f43","/static/media/whatsapp.924f3c76.jpg":"a8b614f2f7f742abe8fbef12dc057188ff66a0650e77d40e02093ceb02ee567b","/fonts/Foundation.ttf":"c467b886c9d0019dd7c0b82d1708781563cb89d998b23aa17ca90da41085f2d1","/fonts/SimpleLineIcons.ttf":"0008e9d91744a13909a740ae365d32d55027514b357e0c0890164cfc00959cfa","/static/media/icon.ac58bfc6.png":"2cc97cb762c674a3db58daec4162c49fbe9ec62b8913bc9a13982d3fed3f6719","/fonts/AntDesign.ttf":"3511d5655ede3265d5d3665d10d468ab3e0392dc44af3b6fa0dc69a3e942f093","/fonts/Entypo.ttf":"1deda733e5cfd9a5e9a997f1226c77517f2e2b50c2c9a210981384920dd5c497","/static/media/loading.9e0373c2.gif":"a406cc0f60369fdfed063904acfbf64f399735541cd57f47c5b19f1e342074a8","/fonts/MaterialIcons.ttf":"7298099786723f37fad9d593142651d675024a6b25c3fa14ee1276a2b3e1f21e","/fonts/Ionicons.ttf":"860db16ab997d30cd7c6ecf63efdbc32cc23f47b78d9d48e4e46c34f2577e69b","/static/media/logo.1f861460.png":"d0774b87ad69128c09f4687b97f0d58fa502b4e4d42d32b390df5e98f92d987b","/fonts/FontAwesome.ttf":"225dc03087123b26cb71296d418705ec2e89e826acd04bfe6fc6353a0f5220c8","/static/js/app.5b101cd4.chunk.js.map":"616a660757c3b452b4f299212eaf553c551e782073e038562265cfd356098a96","/fonts/MaterialCommunityIcons.ttf":"7f35b88e3011f14d97f2aac4d9f50105ed947cfda52ea170ba7ed9e75f8e1a63","/static/js/2.42008ec2.chunk.js":"df586e0e41330ab613243acd9f6e1cf91974c58aa5332ed5b65b7de5918662fe","/static/js/2.42008ec2.chunk.js.map":"1bc82fe8406cc8f8f481f0a37fa66114b429f50d2e1ce0c8427ba27a6274b5f5"}}
+[debug] [2021-07-01T05:34:58.116Z] ----------------------------------------------------------------------
+[debug] [2021-07-01T05:34:58.118Z] Command:       /usr/local/bin/firebase /Users/OMI/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy
+[debug] [2021-07-01T05:34:58.118Z] CLI Version:   9.14.0
+[debug] [2021-07-01T05:34:58.118Z] Platform:      darwin
+[debug] [2021-07-01T05:34:58.118Z] Node Version:  v12.18.1
+[debug] [2021-07-01T05:34:58.119Z] Time:          Thu Jul 01 2021 06:34:58 GMT+0100 (West Africa Standard Time)
+[debug] [2021-07-01T05:34:58.120Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-07-01T05:34:58.128Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-07-01T05:34:58.128Z] > authorizing via signed-in user (oyemadeit@gmail.com)
+[debug] [2021-07-01T05:34:58.129Z] [iam] checking project mobishopvgc for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-07-01T05:34:58.131Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-07-01T05:34:58.131Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-07-01T05:34:58.495Z] <<< HTTP RESPONSE 200 {"cache-control":"no-cache, no-store, max-age=0, must-revalidate","expires":"Mon, 01 Jan 1990 00:00:00 GMT","date":"Thu, 01 Jul 2021 05:34:58 GMT","pragma":"no-cache","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:34:58.516Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/mobishopvgc:testIamPermissions  
+ {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2021-07-01T05:35:00.020Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 01 Jul 2021 05:34:59 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=1112","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-01T05:35:00.021Z] >>> HTTP REQUEST POST https://iam.googleapis.com/v1/projects/mobishopvgc/serviceAccounts/mobishopvgc@appspot.gserviceaccount.com:testIamPermissions  
+ {"permissions":["iam.serviceAccounts.actAs"]}

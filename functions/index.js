@@ -310,7 +310,8 @@ exports.generateApplicationCsv = functions.region('asia-northeast1').pubsub
       'shop',
       'category',
       'subcat',
-      'tags'
+      'tags',
+      'imgURL'
     ];
 
     // get csv output

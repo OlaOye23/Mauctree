@@ -90,7 +90,7 @@ export default class AddItem extends React.Component{
     console.log(qty)
     console.log(this.state.itemObj.qty)
     console.log(this.state.current.stock)
-    if ((qty == "") || (parseInt(qty) <= 0) || (parseInt(qty) > parseInt(this.state.current.stock) ) ){
+    if ((qty == "") || (parseInt(qty) <= 0) || (!this.state.current.shop) && ( (parseInt(qty) > parseInt(this.state.current.stock))) ){
       this.setState({disableAddButton: true})
     }
     else{
@@ -137,36 +137,40 @@ export default class AddItem extends React.Component{
 
   onMoreInfo = (item) =>{
     let msg = `More Information Request%0A %0AItem: ${item.name} %0A %0AMessage:`
-    let chat = `http://api.whatsapp.com/send?text=${msg}&phone=+2348110233359`
+    let chat = `http://api.whatsapp.com/send?text=${msg}&phone=+2348097908824`
     Linking.openURL(chat)
   }
 
   
   render(){
     return (
-      
+      <View style = {{backgroundColor: 'white', height: '110%'}}>
           <View style={addItemStyles.allContainer}>
             <ScrollView >
                 <View style={addItemStyles.modal}>
                 <Text style = {addItemStyles.modalText}>{this.state.current.name} </Text>
                 <Text style = {addItemStyles.modalText}>{this.state.current.size} </Text>
                 <Image source = {{uri:this.state.current.imgURL}} style = {addItemStyles.modalPic} />
-                
-                {this.state.current.shop?
-                <View><Text style = {addItemStyles.modalText}> N{this.state.current.price}</Text> 
-                <Text style = {addItemStyles.goodCenterTextBig}>(N{parseInt(parseInt(this.state.current.price*.85)/10)*10})</Text>
-                <Text style = {addItemStyles.goodCenterText}>select next day at checkout for 15% off</Text></View>
-                :
-                <View><Text style = {addItemStyles.modalText}> N{this.state.current.price}</Text>
+                <Text style = {addItemStyles.modalText}> N{this.state.current.price}</Text>
+
+                {this.state.current.shop && this.state.current.shop != 'MoW'&&
+                <View>
+                <Text style = {addItemStyles.goodCenterTextBig}>(N{parseInt(parseInt(this.state.current.price*.90)/10)*10})</Text>
+                <Text style = {addItemStyles.goodCenterText}>select next day at checkout for 10% off</Text>
+                </View>
+                }
+                {!this.state.current.shop &&
+                <View>
                 <Text style = {addItemStyles.goodCenterText}>select immediate at checkout for 19m delivery</Text>
                 </View>
                 }
+
                 <Text style = {addItemStyles.modalText} >enter quantity:</Text>  
-                {!this.state.current.shop &&
+                {/*!this.state.current.shop &&
                 <Text style = {parseInt(this.state.current.stock) > 0? addItemStyles.goodCenterText: addItemStyles.badCenterText} >
                     {this.state.current.stock} units available 
                 </Text>  
-                }
+                */}
                   <TextInput 
                     keyboardType="numeric"
                     style = {addItemStyles.textInput}
@@ -176,9 +180,11 @@ export default class AddItem extends React.Component{
                     value={String(this.state.itemObj.qty)}
                     onChangeText={(text) => this.onChangeQty(this.state.current,this.state.current.name, text)}
                   />
-                <Text style = {addItemStyles.badCenterText} >
-                  {parseInt(this.state.itemObj.qty) > parseInt(this.state.current.stock)? "Not enough items in stock" : "" }
-                </Text> 
+                  {!this.state.current.shop &&
+                    <Text style = {addItemStyles.badCenterText} >
+                      {parseInt(this.state.itemObj.qty) > parseInt(this.state.current.stock)? "Not enough items in stock" : "" }
+                    </Text> 
+                  }
                 <Text style = {addItemStyles.modalText}> Total: N{this.state.current.price * this.state.itemObj.qty}</Text>
                 <TouchableOpacity 
                   disabled = {this.state.disableAddButton}
@@ -202,6 +208,8 @@ export default class AddItem extends React.Component{
                 </View>
               </ScrollView>
             </View>
+
+            </View>
   );
 }
 }
@@ -209,11 +217,18 @@ export default class AddItem extends React.Component{
 
 const addItemStyles = StyleSheet.create({
   
-  
-  goodCenterText: {
+  goodLeftText: {
     color: 'green',
     fontWeight: 'bold',
     fontSize: hp(percHeight(12*1.25)),
+    marginLeft: hp(percHeight(5)),
+    alignSelf: 'flex-start',
+  },
+
+  goodCenterText: {
+    color: 'green',
+    fontWeight: 'bold',
+    fontSize: wp("100%") < hp(percHeight(450))? wp(percWidth(12*1.25)) : hp(percHeight(12*1.25)),
     marginLeft: hp(percWidth(5)),
     alignSelf: 'center',
   },
@@ -221,7 +236,7 @@ const addItemStyles = StyleSheet.create({
   goodCenterTextBig: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(20*1.25)),
+    fontSize: wp("100%") < hp(percHeight(450))? wp(percWidth(20*1.25)) : hp(percHeight(20*1.25)),
     marginLeft: hp(percWidth(5)),
     alignSelf: 'center',
   },

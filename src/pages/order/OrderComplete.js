@@ -58,7 +58,7 @@ export default class OrderComplete extends Component{
     render(){
         return(
          
-            
+          <View style = {{backgroundColor: 'white', height: '110%'}}>
             <ScrollView style = {orderCompleteStyles.regForm}>
               <View style = {{marginBottom: 300}}>
                   <Image source = {logo} style = {orderCompleteStyles.modalPic} />
@@ -81,6 +81,7 @@ export default class OrderComplete extends Component{
                       </View>
                     </View>
                   </ScrollView>
+                  </View>
       
         )
     }

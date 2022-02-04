@@ -14,7 +14,7 @@ import * as Permissions from 'expo-permissions';
 
 import config from '../../../config'
 
-import uuid4 from "uuid4"
+//import uuid4 from "uuid4"
 import { TouchableOpacity } from '../../web/react-native-web';//'react-native' //
 
 //import { Expo } from 'expo-server-sdk';
@@ -490,7 +490,7 @@ export default class OrderForm extends Component{
         {order: this.state}
       )
 
-      let link = `http://api.whatsapp.com/send?text=${msg}&phone=+2348110233359`
+      let link = `http://api.whatsapp.com/send?text=${msg}&phone=+2348097908824`
       Linking.openURL(link)
 
     }

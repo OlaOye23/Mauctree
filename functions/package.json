@@ -8,6 +8,10 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
+  "hosting": {
+    "site": "shopmob",
+    "public": "public"
+  },
   "engines": {
     "node": "10"
   },

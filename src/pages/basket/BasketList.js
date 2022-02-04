@@ -117,10 +117,13 @@ export default class BasketList extends React.Component{
                 //console.log('hahaha'+this.basket)
               }
               else{
-                this.otherTotal += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
+                if (prodObj.info.shop != 'MoW' ){
+                  this.otherTotal += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
+                }
+                if (prodObj.info.shop == 'MoW' ){
+                  this.immediateTotal += parseInt(prodObj.qty) * parseInt(prodObj.info.price)// immediate total because it is not used
+                  }
                 this.basket.push(prodObj)
-                //alert(prodObj.info.price)
-                //console.log('hahaha'+this.basket)
               }
             }
             
@@ -242,17 +245,21 @@ export default class BasketList extends React.Component{
     }
 
     try{
-      let store = await getSelectStore(this.state.store)
-      this.setState({store: store}) 
-      if (this.state.store.open === "no"){
+      //let store = await getSelectStore(this.state.store)
+      //this.setState({store: store}) 
+      /*if (this.state.store.open === "no"){//CHECK IF STORE IS OPEN
         alert('shop closed! opens at 8am')
         fail = true
         return
       }
-      await this.asyncForEach(items, async (basketItem) => { 
+      await this.asyncForEach(items, 
+        async (basketItem) => { 
         console.log(basketItem)
         
-        let dbItem = await getSelectProduct(basketItem.info, this.onRetrieved)   
+        let dbItem = await getSelectProduct(basketItem.info, this.onRetrieved)
+        if (dbItem == null){
+          this.onClearBasket()
+        }   
         console.log('database + '+ dbItem)
         console.log(dbItem)
         if (parseInt(dbItem.price) == parseInt(basketItem.info.price)){
@@ -264,7 +271,8 @@ export default class BasketList extends React.Component{
           this.storeLocalData(basketItem.name, JSON.stringify(basketItem.info))
           alert(basketItem.name + "'s price has changed since you added it to your basket.\nPlease review the updated price and checkout agian")
         }
-        if (!dbItem.shop){
+
+        if (!dbItem.shop){//CHECK IF IN STOCK
           if (parseInt(dbItem.stock) >= parseInt(basketItem.qty)){//need to test
             console.log('product still in stock')
             //fail = false
@@ -276,7 +284,11 @@ export default class BasketList extends React.Component{
             await AsyncStorage.setItem(basketItem.name, JSON.stringify({"": ""}))
           }
         }
+
       
+      
+      })*/
+
       if (fail === false){
         const { navigation } = this.props;
         navigation.navigate(
@@ -287,7 +299,6 @@ export default class BasketList extends React.Component{
         console.log('fail condition reached')
         this.componentDidMount()
       }
-      })
       } catch (error) {
         console.warn(error)
         alert('Error: please try again or restart')
@@ -316,10 +327,11 @@ export default class BasketList extends React.Component{
   
     
     return (
+      <View style = {{backgroundColor: 'white', height: '110%'}}>
       <View style = {basketStyles.allContainer} >
       <View  >
       <Text style={basketStyles.modalText}>Total : N {this.total} </Text> 
-      <Text style={basketStyles.goodCenterTextBig}>(N {this.total - (this.otherTotal*.15)})</Text> 
+      <Text style={basketStyles.goodCenterTextBig}>(N {this.total - (this.otherTotal*.10)})</Text> 
           {this.state.store.open == "yes" ?
              <Text style = {basketStyles.goodCenterText}>next day discounts available on checkout</Text> : 
              this.state.store.open == "no" ? <Text style = {basketStyles.badCenterText}>store is closed! opens at 3pm</Text>:
@@ -344,6 +356,7 @@ export default class BasketList extends React.Component{
             
       </View>
       <ScrollView 
+      style={{ maxHeight: hp(percHeight(450)) }} 
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
@@ -365,8 +378,8 @@ export default class BasketList extends React.Component{
                   <Text style = {basketStyles.neutralText}>
                       {"Total: N"+ product.qty* product.info.price} 
                   </Text>
-                  {product.info.shop &&
-                  <Text style = {basketStyles.goodLeftText}>{'eligible for discounts \nat checkout (15% off)'}</Text> }
+                  {product.info.shop && product.info.shop !== 'MoW' &&
+                  <Text style = {basketStyles.goodLeftText}>{'eligible for discounts \nat checkout (10% off)'}</Text> }
               </View>
             </View>
             </TouchableOpacity>
@@ -376,6 +389,7 @@ export default class BasketList extends React.Component{
             <Image source = {{uri:"../../../assets/white.png"}} style = {basketStyles.modalPic} />
           </View>
           </ScrollView>
+        </View>
         </View>
   );
 }
@@ -410,15 +424,16 @@ const basketStyles = StyleSheet.create({
   goodCenterText: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(12*1.25)),
+    fontSize: wp("100%") < hp(percHeight(450))? wp(percWidth(12*1.25)) : hp(percHeight(12*1.25)),
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
+    //alignConten: 'center'
   },
 
   goodCenterTextBig: {
     color: 'green',
     fontWeight: 'bold',
-    fontSize: hp(percHeight(20*1.25)),
+    fontSize: wp("100%") < hp(percHeight(450))? wp(percWidth(20*1.25)) : hp(percHeight(20*1.25)),
     marginLeft: hp(percHeight(5)),
     alignSelf: 'center',
   },

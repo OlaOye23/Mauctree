@@ -1,6 +1,7 @@
 import React from 'react'
 import {View, ScrollView, TextInput, Text, Image, StyleSheet, FlatList, Linking} from 'react-native'
 import {SearchBar} from 'react-native-elements'
+//import SearchBar from 'react-native-platform-searchbar'
 //import {BaseButton} from 'react-native-gesture-handler'
 import {getProducts, getStockProducts}from '../../api/ShopsApi'
 //import Modal from 'react-native-modal';
@@ -25,8 +26,19 @@ import hamburgerPic from '../../../assets/hamburger.png'
 import locationPic from '../../../assets/location.png'
 import noImgPic from '../../../assets/noImgPic.png'
 
+import AppLoading from 'expo-app-loading';
+//import ProductsJSON from '../../../assets/images.json'
 
 
+function cacheImages(images) {
+  return images.map(image => {
+    if (typeof image === 'string') {
+      return Image.prefetch(image);
+    } else {
+      return Asset.fromModule(image).downloadAsync();
+    }
+  });
+}
 
 
 
@@ -59,7 +71,11 @@ export default class SearchProducts extends React.Component{
           disableAddButton: true,
           loadingPic: true,
           count: 0,
+          isReady: false,
       }
+
+      
+
       const {navigation} = this.props
       navigation.setOptions({
         headerLeft: () => (
@@ -128,6 +144,18 @@ export default class SearchProducts extends React.Component{
       
   }
 
+  _loadAssetsAsync = async () =>{
+   /*let imagesURL = []
+    Images.forEach((prod)=>{
+      imagesURL.push(prod.imgURL)
+    })
+    console.log(imagesURL)
+    const imageAssets = cacheImages(imagesURL);
+    //alert(imagesURL)
+
+    await Promise.all([...imageAssets]);*/
+  }
+
   
   
 
@@ -147,10 +175,10 @@ export default class SearchProducts extends React.Component{
                     {!product.shop &&
                     <View>
                     <Text style = {product.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
-                        {product.stock > 0? "available for immediate delivery": "out of Stock"}
+                        {"available for immediate delivery"}
                     </Text>
                     <Text style = {SearchProdStyles.description}>
-                        {product.stock + " in stock"} 
+                        {product.stock + " in store"} 
                     </Text>
                     </View>
                     }
@@ -176,6 +204,7 @@ export default class SearchProducts extends React.Component{
 
 
   componentDidMount = async () =>{
+    //this._loadAssetsAsync()
     if (this.props.params){
       const { route } = this.props;
       const { state } = route.params;
@@ -183,8 +212,12 @@ export default class SearchProducts extends React.Component{
     }
     try{
       this.setState({forceRefresh: Math.floor(Math.random() * 100000000)})
-      await getStockProducts(this.stockProductsRetrieved)//, ()=>
+      //await getStockProducts(this.stockProductsRetrieved)
+      this.stockProdList = require('../../../assets/productsStock.json')
+      this.setState({stockProducts: this.stockProdList})
       this.setState({loadingPic: false})
+      //getProducts(this.productsRetrieved)//, ()=>
+      this.prodList = require('../../../assets/products.json')
       console.log('loading pic: '+ this.state.loadingPic)
       //})
     }
@@ -222,7 +255,7 @@ export default class SearchProducts extends React.Component{
             if ((prodObj.qty !== undefined) && (prodObj.qty > 0) && (prodObj.qty !== null)){
               this.total += parseInt(prodObj.qty) * parseInt(prodObj.info.price)
               this.basket.push(prodObj)
-              console.log('hahaha'+this.basket)``
+              console.log('hahaha'+this.basket)
             }
           }catch(error){
             console.warn(error)
@@ -244,7 +277,7 @@ export default class SearchProducts extends React.Component{
   
   productsRetrieved = (productList) =>{
     console.log('retrieved')
-
+    //this._loadAssetsAsync(productList)
     function dynamicSort(property) {
       var sortOrder = 1;
       if(property[0] === "-") {
@@ -263,7 +296,7 @@ export default class SearchProducts extends React.Component{
     this.prodList = productList.sort(dynamicSort('shop'))//.reverse()
     console.log(productList)
     //this.setState({products: this.prodList})
-    this.setState({count: 1})
+    this.setState({count: this.state.count+1})
   }
 
   stockProductsRetrieved = (productList) =>{
@@ -303,11 +336,11 @@ export default class SearchProducts extends React.Component{
 
 
   onSearchProducts = async () => {
-    this.setState({loadingPic: true})
-    this.setState({category: ''})
+    //this.setState({loadingPic: true})*************************************for API
+    //this.setState({category: ''})**********************************
     if (this.state.count == 0){
-      await getProducts(this.productsRetrieved)//count is increased in callback
-      this.setState({count: 1})
+      //await getProducts(this.productsRetrieved)//count is increased in callback
+      this.setState({count: this.state.count+1})
     }
     //setTimeout(()=>{
     Analytics.logEvent('searchItem', {
@@ -327,7 +360,7 @@ export default class SearchProducts extends React.Component{
   if (this.state.searchQuery !== ""){
     this.setState({searchUsed: true})
     //this.setState({loadingPic: true}) //too quick to display thus useless
-    const result = fuse.search(this.state.searchQuery,{limit:100})
+    const result = fuse.search(this.state.searchQuery,{limit:250})
     console.log(result)
     this.setState({products :[]})
     this.setState({products :result})
@@ -340,6 +373,7 @@ export default class SearchProducts extends React.Component{
   }
   this.setState({loadingPic: false})
 //},1000)
+this.refs._scrollView.scrollTo({x: 0, y: 0, animated: false})
 }
 
 
@@ -372,13 +406,14 @@ onClearSearch  = () =>{//used for clearing search and loading only immediate
 
 onMoreInfo = () =>{
   let msg = `Hello, I want these items: %0A %0A`
-  let chat = `http://api.whatsapp.com/send?text=${msg}&phone=+2348110233359`
+  let chat = `http://api.whatsapp.com/send?text=${msg}&phone=+2348097908824`
   Linking.openURL(chat)
 }
 
 onSelectCat = async (category )=>{
   //setTimeout(async()=>{
     console.log(category)
+    
     this.setState({loadingPic: true})
     this.setState({searchUsed: false, searchQuery: '', category: category})
     if (category == "Immediate"){
@@ -388,8 +423,8 @@ onSelectCat = async (category )=>{
     else{
       
       if (this.state.count == 0){
-        await getProducts(this.productsRetrieved)
-        this.setState({count: 1})
+        //await getProducts(this.productsRetrieved)
+        this.setState({count: this.state.count+1})
       }
 
       Analytics.logEvent('searchItem', {
@@ -405,7 +440,7 @@ onSelectCat = async (category )=>{
     
       const fuse = new Fuse(this.prodList, options)
       this.setState({searchUsed: true})
-      const result = fuse.search(category)
+      const result = fuse.search('='+category, {limit: 250})
       this.setState({products :[]})
       this.setState({products :result})
       //console.log(this.state.products.length)
@@ -413,13 +448,26 @@ onSelectCat = async (category )=>{
       
     }
     this.setState({loadingPic: false})
+    this.refs._scrollView.scrollTo({x: 0, y: 0, animated: false})
   //},1000)
 }
 
 render(){
+  /*if (!this.state.isReady) {
+    //console.log('READDDDDDDDDDDY')
+    return (
+      <AppLoading
+        startAsync={this._loadAssetsAsync}
+        onFinish={() => this.setState({ isReady: true })}
+        onError={console.warn}
+      />
+    );
+  }*/
  
     
   return (
+    
+    <View style = {{backgroundColor: 'white', height: '110%', borderColor:'#c0c0c0', borderWidth: .5,}}>
       <View style = {SearchProdStyles.allContainer}>
      <View style = {{backgroundColor: 'white', borderColor:'#c0c0c0', borderWidth: .5,}}>
         <SearchBar 
@@ -427,9 +475,11 @@ render(){
             inputStyle={SearchProdStyles.searchBox} 
             containerStyle={SearchProdStyles.searchBox} 
             inputContainerStyle={SearchProdStyles.searchBox} 
+            autoCorrect={false}
             lightTheme="true"
             onChangeText={(text) => {
-              this.setState({searchUsed: false, category: ''})
+              //this.setState({searchUsed: false, category: ''})
+              //this.refs._scrollView.scrollTo({x: 0, y: 0, animated: false})
               this.setState({searchQuery: text})
             }} 
             value={this.state.searchQuery} 
@@ -444,14 +494,16 @@ render(){
   <TouchableOpacity onPress = {() => this.onSelectCat('Immediate') }>
             <Text style = {this.state.category == "Immediate"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Immediate Delivery</Text>
   </TouchableOpacity>
-  
+  {/*<TouchableOpacity onPress = {() => this.onSelectCat('Fresh') }>
+            <Text style = {this.state.category == "Fresh"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Fresh</Text>
+  </TouchableOpacity>*/}
   <TouchableOpacity onPress = {() => this.onSelectCat('Breakfast') }>
             <Text style = {this.state.category == "Breakfast"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Breakfast</Text>
   </TouchableOpacity>
   <TouchableOpacity onPress = {() => this.onSelectCat('Snacks') }>
             <Text style = {this.state.category == "Snacks"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Snacks</Text>
   </TouchableOpacity>
-  <TouchableOpacity onPress = {() => this.onSelectCat('Cooking') }>
+  <TouchableOpacity onPress = {() => this.onSelectCat('Ingredients') }>
             <Text style = {this.state.category == "Cooking"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Cooking</Text>
   </TouchableOpacity>
   <TouchableOpacity onPress = {() => this.onSelectCat('Baking') }>
@@ -469,7 +521,7 @@ render(){
   <TouchableOpacity onPress = {() => this.onSelectCat('Household') }>
             <Text style = {this.state.category == "Household"?SearchProdStyles.selectecCatText: SearchProdStyles.catText} >Household</Text>
   </TouchableOpacity>
-  <TouchableOpacity onPress = {() => this.onSelectCat('Toiletries') }>
+  <TouchableOpacity onPress = {() => this.onSelectCat('Health') }>
             <Text  style = {this.state.category == "Toiletries"?SearchProdStyles.selectecCatText: SearchProdStyles.catText}>Toiletries</Text>
   </TouchableOpacity>
  
@@ -490,9 +542,10 @@ render(){
       <View style = {{backgroundColor: 'white',}}>
             <Image source = {{uri: require("../../../assets/loading.gif")}} style = {this.state.loadingPic == true? SearchProdStyles.loadingPic: SearchProdStyles.loadingPicHide} />
             </View>
-      
+      {/* 450  */}
       <ScrollView 
-      
+        ref='_scrollView'
+      	style={{ maxHeight: hp(percHeight(450)) }} 
         refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
@@ -520,22 +573,19 @@ render(){
                       <Text style = {SearchProdStyles.priceText}>N{product.item.price}</Text>
                   </View>
                   <View style = {SearchProdStyles.titleContainer}>
-                      <Text style = {SearchProdStyles.description}>{"delivered today\norder by 2pm"} </Text>
+                  <Text style = {SearchProdStyles.description}>{"same day delivery"} </Text>
                       
                   </View>
-                  <View style = {SearchProdStyles.sizeContainer}>
-                      <Text style = {SearchProdStyles.mediumText}>{"select next day\nat checkout\n(15% off)"} </Text>
-                      <Text style = {SearchProdStyles.priceTextGood}>N{parseInt(parseInt(product.item.price*.85)/10)*10} </Text>
-                  </View>
-                  {/*<View style = {SearchProdStyles.sizeContainer}>
-                      <Text style = {SearchProdStyles.titleText}>{product.item.size} </Text>
- 
-              </View>*/}
-
-                  <View>
-                  
-                 
-                  </View>
+                  {product.item.shop == "MoW"?
+                   <View style = {SearchProdStyles.sizeContainer}>
+                    <Text style = {SearchProdStyles.mediumText}>{"fulfilled by\nexternal vendor"} </Text>
+                    </View>
+                    :
+                   <View style = {SearchProdStyles.sizeContainer}>
+                       <Text style = {SearchProdStyles.mediumText}>{"select next day\nat checkout\nfor 10% off"} </Text>
+                       {/*<Text style = {SearchProdStyles.priceTextGood}>N{parseInt(parseInt(product.item.price*.90)/10)*10} </Text>*/}
+                   </View>
+                    }
 
                 </View>
               }
@@ -544,7 +594,7 @@ render(){
               <View>
                   <View style = {SearchProdStyles.titleContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.item.name} </Text>
-                      <Text style = {SearchProdStyles.priceTextBad}> N{parseInt(parseInt(product.item.price*1.1)/10)*10}</Text>
+                      <Text style = {SearchProdStyles.priceTextBad}> N{parseInt(parseInt(product.item.price*1.1+5)/10)*10}</Text>
                   </View>
                   <View style = {SearchProdStyles.sizeContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.item.size} </Text>
@@ -552,13 +602,13 @@ render(){
                   </View>
 
                   <View>
-                  <Text style = {SearchProdStyles.description}>{product.item.stock + " in stock"}</Text>
+                  <Text style = {SearchProdStyles.description}>{product.item.stock + " in store"}</Text>
                 </View>
                   
 
                   <View>
-                    <Text style = {product.item.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
-                        {product.item.stock > 0? "select immediate\nat checkout\n(19 mins)": "out of Stock"}
+                    <Text style = {SearchProdStyles.goodText} >
+                        {"select immediate\nat checkout\n(19 mins delivery)"}
                     </Text>
                     
                   </View>
@@ -595,22 +645,19 @@ render(){
                        <Text style = {SearchProdStyles.priceText}>N{product.price}</Text>
                    </View>
                    <View style = {SearchProdStyles.titleContainer}>
-                       <Text style = {SearchProdStyles.description}>{"delivered today\norder by 2pm"} </Text>
+                       <Text style = {SearchProdStyles.description}>{"same day delivery"} </Text>
                        
                    </View>
+                   {product.shop == "MoW"?
                    <View style = {SearchProdStyles.sizeContainer}>
-                       <Text style = {SearchProdStyles.mediumText}>{"select next day\nat checkout\n(15% off)"} </Text>
-                       <Text style = {SearchProdStyles.priceTextGood}>N{parseInt(parseInt(product.price*.85)/10)*10} </Text>
+                    <Text style = {SearchProdStyles.mediumText}>{"fulfilled by external vendor:\nMarket on Wheels"} </Text>
+                    </View>
+                    :
+                   <View style = {SearchProdStyles.sizeContainer}>
+                       <Text style = {SearchProdStyles.mediumText}>{"select next day\nat checkout\n for 10% off"} </Text>
+                       {/*<Text style = {SearchProdStyles.priceTextGood}>N{parseInt(parseInt(product.price*.90)/10)*10} </Text>*/}
                    </View>
-                   {/*<View style = {SearchProdStyles.sizeContainer}>
-                       <Text style = {SearchProdStyles.titleText}>{product.size} </Text>
-  
-               </View>*/}
- 
-                   <View>
-                   
-                  
-                   </View>
+                    }
  
                  </View>
                   }
@@ -619,7 +666,7 @@ render(){
                   <View>
                     <View style = {SearchProdStyles.titleContainer}>
                         <Text style = {SearchProdStyles.titleText}>{product.name} </Text>
-                        <Text style = {SearchProdStyles.priceTextBad}> N{parseInt(parseInt(product.price*1.1)/10)*10}</Text>
+                        <Text style = {SearchProdStyles.priceTextBad}> N{parseInt(parseInt(product.price*1.1+5)/10)*10}</Text>
                     </View>
                     <View style = {SearchProdStyles.sizeContainer}>
                       <Text style = {SearchProdStyles.titleText}>{product.size} </Text>
@@ -627,12 +674,12 @@ render(){
                   </View>
 
                   <View>
-                  <Text style = {SearchProdStyles.description}>{product.stock + " in stock"}</Text>
+                  <Text style = {SearchProdStyles.description}>{product.stock + " in store"}</Text>
                   </View>
 
                   <View>
-                      <Text style = {product.stock > 0? SearchProdStyles.goodText: SearchProdStyles.badText} >
-                          {product.stock > 0? "select immediate\nat checkout\n(19 mins)": "out of Stock"}
+                      <Text style = {SearchProdStyles.goodText} >
+                          {"select immediate\nat checkout\n(19 mins delivery)"}
                       </Text>
                       
                     </View>
@@ -648,7 +695,7 @@ render(){
 
           
 
-          <View style = {SearchProdStyles.superContainer}>
+          <View >
             <Image source = {{uri:"../../../assets/white.png"}} style = {SearchProdStyles.modalPic} />
           </View>
 
@@ -657,8 +704,10 @@ render(){
           
         </ScrollView>
 
-        
+        <Image source = {{uri:"../../../assets/logo2.png"}} style = {{alignSelf: 'center', height: 10, width: 10,}} />
         </View>
+         </View>
+      
   );
 }
 }
@@ -814,6 +863,7 @@ const SearchProdStyles = StyleSheet.create({
   },
   
   allContainer:{
+    backgroundColor: 'white',
     alignSelf : 'center',
     width: wp("100%") < hp(percHeight(450))? wp("100%") : hp(percHeight(450)),//hp("67%") < wp("100%")? hp("67%"): wp("100%"),- BS
   },
@@ -834,9 +884,13 @@ const SearchProdStyles = StyleSheet.create({
 
   },
   superContainer:{
+    borderColor:'#c0c0c0',
+    borderWidth: .5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     margin: hp(percHeight(5)),
+    paddingTop: hp(percHeight(5)),
+    paddingBottom: hp(percHeight(5)),
 
   },
   mainContainer: {
@@ -911,8 +965,11 @@ const SearchProdStyles = StyleSheet.create({
   
   productPic:{
     width: "30%",//hp(percHeight(80)),
-    height: wp("20%") < hp(percHeight(80))? wp("20%") : hp(percHeight(120)),//used width to maintain ratio- very slight difference
+    height: hp("20%") < hp(percHeight(80))? hp("20%") : hp(percHeight(120)),//used width to maintain ratio- very slight difference
     margin: hp(percHeight(5)),
+    marginTop: hp(percHeight(10)),
+    
+    
   },
   
      
