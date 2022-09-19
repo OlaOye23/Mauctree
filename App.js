@@ -3,46 +3,19 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import SearchProducts from './src/pages/search/SearchProducts'
-import AddItem from './src/pages/search/AddItem'
-
-import OrderForm from './src/pages/order/OrderForm'
-import OrderComplete from './src/pages/order/OrderComplete'
-//import OrderPayment from './src/pages/order/OrderPayment'
-
-import BasketList from './src/pages/basket/BasketList'
-import UpdateItem from './src/pages/basket/UpdateItem'
-
-import MyOrders from './src/pages/history/MyOrders'
-import ViewOrder from './src/pages/history/ViewOrder'
+import SearchProducts from './src/pages/search/SearchProps'
+import AddItem from './src/pages/search/ViewProp'
 
 
-import MoreApps from './src/pages/misc/moreApps'
-import Location from './src/pages/misc/location'
-import Soon from './src/pages/misc/comingSoon'
-//import TrackDriver from './src/pages/track/trackDriver'
-//import MapPage from './src/pages/light/mapPage'
-//import RequestPage from './src/pages/light/requestPage'
 
-
-import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, Button, Platform, Image } from 'react-native';
 
-import * as myEPT from './assets/myEPT.json'
 
 import * as Analytics from 'expo-firebase-analytics';
 
-import basketPic from './assets/basketIcon.png'
-import logoPic from './assets/logoPic.png' 
-import logoName from './assets/logoName.png' 
-
-import { TouchableOpacity } from './src/web/react-native-web'; //'react-native' //
-
-import { widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
-import {percWidth, percHeight} from './src/api/StyleFuncs'
+import logoName from './assets/mauctree.png' 
 
 
 const Tab = createBottomTabNavigator();
@@ -58,67 +31,6 @@ Notifications.setNotificationHandler({
 
 
 
-function Shop() {
-  return (
-      <Stack.Navigator>
-        {/*<Stack.Screen name="Welcome" component={LogoPage} />*/}
-        <Stack.Screen name="Find a Product" component={SearchProducts} />
-        <Stack.Screen name="Basket" component={BasketList} />
-        <Stack.Screen name="Order Details" component={OrderForm} />
-        
-      </Stack.Navigator>
-  );
-}
-
-
-
-
-/*
-function Location() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Light Request" component={RequestPage} />
-      <Stack.Screen name="Light Reports" component={MapPage} />
-    </Stack.Navigator>
-  );
-}
-*/
-
-async function registerForPushNotificationsAsync() {
-  let token;
-  if (Constants.isDevice) {
-    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      console.warn('Failed to get push token for push notification!');
-      return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    //console.log("token: ",token); // log token to send to user
-  } else {
-    console.warn('Must use physical device for Push Notifications');
-  }
-
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
-  }
-  return token;
-}
-
-function LogoTitle() {
-  return (
-    <Image style={{ width: 50, height: 50 }} source = {logo} />
-  );
-}
 
 function App() {//stack
   const routeNameRef = React.useRef();
@@ -154,51 +66,11 @@ function App() {//stack
             </View>,
           headerRight: () => {}
         }}/>
-        <Stack.Screen name="Promo" component={Soon} options={{ title: 'Promo' }}/>
-        <Stack.Screen name="More Apps" component={MoreApps} options={{ title: 'Menu' }}/>
-        <Stack.Screen name="Location" component={Location} options={{ title: 'Select Location' }}/>
         
         <Stack.Screen name="Add Item" component={AddItem} options={{ title: ' ' }}/>
-        <Stack.Screen name="Basket" component={BasketList} options={{ title: 'Basket' }}/>
-        <Stack.Screen name="Update Item" component={UpdateItem} options={{ title: ' ' }}/>
-        <Stack.Screen name="Order Details" component={OrderForm} options={{ title: 'Delivery' }}/>
-        <Stack.Screen name="Order Complete" component={OrderComplete} options={{ title: ' ' }}/>
-        <Stack.Screen name="My Orders" component={MyOrders} options={{ title: 'History' }}/>
-        <Stack.Screen name="View Order" component={ViewOrder} options={{ title: ' ' }}/>
-
         
-        
-        {/*
-        <Stack.Screen name="Track Driver" component={TrackDriver} />
-        <Stack.Screen name="Request" component={RequestPage} />
-        <Stack.Screen name="Reports" component={MapPage} />
-        */}
 
       </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
-
-function AppX() {//stack
-  return (
-    <NavigationContainer>
-      <Stack.Navigator >
-        <Stack.Screen name="Find a Product" component={SearchProducts} />
-        <Stack.Screen name="Basket" component={BasketList} />
-        <Stack.Screen name="Order Details" component={OrderForm} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
-
-
-function AppTab() {//tab
-  return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Browse" component={Shop} />
-        {/*<Tab.Screen name="Location" component={Location} />*/}
-      </Tab.Navigator>
     </NavigationContainer>
   );
 }
