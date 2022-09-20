@@ -9,7 +9,7 @@ Strictly for non commercial purposes**
 
 2) auctree data exploration.ipynb - a python notebook for preliminary exploration of data from auctree.com. #python #pandas #regexp #matplotlib
 
-3) Mauctree.pdf - a power BI dashboard to track basic metrics using data from auctree.com. #PowerBi
+3) Mauctree.pdf - an export of a power BI dashboard for tracking basic property metrics using data from auctree.com. #PowerBi
 
 4) mauctree_extract.sql - a SQL script for creating a serverless data warehouse to virtualise auctree.com data stored in a cloud storage container. #AzureDataLake #AzureSynapse
 
